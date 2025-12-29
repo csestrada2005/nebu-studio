@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Sun, Moon } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useTheme } from "next-themes";
 
 export const Header = () => {
   const { language, setLanguage, t } = useLanguage();
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -12,6 +15,10 @@ export const Header = () => {
     { href: "#servicios", label: t("nav.services") },
     { href: "#sobre-mi", label: t("nav.about") },
   ];
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 30);
@@ -23,6 +30,10 @@ export const Header = () => {
     document.body.style.overflow = isMobileMenuOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [isMobileMenuOpen]);
+
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
 
   return (
     <>
@@ -44,7 +55,16 @@ export const Header = () => {
             ))}
           </nav>
 
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-3">
+            {/* Theme toggle */}
+            <button
+              onClick={toggleTheme}
+              className="w-9 h-9 flex items-center justify-center border border-border rounded-full hover:bg-muted transition-colors"
+              aria-label="Toggle theme"
+            >
+              {mounted && (theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />)}
+            </button>
+
             {/* Language toggle */}
             <button
               onClick={() => setLanguage(language === "es" ? "en" : "es")}
@@ -79,7 +99,15 @@ export const Header = () => {
       >
         <div className="flex items-center justify-between px-5 py-5">
           <span className="font-display text-xl font-semibold">daniel<span className="text-accent">.</span></span>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            {/* Theme toggle mobile */}
+            <button
+              onClick={toggleTheme}
+              className="w-10 h-10 flex items-center justify-center border border-border rounded-full"
+              aria-label="Toggle theme"
+            >
+              {mounted && (theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />)}
+            </button>
             <button
               onClick={() => setLanguage(language === "es" ? "en" : "es")}
               className="px-3 py-1.5 text-xs font-medium border border-border rounded-full"
@@ -108,7 +136,7 @@ export const Header = () => {
           ))}
         </nav>
 
-        <div className="px-5 pb-8">
+        <div className="px-5 pb-8 safe-bottom">
           <a
             href="#contacto"
             onClick={() => setIsMobileMenuOpen(false)}
