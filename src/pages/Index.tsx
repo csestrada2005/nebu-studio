@@ -1,31 +1,25 @@
-import { Header } from "@/components/landing/Header";
-import { Hero } from "@/components/landing/Hero";
-import { Services } from "@/components/landing/Services";
-import { Process } from "@/components/landing/Process";
-import { Portfolio } from "@/components/landing/Portfolio";
-import { Testimonials } from "@/components/landing/Testimonials";
-import { Scarcity } from "@/components/landing/Scarcity";
-import { About } from "@/components/landing/About";
-import { Contact } from "@/components/landing/Contact";
-import { Footer } from "@/components/landing/Footer";
-import { FloatingCTA } from "@/components/landing/FloatingCTA";
+import { Navigation } from "@/components/landing/Navigation";
+import { HeroSection } from "@/components/landing/HeroSection";
+import { ServicesSection } from "@/components/landing/ServicesSection";
+import { WorkSection } from "@/components/landing/WorkSection";
+import { ProcessSection } from "@/components/landing/ProcessSection";
+import { AboutSection } from "@/components/landing/AboutSection";
+import { ContactSection } from "@/components/landing/ContactSection";
+import { FooterSection } from "@/components/landing/FooterSection";
 
 const Index = () => {
   return (
     <div className="min-h-screen">
-      <Header />
+      <Navigation />
       <main>
-        <Hero />
-        <Services />
-        <Process />
-        <Portfolio />
-        <Testimonials />
-        <Scarcity />
-        <About />
-        <Contact />
+        <HeroSection />
+        <ServicesSection />
+        <WorkSection />
+        <ProcessSection />
+        <AboutSection />
+        <ContactSection />
       </main>
-      <Footer />
-      <FloatingCTA />
+      <FooterSection />
     </div>
   );
 };
