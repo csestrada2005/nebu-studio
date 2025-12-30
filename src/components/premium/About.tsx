@@ -34,7 +34,7 @@ export const About = () => {
           {/* Timeline */}
           <div className={`mb-10 transition-all duration-600 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
             <div className="flex flex-wrap justify-center gap-4">
-              {timeline.map((item, index) => (
+              {timeline.map((item) => (
                 <div key={item.year} className="flex-1 min-w-[140px] max-w-[180px] p-4 bg-background/5 rounded-xl border border-background/10">
                   <p className="text-accent font-display text-lg font-semibold">{item.year}</p>
                   <p className="text-sm text-background/60">{t(item.key)}</p>

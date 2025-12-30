@@ -15,34 +15,34 @@ export const Portfolio = () => {
     {
       id: 1,
       title: "Moda Luxe",
-      type: "E-commerce",
+      type: language === "es" ? "Tienda online" : "Online store",
       result: "+200%",
       resultLabel: language === "es" ? "ventas" : "sales",
       description: language === "es"
-        ? "Tienda online de moda premium con experiencia de compra inmersiva"
-        : "Premium fashion online store with immersive shopping experience",
+        ? "Tienda online de moda premium con experiencia de compra inmersiva y automatizaciones de recuperación de carrito."
+        : "Premium fashion online store with immersive shopping experience and cart recovery automations.",
       image: portfolio1,
     },
     {
       id: 2,
       title: "TechFlow",
-      type: "Landing Page",
+      type: "Landing page",
       result: "+350%",
       resultLabel: "leads",
       description: language === "es"
-        ? "Página de captación para startup SaaS con animaciones fluidas"
-        : "Lead capture page for SaaS startup with fluid animations",
+        ? "Página de captación para startup SaaS. Diseño persuasivo que multiplicó sus conversiones."
+        : "Lead capture page for SaaS startup. Persuasive design that multiplied their conversions.",
       image: portfolio2,
     },
     {
       id: 3,
       title: "Wellness Spa",
-      type: language === "es" ? "Sitio Web" : "Website",
+      type: language === "es" ? "Sitio web" : "Website",
       result: "+150%",
       resultLabel: language === "es" ? "reservas" : "bookings",
       description: language === "es"
-        ? "Web para centro de bienestar con sistema de citas integrado"
-        : "Wellness center website with integrated booking system",
+        ? "Sitio web para centro de bienestar con sistema de citas integrado y diseño que transmite calma."
+        : "Wellness center website with integrated booking system and design that conveys calm.",
       image: portfolio3,
     },
   ];
