@@ -1,6 +1,6 @@
 import { useReveal } from "@/hooks/useAnimations";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Mail, MessageCircle } from "lucide-react";
+import { MessageCircle, ArrowRight } from "lucide-react";
 
 export const Hero = () => {
   const { ref, isVisible } = useReveal(0.1);
@@ -10,12 +10,11 @@ export const Hero = () => {
     <section ref={ref as React.RefObject<HTMLElement>} className="min-h-[100dvh] flex items-center pt-24 pb-16 px-1">
       <div className="container max-w-4xl text-center">
         <p
-          className={`text-muted-foreground text-sm sm:text-base mb-4 sm:mb-6 transition-all duration-700 ${
+          className={`text-accent font-medium text-sm sm:text-base mb-4 sm:mb-6 transition-all duration-700 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           }`}
         >
-          {t("hero.greeting")} <span className="text-foreground font-medium">Josep Cuatrecasas</span>
-          <span className="hidden sm:inline"> — {t("hero.role")}</span>
+          {t("hero.eyebrow")}
         </p>
 
         <h1
@@ -37,27 +36,35 @@ export const Hero = () => {
         </p>
 
         <div
-          className={`flex flex-col gap-3 sm:flex-row sm:justify-center sm:gap-4 mb-10 sm:mb-12 px-4 sm:px-0 transition-all duration-700 delay-300 ${
+          className={`flex flex-col gap-3 sm:flex-row sm:justify-center sm:gap-4 mb-4 px-4 sm:px-0 transition-all duration-700 delay-300 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
           }`}
         >
           <a
-            href="https://wa.me/34600000000?text=Hola,%20me%20interesa%20una%20consulta"
+            href="https://wa.me/34600000000?text=Hola,%20me%20interesa%20agendar%20una%20consultoría%20gratis"
             target="_blank"
             rel="noopener noreferrer"
-            className="touch-target inline-flex items-center justify-center gap-3 px-6 py-4 bg-[#25D366] text-white font-medium rounded-2xl hover:bg-[#22c55e] transition-colors active:scale-[0.98] text-base"
+            className="touch-target inline-flex items-center justify-center gap-3 px-6 py-4 bg-accent text-accent-foreground font-medium rounded-2xl hover:bg-accent/90 transition-colors active:scale-[0.98] text-base"
           >
             <MessageCircle className="w-5 h-5" />
-            {t("hero.cta.whatsapp")}
+            {t("hero.cta.primary")}
           </a>
           <a
-            href="mailto:hola@danielgarcia.dev"
-            className="touch-target inline-flex items-center justify-center gap-3 px-6 py-4 border-2 border-border bg-card font-medium rounded-2xl hover:bg-muted transition-colors active:scale-[0.98] text-base"
+            href="#trabajo"
+            className="touch-target inline-flex items-center justify-center gap-3 px-6 py-4 border-2 border-border bg-card font-medium rounded-2xl hover:bg-muted transition-colors active:scale-[0.98] text-base group"
           >
-            <Mail className="w-5 h-5" />
-            {t("hero.cta.email")}
+            {t("hero.cta.secondary")}
+            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </a>
         </div>
+
+        <p
+          className={`text-sm text-muted-foreground mb-10 sm:mb-12 transition-all duration-700 delay-350 ${
+            isVisible ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          {t("hero.microcopy")}
+        </p>
 
         <div
           className={`grid grid-cols-3 gap-4 sm:flex sm:flex-wrap sm:justify-center sm:gap-12 pt-6 sm:pt-8 border-t border-border mx-4 sm:mx-0 transition-all duration-700 delay-400 ${
@@ -65,9 +72,9 @@ export const Hero = () => {
           }`}
         >
           {[
-            { value: "50+", label: t("hero.stat.projects") },
-            { value: "3", label: t("hero.stat.years") },
-            { value: "100%", label: t("hero.stat.dedication") },
+            { value: "50+", label: t("stats.projects") },
+            { value: "40+", label: t("stats.clients") },
+            { value: "+180%", label: t("stats.conversion") },
           ].map((stat) => (
             <div key={stat.label} className="text-center sm:text-left">
               <p className="font-display text-2xl sm:text-3xl font-semibold">{stat.value}</p>
@@ -75,6 +82,14 @@ export const Hero = () => {
             </div>
           ))}
         </div>
+
+        <p
+          className={`text-xs text-muted-foreground/60 mt-4 transition-all duration-700 delay-500 ${
+            isVisible ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          {t("stats.disclaimer")}
+        </p>
       </div>
     </section>
   );

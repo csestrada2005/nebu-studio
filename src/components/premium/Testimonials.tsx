@@ -17,8 +17,8 @@ export const Testimonials = () => {
     {
       id: 1,
       text: language === "es"
-        ? "Nuestra conversión subió un 200% en el primer mes. Daniel entendió exactamente lo que necesitábamos y lo entregó antes del plazo."
-        : "Our conversion went up 200% in the first month. Daniel understood exactly what we needed and delivered ahead of schedule.",
+        ? "Nuestra conversión subió un 200% en el primer mes. Entendieron exactamente lo que necesitábamos y lo entregaron antes del plazo. Totalmente recomendables."
+        : "Our conversion went up 200% in the first month. They understood exactly what we needed and delivered ahead of schedule. Totally recommended.",
       name: "María García",
       role: "CEO, TechFlow",
       image: testimonial1,
@@ -27,8 +27,8 @@ export const Testimonials = () => {
     {
       id: 2,
       text: language === "es"
-        ? "Profesionalidad total. La web refleja perfectamente nuestra esencia y las reservas no paran de llegar. Muy recomendable."
-        : "Total professionalism. The website perfectly reflects our essence and bookings keep coming. Highly recommended.",
+        ? "Profesionalidad total. La web refleja perfectamente nuestra esencia y las reservas no paran de llegar. La inversión se recuperó en menos de dos meses."
+        : "Total professionalism. The website perfectly reflects our essence and bookings keep coming. The investment was recovered in less than two months.",
       name: "Carlos Rodríguez",
       role: "Director, Wellness Spa",
       image: testimonial2,
@@ -37,8 +37,8 @@ export const Testimonials = () => {
     {
       id: 3,
       text: language === "es"
-        ? "Mi tienda online por fin vende como debería. La experiencia de compra es increíble y la gestión muy sencilla."
-        : "My online store finally sells as it should. The shopping experience is amazing and management is very simple.",
+        ? "Mi tienda online por fin vende como debería. La experiencia de compra es increíble y las automatizaciones me ahorran horas cada semana."
+        : "My online store finally sells as it should. The shopping experience is amazing and the automations save me hours every week.",
       name: "Ana Martínez",
       role: "Fundadora, Moda Luxe",
       image: testimonial3,
@@ -77,26 +77,26 @@ export const Testimonials = () => {
           >
             <div className="overflow-hidden -mx-2">
               <div className="flex transition-transform duration-500 ease-out" style={{ transform: `translateX(-${current * 100}%)` }}>
-                {testimonials.map((t) => (
-                  <div key={t.id} className="w-full flex-shrink-0 px-2">
+                {testimonials.map((testimonial) => (
+                  <div key={testimonial.id} className="w-full flex-shrink-0 px-2">
                     <div className="bg-card rounded-2xl border border-border p-6 sm:p-8 md:p-10">
                       {/* Stars */}
                       <div className="flex gap-1 mb-5 sm:mb-6">
-                        {[...Array(t.rating)].map((_, i) => (
+                        {[...Array(testimonial.rating)].map((_, i) => (
                           <Star key={i} className="w-4 h-4 sm:w-5 sm:h-5 fill-accent text-accent" />
                         ))}
                       </div>
 
                       <blockquote className="font-display text-lg sm:text-xl md:text-2xl leading-relaxed mb-6 sm:mb-8">
-                        "{t.text}"
+                        "{testimonial.text}"
                       </blockquote>
 
                       {/* Author */}
                       <div className="flex items-center gap-3 sm:gap-4">
-                        <img src={t.image} alt={t.name} className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover" />
+                        <img src={testimonial.image} alt={testimonial.name} className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover" />
                         <div>
-                          <p className="font-medium text-sm sm:text-base">{t.name}</p>
-                          <p className="text-xs sm:text-sm text-muted-foreground">{t.role}</p>
+                          <p className="font-medium text-sm sm:text-base">{testimonial.name}</p>
+                          <p className="text-xs sm:text-sm text-muted-foreground">{testimonial.role}</p>
                         </div>
                       </div>
                     </div>

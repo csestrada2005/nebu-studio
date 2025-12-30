@@ -3,36 +3,33 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Rocket, Globe, ShoppingCart, MessageCircle, Mail, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const services = [
-  {
-    icon: Rocket,
-    number: "01",
-    title: "Landing Pages",
-    description:
-      "Páginas de aterrizaje diseñadas para convertir. Cada elemento está pensado para guiar al visitante hacia la acción que importa, con diseño premium y estrategia de conversión integrada.",
-  },
-  {
-    icon: Globe,
-    number: "02",
-    title: "Sitios Web",
-    description:
-      "Tu presencia digital profesional. Sitios web elegantes que transmiten confianza, cuentan tu historia y posicionan tu marca donde merece estar.",
-  },
-  {
-    icon: ShoppingCart,
-    number: "03",
-    title: "E-commerce + AI",
-    description:
-      "Tiendas online inteligentes que venden mientras duermes. Con automatizaciones que recuperan carritos abandonados, responden clientes al instante y optimizan cada venta.",
-  },
-];
-
 export const Services = () => {
   const { ref, isVisible } = useReveal();
   const { t } = useLanguage();
 
-  const whatsappUrl = "https://wa.me/34600000000?text=Hola%20Josep,%20me%20gustaría%20agendar%20una%20consultoría%20gratis";
+  const whatsappUrl = "https://wa.me/34600000000?text=Hola,%20me%20gustaría%20agendar%20una%20consultoría%20gratis";
   const emailUrl = "mailto:hola@cuatre.es?subject=Consultoría%20Gratis";
+
+  const services = [
+    {
+      icon: Rocket,
+      number: "01",
+      titleKey: "services.landing.title",
+      descKey: "services.landing.desc",
+    },
+    {
+      icon: Globe,
+      number: "02",
+      titleKey: "services.web.title",
+      descKey: "services.web.desc",
+    },
+    {
+      icon: ShoppingCart,
+      number: "03",
+      titleKey: "services.ecommerce.title",
+      descKey: "services.ecommerce.desc",
+    },
+  ];
 
   return (
     <section id="servicios" ref={ref as React.RefObject<HTMLElement>} className="py-16 sm:py-24 md:py-32">
@@ -66,10 +63,10 @@ export const Services = () => {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
             <div>
               <p className="font-display text-lg sm:text-xl md:text-2xl mb-2">
-                ¿No sabes qué necesitas?
+                {t("services.consultation.headline")}
               </p>
               <p className="text-muted-foreground text-sm sm:text-base">
-                Te digo qué te conviene en 15 minutos. Sin compromiso.
+                {t("services.consultation.subheadline")}
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3">
@@ -79,7 +76,7 @@ export const Services = () => {
               >
                 <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
                   <MessageCircle className="w-4 h-4 mr-2" />
-                  Agendar por WhatsApp
+                  WhatsApp
                 </a>
               </Button>
               <Button
@@ -89,7 +86,7 @@ export const Services = () => {
               >
                 <a href={emailUrl}>
                   <Mail className="w-4 h-4 mr-2" />
-                  Agendar por Email
+                  Email
                 </a>
               </Button>
             </div>
@@ -113,16 +110,16 @@ export const Services = () => {
 
               <span className="text-xs text-muted-foreground font-mono">{service.number}</span>
               <h3 className="font-display text-lg sm:text-xl mt-2 mb-3 group-hover:text-accent transition-colors">
-                {service.title}
+                {t(service.titleKey)}
               </h3>
               <p className="text-muted-foreground text-sm leading-relaxed mb-6">
-                {service.description}
+                {t(service.descKey)}
               </p>
 
               {/* Mini CTA */}
               <div className="pt-4 border-t border-border/50">
                 <p className="text-xs text-muted-foreground mb-3 font-medium uppercase tracking-wider">
-                  Agenda consultoría gratis
+                  {t("services.cta.label")}
                 </p>
                 <div className="flex gap-2">
                   <a
