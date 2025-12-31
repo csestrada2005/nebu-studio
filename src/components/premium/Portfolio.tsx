@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { useReveal } from "@/hooks/useAnimations";
-import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
 import useEmblaCarousel from "embla-carousel-react";
 
 // BUMBA images
@@ -245,15 +245,6 @@ export const Portfolio = () => {
                   </p>
                 )}
 
-                {/* CTA */}
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  className="gap-2 group/btn hover:bg-accent hover:text-accent-foreground hover:border-accent transition-all"
-                >
-                  Ver caso
-                  <ArrowUpRight className="w-3 h-3 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
-                </Button>
               </div>
             </article>
           ))}
