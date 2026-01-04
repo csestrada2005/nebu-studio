@@ -153,7 +153,7 @@ export const Contact = () => {
               <button
                 type="submit"
                 disabled={isSubmitting || isSuccess}
-                className="touch-target w-full h-14 bg-accent text-accent-foreground font-medium rounded-xl flex items-center justify-center gap-2 hover:bg-accent/90 transition-colors disabled:opacity-80 active:scale-[0.99] text-base"
+                className="btn-primary touch-target w-full h-14 text-base disabled:opacity-80"
               >
                 {isSuccess ? (
                   <>
