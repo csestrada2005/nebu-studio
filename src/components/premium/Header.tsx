@@ -75,7 +75,7 @@ export const Header = () => {
 
             <a
               href="#contacto"
-              className="px-5 py-2.5 bg-foreground text-background text-sm font-medium rounded-full hover:bg-foreground/90 transition-colors"
+              className="btn-primary py-2.5 px-5 text-sm rounded-full"
             >
               {t("nav.cta")}
             </a>
@@ -140,7 +140,7 @@ export const Header = () => {
           <a
             href="#contacto"
             onClick={() => setIsMobileMenuOpen(false)}
-            className="block w-full py-4 bg-foreground text-background text-center font-medium text-lg rounded-full"
+            className="btn-primary block w-full py-4 text-center text-lg rounded-full"
           >
             {t("nav.cta")}
           </a>

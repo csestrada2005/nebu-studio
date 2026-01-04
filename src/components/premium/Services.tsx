@@ -72,7 +72,7 @@ export const Services = () => {
             <div className="flex flex-col sm:flex-row gap-3">
               <Button
                 asChild
-                className="group bg-accent hover:bg-accent/90 text-accent-foreground"
+                className="btn-primary py-2.5 px-4"
               >
                 <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
                   <MessageCircle className="w-4 h-4 mr-2" />
@@ -82,7 +82,7 @@ export const Services = () => {
               <Button
                 asChild
                 variant="outline"
-                className="border-accent/30 hover:bg-accent/10 hover:border-accent/50"
+                className="btn-secondary py-2.5 px-4"
               >
                 <a href={emailUrl}>
                   <Mail className="w-4 h-4 mr-2" />

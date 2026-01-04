@@ -44,14 +44,14 @@ export const Hero = () => {
             href="https://wa.me/522213497090?text=Hi!%20I'm%20interested%20in%20your%20service%20%F0%9F%99%82%0A%C2%A1Hola!%20Me%20interesa%20tu%20servicio%0A%0APlease%20reply%20in%20%2F%20Responde%20en%3A%0A%F0%9F%87%AC%F0%9F%87%A7%20English%20%7C%20%F0%9F%87%AA%F0%9F%87%B8%20Espa%C3%B1ol"
             target="_blank"
             rel="noopener noreferrer"
-            className="touch-target inline-flex items-center justify-center gap-3 px-6 py-4 bg-accent text-accent-foreground font-medium rounded-2xl hover:bg-accent/90 transition-colors active:scale-[0.98] text-base"
+            className="btn-primary touch-target text-base"
           >
             <MessageCircle className="w-5 h-5" />
             {t("hero.cta.primary")}
           </a>
           <a
             href="#trabajo"
-            className="touch-target inline-flex items-center justify-center gap-3 px-6 py-4 border-2 border-border bg-card font-medium rounded-2xl hover:bg-muted transition-colors active:scale-[0.98] text-base group"
+            className="btn-secondary touch-target text-base group"
           >
             {t("hero.cta.secondary")}
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
