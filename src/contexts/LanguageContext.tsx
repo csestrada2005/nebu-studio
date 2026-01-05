@@ -140,13 +140,17 @@ const translations: Translations = {
     es: "Optimizado para conversión: jerarquía clara, CTA directo y flujo de compra sin fricción.",
     en: "Optimized for conversion: clear hierarchy, direct CTA and frictionless purchase flow."
   },
-  "portfolio.boutique.summary": { 
-    es: "Tienda de moda premium con catálogo de más de 500 productos. Sistema de inventario en tiempo real, wishlist integrada y pasarela de pagos multi-método con analytics avanzado.",
-    en: "Premium fashion store with 500+ product catalog. Real-time inventory system, integrated wishlist and multi-method payment gateway with advanced analytics."
+  "portfolio.clinica.summary": { 
+    es: "Web corporativa para clínica dental con sistema de reservas online integrado. Optimización SEO local que aumentó las citas un 65% en 3 meses.",
+    en: "Corporate website for dental clinic with integrated online booking system. Local SEO optimization that increased appointments by 65% in 3 months."
   },
-  "portfolio.techflow.summary": { 
-    es: "Plataforma SaaS de gestión empresarial con dashboard interactivo, reportes automatizados y API REST para integraciones. Sistema de autenticación seguro con roles y permisos granulares.",
-    en: "Enterprise management SaaS platform with interactive dashboard, automated reports and REST API for integrations. Secure authentication system with granular roles and permissions."
+  "portfolio.finance.summary": { 
+    es: "Dashboard financiero para gestión de inversiones con gráficos en tiempo real, alertas personalizadas y exportación automática de reportes fiscales.",
+    en: "Financial dashboard for investment management with real-time charts, custom alerts and automatic tax report exports."
+  },
+  "portfolio.gastro.summary": { 
+    es: "Plataforma completa para restaurante: web con pedidos online, gestión de reservas, programa de puntos y sistema de delivery propio.",
+    en: "Complete restaurant platform: website with online orders, reservation management, loyalty program and own delivery system."
   },
 };
 

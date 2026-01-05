@@ -11,9 +11,10 @@ import bumba2 from "@/assets/bumba-2.png";
 import bumba3 from "@/assets/bumba-3.png";
 import bumba4 from "@/assets/bumba-4.png";
 
-// Placeholder images
+// Portfolio images
 import portfolio1 from "@/assets/portfolio-1.jpg";
 import portfolio2 from "@/assets/portfolio-2.jpg";
+import portfolio3 from "@/assets/portfolio-3.jpg";
 
 interface Project {
   id: number;
@@ -45,19 +46,27 @@ const projects: Project[] = [
   },
   {
     id: 2,
-    title: "Boutique Elegance",
-    type: "E-commerce",
-    summaryKey: "portfolio.boutique.summary",
-    highlightsKeys: ["Pasarela de pagos", "Inventario en tiempo real", "Wishlist integrada", "Analytics avanzado"],
+    title: "Clínica Dental Sonrisa",
+    type: "Sitio corporativo",
+    summaryKey: "portfolio.clinica.summary",
+    highlightsKeys: ["Sistema de citas online", "SEO local optimizado", "Chat en vivo", "Galería de casos"],
     images: [portfolio1],
   },
   {
     id: 3,
-    title: "TechFlow SaaS",
-    type: "Plataforma web",
-    summaryKey: "portfolio.techflow.summary",
-    highlightsKeys: ["Dashboard interactivo", "API REST", "Autenticación segura", "Reportes automatizados"],
+    title: "FinanceHub Pro",
+    type: "Dashboard SaaS",
+    summaryKey: "portfolio.finance.summary",
+    highlightsKeys: ["Gráficos en tiempo real", "Exportación de reportes", "Multi-usuario", "Integraciones bancarias"],
     images: [portfolio2],
+  },
+  {
+    id: 4,
+    title: "GastroMaster",
+    type: "E-commerce + App",
+    summaryKey: "portfolio.gastro.summary",
+    highlightsKeys: ["Pedidos online", "Gestión de mesas", "Programa de fidelidad", "Delivery integrado"],
+    images: [portfolio3],
   },
 ];
 
