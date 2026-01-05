@@ -3,6 +3,7 @@ import { useReveal } from "@/hooks/useAnimations";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Send, Check, MessageCircle, Mail, MapPin, Clock, Copy } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Contact = () => {
   const { ref, isVisible } = useReveal();
@@ -21,12 +22,44 @@ export const Contact = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-    await new Promise((r) => setTimeout(r, 1500));
-    setIsSubmitting(false);
-    setIsSuccess(true);
-    toast({ title: t("contact.form.success"), description: t("contact.form.response") });
-    setTimeout(() => setIsSuccess(false), 3000);
-    (e.target as HTMLFormElement).reset();
+    
+    const formData = new FormData(e.currentTarget);
+    const name = (formData.get("name") as string)?.trim();
+    const email = (formData.get("email") as string)?.trim();
+    const message = (formData.get("message") as string)?.trim();
+
+    // Basic validation
+    if (!name || !email || !message) {
+      toast({ 
+        title: "Error", 
+        description: "Por favor completa todos los campos",
+        variant: "destructive"
+      });
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase.functions.invoke("send-contact-email", {
+        body: { name, email, message }
+      });
+
+      if (error) throw error;
+
+      setIsSuccess(true);
+      toast({ title: t("contact.form.success"), description: t("contact.form.response") });
+      setTimeout(() => setIsSuccess(false), 3000);
+      (e.target as HTMLFormElement).reset();
+    } catch (error: any) {
+      console.error("Error sending email:", error);
+      toast({ 
+        title: "Error", 
+        description: "No se pudo enviar el mensaje. Intenta de nuevo.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
