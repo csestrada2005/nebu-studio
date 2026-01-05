@@ -5,96 +5,85 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import useEmblaCarousel from "embla-carousel-react";
 
-// BUMBA images
-import bumba1 from "@/assets/bumba-1.png";
-import bumba2 from "@/assets/bumba-2.png";
-import bumba3 from "@/assets/bumba-3.png";
-import bumba4 from "@/assets/bumba-4.png";
+// Landing Page images
+import landing1 from "@/assets/example-landing-1.jpg";
+import landing2 from "@/assets/example-landing-2.jpg";
+import landing3 from "@/assets/example-landing-3.jpg";
 
-// Portfolio images - Dental
-import portfolio1 from "@/assets/portfolio-1.jpg";
-import portfolioDental2 from "@/assets/portfolio-dental-2.jpg";
-import portfolioDental3 from "@/assets/portfolio-dental-3.jpg";
+// Website images
+import web1 from "@/assets/example-web-1.jpg";
+import web2 from "@/assets/example-web-2.jpg";
+import web3 from "@/assets/example-web-3.jpg";
 
-// Portfolio images - Finance
-import portfolio2 from "@/assets/portfolio-2.jpg";
-import portfolioFinance2 from "@/assets/portfolio-finance-2.jpg";
-import portfolioFinance3 from "@/assets/portfolio-finance-3.jpg";
+// E-commerce images
+import ecommerce1 from "@/assets/example-ecommerce-1.jpg";
+import ecommerce2 from "@/assets/example-ecommerce-2.jpg";
+import ecommerce3 from "@/assets/example-ecommerce-3.jpg";
 
-// Portfolio images - Gastro
-import portfolio3 from "@/assets/portfolio-3.jpg";
-import portfolioGastro2 from "@/assets/portfolio-gastro-2.jpg";
-import portfolioGastro3 from "@/assets/portfolio-gastro-3.jpg";
-
-interface Project {
+interface Example {
   id: number;
   title: string;
-  type: string;
-  summaryKey: string;
-  highlightsKeys: string[];
-  metrics: { value: string; label: string }[];
+  category: string;
+  description: string;
+  features: string[];
+  benefits: { value: string; label: string }[];
   images: string[];
 }
 
-const projects: Project[] = [
+const examples: Example[] = [
   {
     id: 1,
-    title: "BUMBA",
-    type: "E-commerce",
-    summaryKey: "portfolio.bumba.summary",
-    highlightsKeys: [
-      "Shopify Checkout",
-      "Carrito persistente",
-      "Multi-moneda",
-      "Chatbot soporte",
-      "Animaciones premium",
-      "Mobile-first"
+    title: "Landing Page",
+    category: "Captación",
+    description: "Páginas de aterrizaje diseñadas para convertir visitantes en clientes. Perfectas para campañas de marketing, lanzamientos de productos o servicios específicos.",
+    features: [
+      "Diseño enfocado en conversión",
+      "Formularios optimizados",
+      "Llamadas a la acción claras",
+      "Carga ultra-rápida"
     ],
-    metrics: [
-      { value: "+127%", label: "Conversión" },
-      { value: "2.1s", label: "Carga inicial" },
-      { value: "4.8★", label: "Satisfacción" },
+    benefits: [
+      { value: "Alta", label: "Conversión" },
+      { value: "<2s", label: "Velocidad" },
+      { value: "100%", label: "Responsive" },
     ],
-    images: [bumba1, bumba2, bumba3, bumba4],
+    images: [landing1, landing2, landing3],
   },
   {
     id: 2,
-    title: "Clínica Dental Sonrisa",
-    type: "Sitio corporativo",
-    summaryKey: "portfolio.clinica.summary",
-    highlightsKeys: ["Sistema de citas online", "SEO local optimizado", "Chat en vivo", "Galería de casos"],
-    metrics: [
-      { value: "+65%", label: "Citas online" },
-      { value: "Top 3", label: "SEO local" },
-      { value: "-40%", label: "Llamadas" },
+    title: "Sitio Web",
+    category: "Presencia digital",
+    description: "Sitios web corporativos completos que representan tu marca profesionalmente. Incluyen múltiples páginas, blog y formularios de contacto.",
+    features: [
+      "Diseño profesional",
+      "SEO optimizado",
+      "Gestión de contenido",
+      "Integración de redes"
     ],
-    images: [portfolio1, portfolioDental2, portfolioDental3],
+    benefits: [
+      { value: "SEO", label: "Optimizado" },
+      { value: "Multi", label: "Páginas" },
+      { value: "Blog", label: "Integrado" },
+    ],
+    images: [web1, web2, web3],
   },
   {
     id: 3,
-    title: "FinanceHub Pro",
-    type: "Dashboard SaaS",
-    summaryKey: "portfolio.finance.summary",
-    highlightsKeys: ["Gráficos en tiempo real", "Exportación de reportes", "Multi-usuario", "Integraciones bancarias"],
-    metrics: [
-      { value: "<0.8s", label: "Tiempo carga" },
-      { value: "99.9%", label: "Uptime" },
-      { value: "+320", label: "Usuarios activos" },
+    title: "E-commerce",
+    category: "Tienda online",
+    description: "Tiendas online completas con carrito de compras, pasarela de pagos y gestión de inventario. Todo lo que necesitas para vender online.",
+    features: [
+      "Carrito de compras",
+      "Pagos seguros",
+      "Gestión de productos",
+      "Panel de administración"
     ],
-    images: [portfolio2, portfolioFinance2, portfolioFinance3],
-  },
-  {
-    id: 4,
-    title: "GastroMaster",
-    type: "E-commerce + App",
-    summaryKey: "portfolio.gastro.summary",
-    highlightsKeys: ["Pedidos online", "Gestión de mesas", "Programa de fidelidad", "Delivery integrado"],
-    metrics: [
-      { value: "+48%", label: "Pedidos online" },
-      { value: "12min", label: "Tiempo medio" },
-      { value: "89%", label: "Clientes recurrentes" },
+    benefits: [
+      { value: "Pagos", label: "Integrados" },
+      { value: "Stock", label: "Automático" },
+      { value: "24/7", label: "Ventas" },
     ],
-    images: [portfolio3, portfolioGastro2, portfolioGastro3],
+    images: [ecommerce1, ecommerce2, ecommerce3],
   },
 ];
 
@@ -205,21 +194,21 @@ export const Portfolio = () => {
         {/* Header */}
         <div className="max-w-2xl mb-10 sm:mb-16">
           <p className={`text-accent font-medium mb-3 text-sm tracking-wide uppercase transition-all duration-600 ${isVisible ? "opacity-100" : "opacity-0"}`}>
-            {t("portfolio.title")}
+            Lo que podemos crear
           </p>
           <h2 className={`font-display text-3xl sm:text-4xl md:text-5xl mb-4 transition-all duration-600 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
-            {t("portfolio.headline")}
+            Soluciones para cada necesidad
           </h2>
           <p className={`text-muted-foreground text-base sm:text-lg transition-all duration-600 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
-            {t("portfolio.subtitle")}
+            Desde páginas de captación hasta tiendas online completas, creamos la solución perfecta para tu negocio.
           </p>
         </div>
 
-        {/* Projects Grid - 3 per row */}
+        {/* Examples Grid - 3 columns */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {projects.map((project, index) => (
+          {examples.map((example, index) => (
             <article
-              key={project.id}
+              key={example.id}
               className={`bg-card rounded-2xl border border-border overflow-hidden shadow-sm hover:shadow-lg transition-all duration-500 ${
                 isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
               }`}
@@ -227,7 +216,7 @@ export const Portfolio = () => {
             >
               {/* Image / Carousel */}
               <div className="p-3 sm:p-4">
-                <ProjectCarousel images={project.images} title={project.title} t={t} />
+                <ProjectCarousel images={example.images} title={example.title} t={t} />
               </div>
 
               {/* Content */}
@@ -235,38 +224,33 @@ export const Portfolio = () => {
                 {/* Badge + Title */}
                 <div className="flex flex-wrap items-center gap-2 mb-2">
                   <span className="text-xs font-medium text-accent uppercase tracking-wider px-2 py-0.5 bg-accent/10 rounded-full">
-                    {project.type}
+                    {example.category}
                   </span>
                 </div>
                 
                 <h3 className="font-display text-xl sm:text-2xl mb-2">
-                  {project.title}
+                  {example.title}
                 </h3>
                 
                 <p className="text-muted-foreground text-sm mb-4 leading-relaxed line-clamp-3">
-                  {t(project.summaryKey)}
+                  {example.description}
                 </p>
 
-                {/* Highlights chips */}
+                {/* Features chips */}
                 <div className="flex flex-wrap gap-1.5 mb-4">
-                  {project.highlightsKeys.slice(0, 4).map((highlight, i) => (
+                  {example.features.map((feature, i) => (
                     <span
                       key={i}
                       className="text-xs px-2 py-1 rounded-full bg-muted text-foreground/80 font-medium"
                     >
-                      {highlight}
+                      {feature}
                     </span>
                   ))}
-                  {project.highlightsKeys.length > 4 && (
-                    <span className="text-xs px-2 py-1 rounded-full bg-muted text-muted-foreground">
-                      +{project.highlightsKeys.length - 4}
-                    </span>
-                  )}
                 </div>
 
-                {/* Metrics block with staggered animations */}
+                {/* Benefits block with staggered animations */}
                 <div className="grid grid-cols-3 gap-2 pt-3 border-t border-border">
-                  {project.metrics.map((metric, i) => (
+                  {example.benefits.map((benefit, i) => (
                     <div 
                       key={i} 
                       className={`text-center transition-all duration-500 ${
@@ -276,8 +260,8 @@ export const Portfolio = () => {
                       }`}
                       style={{ transitionDelay: `${(index * 150) + (i * 100) + 400}ms` }}
                     >
-                      <p className="text-sm sm:text-base font-bold text-accent">{metric.value}</p>
-                      <p className="text-[10px] sm:text-xs text-muted-foreground">{metric.label}</p>
+                      <p className="text-sm sm:text-base font-bold text-accent">{benefit.value}</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground">{benefit.label}</p>
                     </div>
                   ))}
                 </div>
@@ -287,10 +271,10 @@ export const Portfolio = () => {
           ))}
         </div>
 
-        {/* Privacy notice */}
+        {/* CTA */}
         <div className={`mt-10 sm:mt-14 text-center transition-all duration-600 delay-500 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
-          <p className="text-sm text-muted-foreground/70 italic max-w-2xl mx-auto">
-            🔒 Por motivos de confidencialidad y acuerdos de privacidad con las marcas, el acceso directo a los proyectos no está disponible públicamente.
+          <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
+            ¿Tienes un proyecto en mente? <span className="text-accent font-medium">Cuéntanos tu idea</span> y encontraremos la mejor solución para ti.
           </p>
         </div>
       </div>
