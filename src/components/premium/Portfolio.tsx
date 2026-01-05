@@ -11,10 +11,20 @@ import bumba2 from "@/assets/bumba-2.png";
 import bumba3 from "@/assets/bumba-3.png";
 import bumba4 from "@/assets/bumba-4.png";
 
-// Portfolio images
+// Portfolio images - Dental
 import portfolio1 from "@/assets/portfolio-1.jpg";
+import portfolioDental2 from "@/assets/portfolio-dental-2.jpg";
+import portfolioDental3 from "@/assets/portfolio-dental-3.jpg";
+
+// Portfolio images - Finance
 import portfolio2 from "@/assets/portfolio-2.jpg";
+import portfolioFinance2 from "@/assets/portfolio-finance-2.jpg";
+import portfolioFinance3 from "@/assets/portfolio-finance-3.jpg";
+
+// Portfolio images - Gastro
 import portfolio3 from "@/assets/portfolio-3.jpg";
+import portfolioGastro2 from "@/assets/portfolio-gastro-2.jpg";
+import portfolioGastro3 from "@/assets/portfolio-gastro-3.jpg";
 
 interface Project {
   id: number;
@@ -22,9 +32,8 @@ interface Project {
   type: string;
   summaryKey: string;
   highlightsKeys: string[];
-  resultsKey?: string;
+  metrics: { value: string; label: string }[];
   images: string[];
-  isPlaceholder?: boolean;
 }
 
 const projects: Project[] = [
@@ -41,7 +50,11 @@ const projects: Project[] = [
       "Animaciones premium",
       "Mobile-first"
     ],
-    resultsKey: "portfolio.bumba.results",
+    metrics: [
+      { value: "+127%", label: "Conversión" },
+      { value: "2.1s", label: "Carga inicial" },
+      { value: "4.8★", label: "Satisfacción" },
+    ],
     images: [bumba1, bumba2, bumba3, bumba4],
   },
   {
@@ -50,7 +63,12 @@ const projects: Project[] = [
     type: "Sitio corporativo",
     summaryKey: "portfolio.clinica.summary",
     highlightsKeys: ["Sistema de citas online", "SEO local optimizado", "Chat en vivo", "Galería de casos"],
-    images: [portfolio1],
+    metrics: [
+      { value: "+65%", label: "Citas online" },
+      { value: "Top 3", label: "SEO local" },
+      { value: "-40%", label: "Llamadas" },
+    ],
+    images: [portfolio1, portfolioDental2, portfolioDental3],
   },
   {
     id: 3,
@@ -58,7 +76,12 @@ const projects: Project[] = [
     type: "Dashboard SaaS",
     summaryKey: "portfolio.finance.summary",
     highlightsKeys: ["Gráficos en tiempo real", "Exportación de reportes", "Multi-usuario", "Integraciones bancarias"],
-    images: [portfolio2],
+    metrics: [
+      { value: "<0.8s", label: "Tiempo carga" },
+      { value: "99.9%", label: "Uptime" },
+      { value: "+320", label: "Usuarios activos" },
+    ],
+    images: [portfolio2, portfolioFinance2, portfolioFinance3],
   },
   {
     id: 4,
@@ -66,7 +89,12 @@ const projects: Project[] = [
     type: "E-commerce + App",
     summaryKey: "portfolio.gastro.summary",
     highlightsKeys: ["Pedidos online", "Gestión de mesas", "Programa de fidelidad", "Delivery integrado"],
-    images: [portfolio3],
+    metrics: [
+      { value: "+48%", label: "Pedidos online" },
+      { value: "12min", label: "Tiempo medio" },
+      { value: "89%", label: "Clientes recurrentes" },
+    ],
+    images: [portfolio3, portfolioGastro2, portfolioGastro3],
   },
 ];
 
@@ -236,12 +264,15 @@ export const Portfolio = () => {
                   )}
                 </div>
 
-                {/* Results block (only for BUMBA) */}
-                {project.resultsKey && (
-                  <p className="text-xs text-foreground/70 italic mb-4 border-l-2 border-accent/30 pl-3 line-clamp-2">
-                    {t(project.resultsKey)}
-                  </p>
-                )}
+                {/* Metrics block */}
+                <div className="grid grid-cols-3 gap-2 pt-3 border-t border-border">
+                  {project.metrics.map((metric, i) => (
+                    <div key={i} className="text-center">
+                      <p className="text-sm sm:text-base font-bold text-accent">{metric.value}</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground">{metric.label}</p>
+                    </div>
+                  ))}
+                </div>
 
               </div>
             </article>
