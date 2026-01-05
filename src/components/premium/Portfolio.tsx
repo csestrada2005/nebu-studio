@@ -264,10 +264,18 @@ export const Portfolio = () => {
                   )}
                 </div>
 
-                {/* Metrics block */}
+                {/* Metrics block with staggered animations */}
                 <div className="grid grid-cols-3 gap-2 pt-3 border-t border-border">
                   {project.metrics.map((metric, i) => (
-                    <div key={i} className="text-center">
+                    <div 
+                      key={i} 
+                      className={`text-center transition-all duration-500 ${
+                        isVisible 
+                          ? "opacity-100 translate-y-0 scale-100" 
+                          : "opacity-0 translate-y-4 scale-95"
+                      }`}
+                      style={{ transitionDelay: `${(index * 150) + (i * 100) + 400}ms` }}
+                    >
                       <p className="text-sm sm:text-base font-bold text-accent">{metric.value}</p>
                       <p className="text-[10px] sm:text-xs text-muted-foreground">{metric.label}</p>
                     </div>
