@@ -66,13 +66,18 @@ export const Contact = () => {
     <section id="contacto" ref={ref as React.RefObject<HTMLElement>} className="py-16 sm:py-24 md:py-32">
       <div className="container px-5 sm:px-6">
         {/* Scarcity line */}
-        <p
-          className={`text-center text-sm text-muted-foreground mb-10 sm:mb-14 transition-all duration-600 ${
-            isVisible ? "opacity-100" : "opacity-0"
+        <div
+          className={`flex justify-center mb-10 sm:mb-14 transition-all duration-600 ${
+            isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
           }`}
         >
-          {t("scarcity.text")}
-        </p>
+          <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-accent/10 border border-accent/20">
+            <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+            <p className="text-sm sm:text-base font-medium text-accent">
+              {t("scarcity.text")}
+            </p>
+          </div>
+        </div>
 
         <div className="grid gap-8 sm:gap-12 md:grid-cols-2 md:gap-20">
           {/* Left */}
