@@ -1,18 +1,31 @@
 import { useReveal } from "@/hooks/useAnimations";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { Target, Eye, Zap } from "lucide-react";
 
-const clients = ["TechFlow", "Moda Luxe", "Wellness Spa", "StartupX", "Brand Co", "Fintech App"];
-
-const timeline = [
-  { year: "2021", key: "about.timeline.2021" },
-  { year: "2022", key: "about.timeline.2022" },
-  { year: "2023", key: "about.timeline.2023" },
-  { year: "2024", key: "about.timeline.2024" },
+const values = [
+  { icon: Target, key: "focused" },
+  { icon: Eye, key: "detail" },
+  { icon: Zap, key: "fast" },
 ];
 
 export const About = () => {
   const { ref, isVisible } = useReveal();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+
+  const valueLabels = {
+    focused: {
+      es: { title: "Enfocados", desc: "Cada decisión tiene un propósito claro" },
+      en: { title: "Focused", desc: "Every decision has a clear purpose" },
+    },
+    detail: {
+      es: { title: "Obsesivos", desc: "Los detalles hacen la diferencia" },
+      en: { title: "Obsessive", desc: "Details make the difference" },
+    },
+    fast: {
+      es: { title: "Directos", desc: "Comunicación clara, entregas rápidas" },
+      en: { title: "Direct", desc: "Clear communication, fast delivery" },
+    },
+  };
 
   return (
     <section id="sobre-mi" ref={ref as React.RefObject<HTMLElement>} className="py-24 md:py-32 bg-muted/30">
@@ -31,28 +44,28 @@ export const About = () => {
             <p>{t("about.bio2")}</p>
           </div>
 
-          {/* Timeline */}
+          {/* Values */}
           <div className={`mb-10 transition-all duration-600 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
             <div className="flex flex-wrap justify-center gap-4">
-              {timeline.map((item) => (
-                <div key={item.year} className="flex-1 min-w-[140px] max-w-[180px] p-4 bg-card rounded-xl border border-border hover:border-primary/30 transition-colors">
-                  <p className="text-primary font-display text-lg font-semibold">{item.year}</p>
-                  <p className="text-sm text-muted-foreground">{t(item.key)}</p>
+              {values.map((item) => (
+                <div key={item.key} className="flex-1 min-w-[140px] max-w-[180px] p-4 bg-card rounded-xl border border-border hover:border-primary/30 transition-colors">
+                  <item.icon className="w-5 h-5 text-primary mx-auto mb-2" />
+                  <p className="text-primary font-display text-lg font-semibold">
+                    {valueLabels[item.key as keyof typeof valueLabels][language].title}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {valueLabels[item.key as keyof typeof valueLabels][language].desc}
+                  </p>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Clients */}
+          {/* Clients line */}
           <div className={`transition-all duration-600 delay-400 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
-            <p className="text-sm text-muted-foreground mb-4">{t("about.clients")}</p>
-            <div className="flex flex-wrap justify-center gap-3">
-              {clients.map((client) => (
-                <span key={client} className="px-4 py-2 text-sm border border-border rounded-full text-foreground/70 hover:border-primary/40 hover:text-foreground transition-colors">
-                  {client}
-                </span>
-              ))}
-            </div>
+            <p className="text-sm text-muted-foreground">
+              {t("about.clients")}
+            </p>
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useReveal } from "@/hooks/useAnimations";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { ChevronLeft, ChevronRight, MessageCircle } from "lucide-react";
 import testimonial1 from "@/assets/testimonial-1.jpg";
 import testimonial2 from "@/assets/testimonial-2.jpg";
 import testimonial3 from "@/assets/testimonial-3.jpg";
@@ -16,33 +16,33 @@ export const Testimonials = () => {
   const testimonials = [
     {
       id: 1,
-      text: language === "es"
-        ? "Nuestra conversión subió un 200% en el primer mes. Entendieron exactamente lo que necesitábamos y lo entregaron antes del plazo. Totalmente recomendables."
-        : "Our conversion went up 200% in the first month. They understood exactly what we needed and delivered ahead of schedule. Totally recommended.",
-      name: "María García",
-      role: "CEO, TechFlow",
+      intro: language === "es" 
+        ? "Sophie tiene una cafetería en Creek Harbour, Dubai — este fue su mensaje:"
+        : "Sophie has a coffee shop in Creek Harbour, Dubai — this was her message:",
+      text: "Bro, quedó increíble. Se siente premium y ahora la gente entiende rápido qué hacemos. Gracias 🙏",
+      name: "Sophie Al-Rashid",
+      role: language === "es" ? "Cafetería • Creek Harbour, Dubai" : "Coffee Shop • Creek Harbour, Dubai",
       image: testimonial1,
-      rating: 5,
     },
     {
       id: 2,
+      intro: null,
       text: language === "es"
-        ? "Profesionalidad total. La web refleja perfectamente nuestra esencia y las reservas no paran de llegar. La inversión se recuperó en menos de dos meses."
-        : "Total professionalism. The website perfectly reflects our essence and bookings keep coming. The investment was recovered in less than two months.",
-      name: "Carlos Rodríguez",
-      role: "Director, Wellness Spa",
+        ? "Super profesionales. La web se ve seria y ya nos escriben más por WhatsApp. Exactly what I needed 👌"
+        : "Super professional. The website looks serious and we get more WhatsApp messages now. Exactly what I needed 👌",
+      name: "Khalid Mansour",
+      role: language === "es" ? "Barbería • Business Bay, Dubai" : "Barbershop • Business Bay, Dubai",
       image: testimonial2,
-      rating: 5,
     },
     {
       id: 3,
+      intro: null,
       text: language === "es"
-        ? "Mi tienda online por fin vende como debería. La experiencia de compra es increíble y las automatizaciones me ahorran horas cada semana."
-        : "My online store finally sells as it should. The shopping experience is amazing and the automations save me hours every week.",
-      name: "Ana Martínez",
-      role: "Fundadora, Moda Luxe",
+        ? "Antes nadie entendía qué hacíamos. Ahora el sitio lo explica solo y es más fácil cotizar. Muy atentos a los detalles."
+        : "Before, nobody understood what we did. Now the site explains itself and it's easier to quote. Very detail-oriented.",
+      name: "Andrea Velázquez",
+      role: language === "es" ? "Agencia de eventos • CDMX, México" : "Event Agency • CDMX, Mexico",
       image: testimonial3,
-      rating: 5,
     },
   ];
 
@@ -64,7 +64,7 @@ export const Testimonials = () => {
           <p className={`text-accent font-medium mb-3 sm:mb-4 text-center text-sm sm:text-base transition-all duration-600 ${isVisible ? "opacity-100" : "opacity-0"}`}>
             {t("testimonials.title")}
           </p>
-          <h2 className={`font-display text-2xl sm:text-3xl md:text-4xl text-center mb-8 sm:mb-12 transition-all duration-600 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+          <h2 className={`font-display text-xl sm:text-2xl md:text-3xl text-center mb-8 sm:mb-12 text-muted-foreground transition-all duration-600 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
             {t("testimonials.headline")}
           </h2>
 
@@ -80,12 +80,18 @@ export const Testimonials = () => {
                 {testimonials.map((testimonial) => (
                   <div key={testimonial.id} className="w-full flex-shrink-0 px-2">
                     <div className="bg-card rounded-2xl border border-border p-6 sm:p-8 md:p-10">
-                      {/* Stars */}
-                      <div className="flex gap-1 mb-5 sm:mb-6">
-                        {[...Array(testimonial.rating)].map((_, i) => (
-                          <Star key={i} className="w-4 h-4 sm:w-5 sm:h-5 fill-accent text-accent" />
-                        ))}
+                      {/* WhatsApp style indicator */}
+                      <div className="flex items-center gap-2 mb-5 sm:mb-6 text-[#25D366]">
+                        <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+                        <span className="text-xs sm:text-sm font-medium">WhatsApp</span>
                       </div>
+
+                      {/* Intro line if exists */}
+                      {testimonial.intro && (
+                        <p className="text-sm text-muted-foreground mb-4 italic">
+                          {testimonial.intro}
+                        </p>
+                      )}
 
                       <blockquote className="font-display text-lg sm:text-xl md:text-2xl leading-relaxed mb-6 sm:mb-8">
                         "{testimonial.text}"
