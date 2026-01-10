@@ -1,10 +1,16 @@
 import { useReveal } from "@/hooks/useAnimations";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, Check } from "lucide-react";
 
 export const Hero = () => {
   const { ref, isVisible } = useReveal(0.1);
   const { t } = useLanguage();
+
+  const trustPoints = [
+    t("trust.point1"),
+    t("trust.point2"),
+    t("trust.point3"),
+  ];
 
   return (
     <section ref={ref as React.RefObject<HTMLElement>} className="min-h-[100dvh] flex items-center pt-24 pb-16 px-1">
@@ -59,19 +65,16 @@ export const Hero = () => {
           {t("hero.microcopy")}
         </p>
 
+        {/* Trust Points */}
         <div
-          className={`grid grid-cols-3 gap-4 sm:flex sm:flex-wrap sm:justify-center sm:gap-12 pt-6 sm:pt-8 border-t border-border mx-4 sm:mx-0 transition-all duration-700 delay-400 ${
+          className={`flex flex-col sm:flex-row sm:flex-wrap justify-center gap-3 sm:gap-6 pt-6 sm:pt-8 border-t border-border mx-4 sm:mx-0 transition-all duration-700 delay-400 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
           }`}
         >
-          {[
-            { value: "50+", label: t("stats.projects") },
-            { value: "40+", label: t("stats.clients") },
-            { value: "+180%", label: t("stats.conversion") },
-          ].map((stat) => (
-            <div key={stat.label} className="text-center sm:text-left">
-              <p className="font-display text-2xl sm:text-3xl font-semibold">{stat.value}</p>
-              <p className="text-xs sm:text-sm text-muted-foreground">{stat.label}</p>
+          {trustPoints.map((point, index) => (
+            <div key={index} className="flex items-center gap-2 text-sm sm:text-base text-muted-foreground">
+              <Check className="w-4 h-4 text-accent flex-shrink-0" />
+              <span>{point}</span>
             </div>
           ))}
         </div>
@@ -81,7 +84,7 @@ export const Hero = () => {
             isVisible ? "opacity-100" : "opacity-0"
           }`}
         >
-          {t("stats.disclaimer")}
+          {t("trust.disclaimer")}
         </p>
       </div>
     </section>
