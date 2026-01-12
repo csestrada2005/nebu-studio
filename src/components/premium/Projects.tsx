@@ -1,12 +1,12 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useReveal } from "@/hooks/useAnimations";
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext, type CarouselApi } from "@/components/ui/carousel";
 
-// Project images - using existing assets
+// Project images
 import portfolio1 from "@/assets/portfolio-1.jpg";
 import portfolio2 from "@/assets/portfolio-2.jpg";
-import portfolio3 from "@/assets/portfolio-3.jpg";
+import projectBumba from "@/assets/project-bumba-1.png";
 
 interface Project {
   id: string;
@@ -45,7 +45,7 @@ const projects: Project[] = [
       en: "Premium store for supplement mints: packs, multi-currency, reviews, animations and integrated checkout."
     },
     tags: ["Shopify", "Multi-Currency", "CRO", "Premium UI"],
-    image: portfolio3
+    image: projectBumba
   }
 ];
 
