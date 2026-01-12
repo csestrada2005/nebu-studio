@@ -105,6 +105,14 @@ const translations: Translations = {
   "contact.copy": { es: "Copiar", en: "Copy" },
   "contact.copied": { es: "Copiado", en: "Copied" },
 
+  // Projects
+  "projects.badge": { es: "Portfolio", en: "Portfolio" },
+  "projects.title": { es: "Proyectos seleccionados", en: "Selected Projects" },
+  "projects.subtitle": { es: "Algunos productos que hemos diseñado y construido end-to-end.", en: "Some products we've designed and built end-to-end." },
+  "projects.swipe": { es: "Desliza para ver más →", en: "Swipe to see more →" },
+  "projects.viewDetails": { es: "Ver detalle", en: "View details" },
+  "projects.features": { es: "Características", en: "Features" },
+
   // Scarcity
   "scarcity.text": { es: "Tomamos pocos proyectos al mes para mantener calidad.", en: "We take few projects per month to maintain quality." },
 
