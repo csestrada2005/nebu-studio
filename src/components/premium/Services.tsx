@@ -1,34 +1,23 @@
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Rocket, Palette, ShoppingBag, Smartphone } from "lucide-react";
 
 const services = [
   {
-    icon: Rocket,
     titleEs: "Landing Pages",
     titleEn: "Landing Pages",
-    descEs: "Páginas que convierten visitantes en clientes",
-    descEn: "Pages that convert visitors into customers",
+    descEs: "Páginas enfocadas en una acción. Ideales para campañas, lanzamientos y captación de leads.",
+    descEn: "Pages focused on one action. Perfect for campaigns, launches and lead capture.",
   },
   {
-    icon: Palette,
     titleEs: "Sitios Corporativos",
     titleEn: "Corporate Sites",
-    descEs: "Presencia profesional que genera confianza",
-    descEn: "Professional presence that builds trust",
+    descEs: "Presencia digital profesional que genera confianza y posiciona tu marca en el mercado.",
+    descEn: "Professional digital presence that builds trust and positions your brand in the market.",
   },
   {
-    icon: ShoppingBag,
     titleEs: "E-commerce",
     titleEn: "E-commerce",
-    descEs: "Tiendas online optimizadas para vender",
-    descEn: "Online stores optimized to sell",
-  },
-  {
-    icon: Smartphone,
-    titleEs: "Menús QR",
-    titleEn: "QR Menus",
-    descEs: "Menús digitales para restaurantes",
-    descEn: "Digital menus for restaurants",
+    descEs: "Tiendas online optimizadas para vender. Experiencia de compra fluida y segura.",
+    descEn: "Online stores optimized to sell. Smooth and secure shopping experience.",
   },
 ];
 
@@ -36,32 +25,42 @@ export const Services = () => {
   const { language } = useLanguage();
 
   return (
-    <section className="py-12 px-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Section header */}
-        <div className="text-center mb-10">
-          <p className="text-accent font-medium text-xs tracking-widest uppercase mb-2">
-            {language === "es" ? "Servicios" : "Services"}
-          </p>
-          <h2 className="font-display text-xl sm:text-2xl">
-            {language === "es" ? "Lo que hacemos" : "What we do"}
+    <section className="py-20 sm:py-28 px-4">
+      <div className="max-w-5xl mx-auto">
+        {/* Section header - editorial style */}
+        <div className="grid md:grid-cols-2 gap-6 md:gap-12 mb-16 sm:mb-20">
+          <h2 className="font-display text-[clamp(2rem,6vw,3.5rem)] leading-[1.05]">
+            {language === "es" ? (
+              <>
+                Diseñado para<br />
+                Ayudarte a Hacer<br />
+                Más <span className="italic font-normal text-muted-foreground">Con Menos</span>
+              </>
+            ) : (
+              <>
+                Designed to<br />
+                Help You Do<br />
+                More <span className="italic font-normal text-muted-foreground">With Less</span>
+              </>
+            )}
           </h2>
+          <div className="flex items-end">
+            <p className="text-muted-foreground text-sm sm:text-base leading-relaxed max-w-md">
+              {language === "es" 
+                ? "Nuestro enfoque está construido para negocios modernos que quieren estar organizados, enfocados y en control de su presencia digital."
+                : "Our approach is built for modern businesses who want to stay organized, focused, and in control of their digital presence."}
+            </p>
+          </div>
         </div>
 
-        {/* Services grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        {/* Services grid - clean cards */}
+        <div className="grid sm:grid-cols-3 gap-6 sm:gap-8">
           {services.map((service) => (
-            <div
-              key={service.titleEn}
-              className="glass-card p-4 sm:p-5 text-center group hover:border-accent/30 transition-colors"
-            >
-              <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-3 rounded-xl bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
-                <service.icon className="w-5 h-5 sm:w-6 sm:h-6 text-accent" />
-              </div>
-              <h3 className="font-display text-sm sm:text-base mb-1">
+            <div key={service.titleEn} className="group">
+              <h3 className="font-display text-base sm:text-lg mb-3 group-hover:text-accent transition-colors">
                 {language === "es" ? service.titleEs : service.titleEn}
               </h3>
-              <p className="text-[11px] sm:text-xs text-muted-foreground leading-relaxed">
+              <p className="text-sm text-muted-foreground leading-relaxed">
                 {language === "es" ? service.descEs : service.descEn}
               </p>
             </div>
