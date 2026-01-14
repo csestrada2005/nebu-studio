@@ -72,7 +72,7 @@ const AboutContent = () => {
         {/* CTA */}
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <a 
-            href="https://wa.me/522213497090"
+            href="https://wa.me/522213497090?text=Hi!%20I'm%20interested%20in%20your%20service%20%F0%9F%99%82%0A%C2%A1Hola!%20Me%20interesa%20tu%20servicio%0A%0APlease%20reply%20in%20%2F%20Responde%20en%3A%0A%F0%9F%87%AC%F0%9F%87%A7%20English%20%7C%20%F0%9F%87%AA%F0%9F%87%B8%20Espa%C3%B1ol"
             target="_blank"
             rel="noopener noreferrer"
             className="btn-primary"
