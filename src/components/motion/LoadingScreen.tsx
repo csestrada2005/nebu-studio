@@ -26,7 +26,7 @@ export const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
   }, []);
 
   useEffect(() => {
-    const duration = 2400;
+    const duration = 1200;
     const startTime = Date.now();
     let raf: number;
 
@@ -41,8 +41,8 @@ export const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
       } else {
         setTimeout(() => {
           setIsExiting(true);
-          setTimeout(onComplete, 900);
-        }, 400);
+          setTimeout(onComplete, 600);
+        }, 200);
       }
     };
 
