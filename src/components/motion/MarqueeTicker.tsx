@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 
 export const MarqueeTicker = () => {
-  const text = "HEADLESS COMMERCE — VECTOR DATABASES — RAG PIPELINES — FASTAPI SYSTEMS — LOGISTICS ALGORITHMS — CONVERSION RATE OPTIMIZATION — ";
+  const text = "ONLINE STORES — SMART DATA SYSTEMS — AI-POWERED SEARCH — CUSTOM SOFTWARE — DELIVERY AUTOMATION — MORE SALES, LESS EFFORT — ";
   const repeated = text.repeat(4);
 
   return (
