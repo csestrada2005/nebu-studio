@@ -12,10 +12,10 @@ interface Node {
 }
 
 const nodes: Node[] = [
-  { id: "storefront", label: "Storefront", sublabel: "Headless", x: 50, y: 8, color: "hsl(190 90% 55%)", glow: "hsl(190 90% 55% / 0.3)" },
-  { id: "ai", label: "AI Workers", sublabel: "Python", x: 88, y: 50, color: "hsl(270 80% 65%)", glow: "hsl(270 80% 65% / 0.3)" },
-  { id: "db", label: "Database", sublabel: "Supabase", x: 50, y: 92, color: "hsl(163 56% 50%)", glow: "hsl(163 56% 50% / 0.3)" },
-  { id: "auto", label: "Automation", sublabel: "WhatsApp/Email", x: 12, y: 50, color: "hsl(222 100% 65%)", glow: "hsl(222 100% 65% / 0.3)" },
+  { id: "storefront", label: "Online Store", sublabel: "", x: 50, y: 8, color: "hsl(190 90% 55%)", glow: "hsl(190 90% 55% / 0.3)" },
+  { id: "ai", label: "AI Engine", sublabel: "", x: 88, y: 50, color: "hsl(270 80% 65%)", glow: "hsl(270 80% 65% / 0.3)" },
+  { id: "db", label: "Database", sublabel: "", x: 50, y: 92, color: "hsl(163 56% 50%)", glow: "hsl(163 56% 50% / 0.3)" },
+  { id: "auto", label: "Messaging", sublabel: "", x: 12, y: 50, color: "hsl(222 100% 65%)", glow: "hsl(222 100% 65% / 0.3)" },
 ];
 
 const connections = [

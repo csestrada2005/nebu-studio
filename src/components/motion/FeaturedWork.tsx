@@ -119,9 +119,9 @@ const systemCards = [
   {
     id: "rag",
     icon: Cpu,
-    title: "RAG Knowledge Engine",
-    subtitle: "SaaS Architecture",
-    stat: "Vector-based retrieval for instant context.",
+    title: "AI Knowledge Assistant",
+    subtitle: "Education Platform",
+    stat: "Instant answers from thousands of documents.",
     accentColor: "hsl(270 80% 65%)",
     accentGlow: "hsl(270 80% 65% / 0.15)",
     heroType: "binary" as const,
@@ -131,7 +131,7 @@ const systemCards = [
     icon: Zap,
     title: "Headless Commerce Core",
     subtitle: "Fashion Retail",
-    stat: "+15% AOV via algorithmic upsells.",
+    stat: "+15% average order value through smart product recommendations.",
     accentColor: "hsl(163 56% 50%)",
     accentGlow: "hsl(163 56% 50% / 0.15)",
     heroType: "stats" as const,
@@ -173,7 +173,7 @@ export const FeaturedWork = () => {
             FEATURED <span className="text-primary">WORK</span>
           </h2>
           <p className="text-muted-foreground text-sm max-w-lg mt-4 leading-relaxed">
-            Production-grade systems engineered for scale. No templates. No screenshots — just architecture.
+            Production-grade systems engineered for scale. No templates. No shortcuts — just results.
           </p>
         </motion.div>
 

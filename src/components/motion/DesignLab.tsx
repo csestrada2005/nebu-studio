@@ -411,7 +411,7 @@ const RevealWipe = () => {
 
 /* ── Demo config ── */
 const demos = [
-  { id: "architecture", label: "RAG PIPELINE", desc: "Interactive system architecture", component: ArchitectureDemo, caption: "Beyond Frontend: We build custom RAG pipelines that allow your business to chat with its own data." },
+  { id: "architecture", label: "LIVE DASHBOARD", desc: "Real-time SaaS metrics", component: ArchitectureDemo, caption: "We build custom dashboards where each of your clients sees only their own data — secure, real-time, and beautifully designed." },
   { id: "electro", label: "ELECTRO TEXT", desc: "Lightning + glow on hover", component: ElectroText },
   { id: "glass", label: "GLASS POP-UP", desc: "Spring + blur physics", component: GlassPopup },
   { id: "trail", label: "CURSOR TRAIL", desc: "Magnetic particle trail", component: CursorTrail },
