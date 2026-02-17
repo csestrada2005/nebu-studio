@@ -103,10 +103,16 @@ export const ServicesSection = () => {
                 key={tier.tier}
                 initial={{ opacity: 0, y: 50 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: i * 0.15 }}
+                transition={{ duration: 0.6, delay: isExpanded ? 0 : i * 0.15, layout: { duration: 0.5, type: "spring", bounce: 0.15 } }}
                 onMouseEnter={() => !isExpanded && setHoveredIdx(i)}
                 onMouseLeave={() => setHoveredIdx(null)}
-                className="relative group"
+                className={`relative group ${
+                  expandedIdx !== null
+                    ? isExpanded
+                      ? "md:col-span-3"
+                      : "hidden md:block opacity-30 pointer-events-none"
+                    : ""
+                }`}
                 layout
               >
                 {/* Most Popular badge */}
@@ -172,7 +178,7 @@ export const ServicesSection = () => {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.3 }}
-                        className="relative h-[480px]"
+                        className="relative h-[520px]"
                       >
                         <TierDemoChat
                           tierName={tier.name}

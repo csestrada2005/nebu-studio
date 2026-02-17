@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { X, Send, Sparkles, Loader2 } from "lucide-react";
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/demo-chat`;
@@ -17,19 +17,12 @@ export const TierDemoChat = ({ tierName, tierKey, accentColor, onClose }: TierDe
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  const scrollToBottom = useCallback(() => {
-    setTimeout(() => {
-      scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
-    }, 50);
-  }, []);
+  const [htmlPreview, setHtmlPreview] = useState<string | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
 
   const extractHTML = (text: string): string | null => {
-    // Try to find HTML in code blocks
     const codeBlockMatch = text.match(/```(?:html)?\s*([\s\S]*?)```/);
     if (codeBlockMatch) return codeBlockMatch[1].trim();
-    // Try to find a div directly
     const divMatch = text.match(/(<div[\s\S]*<\/div>)/i);
     if (divMatch) return divMatch[1];
     return null;
@@ -39,10 +32,10 @@ export const TierDemoChat = ({ tierName, tierKey, accentColor, onClose }: TierDe
     if (!input.trim() || isLoading) return;
 
     const userMsg: Msg = { role: "user", content: input };
-    setMessages((prev) => [...prev, userMsg]);
+    const newMessages = [...messages, userMsg];
+    setMessages(newMessages);
     setInput("");
     setIsLoading(true);
-    scrollToBottom();
 
     let assistantSoFar = "";
 
@@ -53,7 +46,7 @@ export const TierDemoChat = ({ tierName, tierKey, accentColor, onClose }: TierDe
           "Content-Type": "application/json",
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
-        body: JSON.stringify({ messages: [...messages, userMsg], tier: tierKey }),
+        body: JSON.stringify({ messages: newMessages, tier: tierKey }),
       });
 
       if (!resp.ok || !resp.body) {
@@ -73,6 +66,10 @@ export const TierDemoChat = ({ tierName, tierKey, accentColor, onClose }: TierDe
 
       const upsertAssistant = (chunk: string) => {
         assistantSoFar += chunk;
+        // Try to extract HTML as it streams
+        const html = extractHTML(assistantSoFar);
+        if (html) setHtmlPreview(html);
+
         setMessages((prev) => {
           const last = prev[prev.length - 1];
           if (last?.role === "assistant") {
@@ -80,7 +77,6 @@ export const TierDemoChat = ({ tierName, tierKey, accentColor, onClose }: TierDe
           }
           return [...prev, { role: "assistant", content: assistantSoFar }];
         });
-        scrollToBottom();
       };
 
       let streamDone = false;
@@ -108,6 +104,10 @@ export const TierDemoChat = ({ tierName, tierKey, accentColor, onClose }: TierDe
           }
         }
       }
+
+      // Final extraction
+      const finalHtml = extractHTML(assistantSoFar);
+      if (finalHtml) setHtmlPreview(finalHtml);
     } catch {
       setMessages((prev) => [...prev, { role: "assistant", content: "Connection error. Please try again." }]);
     }
@@ -115,8 +115,7 @@ export const TierDemoChat = ({ tierName, tierKey, accentColor, onClose }: TierDe
     setIsLoading(false);
   };
 
-  const lastAssistant = [...messages].reverse().find((m) => m.role === "assistant");
-  const htmlPreview = lastAssistant ? extractHTML(lastAssistant.content) : null;
+  const userMessages = messages.filter((m) => m.role === "user");
 
   return (
     <div className="flex flex-col h-full">
@@ -136,95 +135,90 @@ export const TierDemoChat = ({ tierName, tierKey, accentColor, onClose }: TierDe
         </button>
       </div>
 
-      {/* Content area */}
-      <div className="flex-1 flex flex-col md:flex-row min-h-0">
-        {/* Chat */}
-        <div className="flex-1 flex flex-col min-h-0">
-          <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3">
-            {messages.length === 0 && (
-              <div className="flex flex-col items-center justify-center h-full text-center gap-3 py-8">
-                <Sparkles className="w-8 h-8" style={{ color: `${accentColor}50` }} />
-                <p className="text-sm text-muted-foreground/60 max-w-xs">
-                  Describe what you'd like to see and I'll create a quick demo for you.
-                </p>
-                <p className="text-[10px] font-mono text-muted-foreground/30 tracking-wider">
-                  Try: "A product card with hover effects"
-                </p>
-              </div>
-            )}
-            {messages.map((msg, i) => (
-              <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                <div
-                  className="max-w-[85%] px-3 py-2 rounded-xl text-xs leading-relaxed"
-                  style={{
-                    background: msg.role === "user"
-                      ? `${accentColor}15`
-                      : "hsl(222 40% 12% / 0.5)",
-                    border: `1px solid ${msg.role === "user" ? `${accentColor}20` : "hsl(222 100% 65% / 0.06)"}`,
-                    color: "hsl(220 15% 75%)",
-                  }}
-                >
-                  <pre className="whitespace-pre-wrap font-sans">{msg.content}</pre>
-                </div>
-              </div>
-            ))}
-            {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
-              <div className="flex justify-start">
-                <div className="px-3 py-2 rounded-xl" style={{ background: "hsl(222 40% 12% / 0.5)" }}>
-                  <Loader2 className="w-4 h-4 animate-spin text-muted-foreground/40" />
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Input */}
-          <div className="p-3 border-t" style={{ borderColor: `${accentColor}10` }}>
-            <div className="flex gap-2">
-              <input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && send()}
-                placeholder="Describe your demo..."
-                className="flex-1 bg-transparent text-sm px-3 py-2 rounded-lg outline-none placeholder:text-muted-foreground/30"
-                style={{ border: `1px solid ${accentColor}15` }}
-              />
-              <button
-                onClick={send}
-                disabled={isLoading || !input.trim()}
-                className="w-9 h-9 rounded-lg flex items-center justify-center transition-all disabled:opacity-30"
-                style={{ background: `${accentColor}15`, color: accentColor }}
-              >
-                <Send className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Preview panel */}
-        {htmlPreview && (
-          <motion.div
-            initial={{ opacity: 0, width: 0 }}
-            animate={{ opacity: 1, width: "50%" }}
-            transition={{ duration: 0.4 }}
-            className="hidden md:flex border-l flex-col"
-            style={{ borderColor: `${accentColor}10` }}
-          >
-            <div className="px-4 py-2 border-b" style={{ borderColor: `${accentColor}10` }}>
-              <span className="text-[9px] font-mono tracking-[0.2em] uppercase text-muted-foreground/40">
-                Live Preview
-              </span>
-            </div>
-            <div className="flex-1 p-4 flex items-center justify-center overflow-auto">
+      {/* Main preview area */}
+      <div className="flex-1 min-h-0 relative">
+        <AnimatePresence mode="wait">
+          {isLoading && !htmlPreview ? (
+            <motion.div
+              key="loading"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 flex flex-col items-center justify-center gap-4"
+            >
+              <Loader2 className="w-8 h-8 animate-spin" style={{ color: `${accentColor}60` }} />
+              <p className="text-sm text-muted-foreground/50 font-mono tracking-wider">
+                Generating your demo...
+              </p>
+            </motion.div>
+          ) : htmlPreview ? (
+            <motion.div
+              key="preview"
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="absolute inset-0 p-3"
+            >
               <iframe
                 srcDoc={`<!DOCTYPE html><html><head><meta charset="utf-8"><style>*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}body{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#0a0a14;color:#e0e0e0}</style></head><body>${htmlPreview}</body></html>`}
                 className="w-full h-full rounded-lg"
-                style={{ border: "1px solid hsl(222 100% 65% / 0.06)", minHeight: "200px", background: "#0a0a14" }}
+                style={{ border: `1px solid ${accentColor}15`, background: "#0a0a14" }}
                 sandbox="allow-scripts"
                 title="Demo Preview"
               />
-            </div>
-          </motion.div>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="empty"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 flex flex-col items-center justify-center gap-3"
+            >
+              <Sparkles className="w-10 h-10" style={{ color: `${accentColor}30` }} />
+              <p className="text-sm text-muted-foreground/50 max-w-xs text-center">
+                Describe what you'd like to see and I'll generate a live preview.
+              </p>
+              <p className="text-[10px] font-mono text-muted-foreground/25 tracking-wider">
+                Try: "A product card with hover effects"
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* User prompt pills + Input */}
+      <div className="px-3 pt-2 pb-3 border-t" style={{ borderColor: `${accentColor}10` }}>
+        {userMessages.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mb-2">
+            {userMessages.map((m, i) => (
+              <span
+                key={i}
+                className="text-[10px] px-2.5 py-1 rounded-full truncate max-w-[200px]"
+                style={{ background: `${accentColor}10`, color: `${accentColor}90`, border: `1px solid ${accentColor}15` }}
+              >
+                {m.content}
+              </span>
+            ))}
+          </div>
         )}
+        <div className="flex gap-2">
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && send()}
+            placeholder="Describe your demo..."
+            className="flex-1 bg-transparent text-sm px-3 py-2 rounded-lg outline-none placeholder:text-muted-foreground/30"
+            style={{ border: `1px solid ${accentColor}15` }}
+          />
+          <button
+            onClick={send}
+            disabled={isLoading || !input.trim()}
+            className="w-9 h-9 rounded-lg flex items-center justify-center transition-all disabled:opacity-30"
+            style={{ background: `${accentColor}15`, color: accentColor }}
+          >
+            <Send className="w-4 h-4" />
+          </button>
+        </div>
       </div>
     </div>
   );
