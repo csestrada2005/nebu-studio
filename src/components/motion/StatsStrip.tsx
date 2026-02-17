@@ -6,10 +6,10 @@ export const StatsStrip = () => {
   const isInView = useInView(ref, { once: true });
 
   const stats = [
-    { label: "Avg delivery: 15 days", icon: "⚡" },
-    { label: "Conversion-first", icon: "📈" },
-    { label: "Mobile-first", icon: "📱" },
-    { label: "SEO-ready", icon: "🔍" },
+    { label: "Avg delivery: 15 days" },
+    { label: "Conversion-first" },
+    { label: "Mobile-first" },
+    { label: "SEO-ready" },
   ];
 
   return (
