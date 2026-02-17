@@ -1,111 +1,175 @@
-import { useRef, useEffect, useState, useMemo } from "react";
-import { motion, useInView } from "framer-motion";
+import { useRef, useEffect, useState, useCallback, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 type Variant = "glitch" | "circuit" | "data";
 
-interface SectionTransitionProps {
+interface TransitionSection {
+  id: string;
   variant: Variant;
+}
+
+interface FullScreenTransitionProviderProps {
+  sections: TransitionSection[];
   children: React.ReactNode;
 }
 
-/* ── Glitch Slice ── */
-const SLICE_COUNT = 5;
+/* ── Full-screen overlay variants ── */
 
-const GlitchSlice = ({ triggered, children }: { triggered: boolean; children: React.ReactNode }) => {
-  const sliceHeight = 100 / SLICE_COUNT;
+const GlitchOverlay = ({ onDone }: { onDone: () => void }) => {
+  useEffect(() => {
+    const t = setTimeout(onDone, 650);
+    return () => clearTimeout(t);
+  }, [onDone]);
 
+  const slices = 6;
   return (
-    <div className="relative">
-      {/* RGB glitch overlay */}
-      {triggered && (
-        <div className="absolute inset-0 z-20 pointer-events-none section-glitch-rgb" />
-      )}
-
-      {Array.from({ length: SLICE_COUNT }).map((_, i) => {
-        const fromLeft = i % 2 === 0;
-        return (
-          <motion.div
-            key={i}
-            initial={{ x: fromLeft ? "-100%" : "100%", opacity: 0 }}
-            animate={triggered ? { x: "0%", opacity: 1 } : { x: fromLeft ? "-100%" : "100%", opacity: 0 }}
-            transition={{ duration: 0.5, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] }}
-            style={{
-              clipPath: `inset(${i * sliceHeight}% 0 ${100 - (i + 1) * sliceHeight}% 0)`,
-              position: i === 0 ? "relative" : "absolute",
-              inset: i === 0 ? undefined : 0,
-            }}
-          >
-            {children}
-          </motion.div>
-        );
-      })}
-    </div>
-  );
-};
-
-/* ── Circuit Wipe ── */
-const CircuitWipe = ({ triggered, children }: { triggered: boolean; children: React.ReactNode }) => {
-  return (
-    <div className="relative">
-      {/* Scan line */}
-      {triggered && (
+    <motion.div
+      className="fixed inset-0 z-[150] pointer-events-auto"
+      style={{ background: "hsl(var(--background))" }}
+      initial={{ clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)" }}
+      exit={{ clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)" }}
+      transition={{ duration: 0.35, ease: [0.76, 0, 0.24, 1] }}
+    >
+      {/* Horizontal slices sliding in */}
+      {Array.from({ length: slices }).map((_, i) => (
         <motion.div
-          className="absolute left-0 right-0 h-[2px] z-20 pointer-events-none"
+          key={i}
+          className="absolute left-0 right-0"
           style={{
-            background: "hsl(var(--primary))",
-            boxShadow: "0 0 15px 4px hsl(var(--primary) / 0.6), 0 0 40px 8px hsl(var(--primary) / 0.3)",
+            top: `${(i / slices) * 100}%`,
+            height: `${100 / slices + 0.5}%`,
+            background: i % 2 === 0
+              ? "hsl(var(--primary) / 0.12)"
+              : "hsl(var(--accent-green) / 0.08)",
           }}
-          initial={{ top: "0%" }}
-          animate={{ top: "100%" }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          initial={{ x: i % 2 === 0 ? "-100%" : "100%" }}
+          animate={{ x: "0%" }}
+          transition={{ duration: 0.3, delay: i * 0.04, ease: [0.22, 1, 0.36, 1] }}
         />
-      )}
+      ))}
 
+      {/* RGB glitch flicker */}
       <motion.div
-        initial={{ clipPath: "inset(100% 0 0 0)" }}
-        animate={triggered ? { clipPath: "inset(0% 0 0 0)" } : { clipPath: "inset(100% 0 0 0)" }}
-        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-      >
-        {children}
-      </motion.div>
-    </div>
+        className="absolute inset-0"
+        style={{
+          background: "linear-gradient(90deg, hsl(var(--primary) / 0.2) 33%, hsl(var(--destructive) / 0.15) 33% 66%, hsl(var(--accent-green) / 0.15) 66%)",
+          mixBlendMode: "screen",
+        }}
+        animate={{ opacity: [0, 0.8, 0, 0.6, 0, 0.4, 0] }}
+        transition={{ duration: 0.3, times: [0, 0.15, 0.3, 0.45, 0.6, 0.75, 1] }}
+      />
+
+      {/* Scan line */}
+      <motion.div
+        className="absolute left-0 right-0 h-[1px]"
+        style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.5), transparent)" }}
+        animate={{ top: ["0%", "100%"] }}
+        transition={{ duration: 0.5, ease: "linear" }}
+      />
+
+      {/* Center label */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <motion.span
+          className="font-mono text-[10px] tracking-[0.4em] uppercase text-muted-foreground"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.6 }}
+          transition={{ delay: 0.1 }}
+        >
+          Loading Section
+        </motion.span>
+      </div>
+    </motion.div>
   );
 };
 
-/* ── Data Dissolve — simplified with opacity grid ── */
-const DataDissolve = ({ triggered, children }: { triggered: boolean; children: React.ReactNode }) => {
+const CircuitOverlay = ({ onDone }: { onDone: () => void }) => {
+  useEffect(() => {
+    const t = setTimeout(onDone, 700);
+    return () => clearTimeout(t);
+  }, [onDone]);
+
   return (
-    <div className="relative">
-      {/* Matrix rain overlay */}
-      {triggered && (
-        <motion.div
-          className="absolute inset-0 z-20 pointer-events-none section-matrix-rain"
-          initial={{ opacity: 0.5 }}
-          animate={{ opacity: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        />
-      )}
-
+    <motion.div
+      className="fixed inset-0 z-[150] pointer-events-auto overflow-hidden"
+      style={{ background: "hsl(var(--background))" }}
+      initial={{ clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)" }}
+      exit={{ clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)" }}
+      transition={{ duration: 0.4, ease: [0.76, 0, 0.24, 1] }}
+    >
+      {/* Electric scan line sweeping down */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.97, filter: "blur(6px)" }}
-        animate={
-          triggered
-            ? { opacity: 1, scale: 1, filter: "blur(0px)" }
-            : { opacity: 0, scale: 0.97, filter: "blur(6px)" }
-        }
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      >
-        {children}
-      </motion.div>
+        className="absolute left-0 right-0 h-[3px]"
+        style={{
+          background: "hsl(var(--primary))",
+          boxShadow: "0 0 20px 6px hsl(var(--primary) / 0.7), 0 0 60px 15px hsl(var(--primary) / 0.3)",
+        }}
+        initial={{ top: "-2%" }}
+        animate={{ top: "102%" }}
+        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+      />
 
-      {/* Pixel grid overlay that dissolves */}
-      {triggered && <PixelGrid />}
-    </div>
+      {/* Grid lines revealing */}
+      <div className="absolute inset-0">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <motion.div
+            key={`h-${i}`}
+            className="absolute left-0 right-0 h-px"
+            style={{
+              top: `${12.5 * (i + 1)}%`,
+              background: "hsl(var(--primary) / 0.08)",
+            }}
+            initial={{ scaleX: 0, originX: i % 2 === 0 ? 0 : 1 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 0.4, delay: i * 0.03 }}
+          />
+        ))}
+        {Array.from({ length: 8 }).map((_, i) => (
+          <motion.div
+            key={`v-${i}`}
+            className="absolute top-0 bottom-0 w-px"
+            style={{
+              left: `${12.5 * (i + 1)}%`,
+              background: "hsl(var(--primary) / 0.06)",
+            }}
+            initial={{ scaleY: 0 }}
+            animate={{ scaleY: 1 }}
+            transition={{ duration: 0.4, delay: 0.1 + i * 0.02 }}
+          />
+        ))}
+      </div>
+
+      {/* Corner markers */}
+      {["top-4 left-4", "top-4 right-4", "bottom-4 left-4", "bottom-4 right-4"].map((pos, i) => (
+        <motion.div
+          key={pos}
+          className={`absolute ${pos} w-3 h-3 border border-primary/30`}
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.15 + i * 0.05 }}
+        />
+      ))}
+
+      <div className="absolute inset-0 flex items-center justify-center">
+        <motion.span
+          className="font-mono text-[10px] tracking-[0.4em] uppercase text-primary/50"
+          initial={{ opacity: 0, y: 5 }}
+          animate={{ opacity: 0.7, y: 0 }}
+          transition={{ delay: 0.15 }}
+        >
+          ▸ Rendering
+        </motion.span>
+      </div>
+    </motion.div>
   );
 };
 
-const PixelGrid = () => {
-  const cols = 16;
+const DataOverlay = ({ onDone }: { onDone: () => void }) => {
+  useEffect(() => {
+    const t = setTimeout(onDone, 700);
+    return () => clearTimeout(t);
+  }, [onDone]);
+
+  const cols = 12;
   const rows = 8;
   const total = cols * rows;
 
@@ -116,63 +180,178 @@ const PixelGrid = () => {
       [arr[i], arr[j]] = [arr[j], arr[i]];
     }
     return arr;
-  }, [total]);
+  }, []);
 
   return (
-    <div
-      className="absolute inset-0 z-10 pointer-events-none"
-      style={{
-        display: "grid",
-        gridTemplateColumns: `repeat(${cols}, 1fr)`,
-        gridTemplateRows: `repeat(${rows}, 1fr)`,
-      }}
+    <motion.div
+      className="fixed inset-0 z-[150] pointer-events-auto"
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.25 }}
     >
-      {Array.from({ length: total }).map((_, idx) => {
-        const delay = (order.indexOf(idx) / total) * 0.5;
-        return (
-          <motion.div
-            key={idx}
-            initial={{ opacity: 1 }}
-            animate={{ opacity: 0 }}
-            transition={{ duration: 0.08, delay }}
-            style={{ background: "hsl(var(--background))" }}
-          />
-        );
-      })}
-    </div>
+      {/* Pixel grid that fills in */}
+      <div
+        className="absolute inset-0"
+        style={{
+          display: "grid",
+          gridTemplateColumns: `repeat(${cols}, 1fr)`,
+          gridTemplateRows: `repeat(${rows}, 1fr)`,
+        }}
+      >
+        {Array.from({ length: total }).map((_, idx) => {
+          const delay = (order.indexOf(idx) / total) * 0.4;
+          return (
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.05, delay }}
+              style={{ background: "hsl(var(--background))" }}
+            />
+          );
+        })}
+      </div>
+
+      {/* Matrix characters */}
+      <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
+        <motion.div
+          className="font-mono text-[8px] leading-tight text-primary/20 whitespace-pre text-center"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 0.4, y: 20 }}
+          transition={{ duration: 0.6 }}
+        >
+          {Array.from({ length: 8 }).map((_, row) => (
+            <div key={row}>
+              {Array.from({ length: 30 }).map(() =>
+                String.fromCharCode(0x30A0 + Math.random() * 96)
+              ).join("")}
+            </div>
+          ))}
+        </motion.div>
+      </div>
+
+      <div className="absolute inset-0 flex items-center justify-center z-10">
+        <motion.span
+          className="font-mono text-[10px] tracking-[0.4em] uppercase text-foreground/40"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.7 }}
+          transition={{ delay: 0.2 }}
+        >
+          Compiling
+        </motion.span>
+      </div>
+    </motion.div>
   );
 };
 
-/* ── Main Wrapper ── */
-export const SectionTransition = ({ variant, children }: SectionTransitionProps) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, amount: 0.08 });
-  const [triggered, setTriggered] = useState(false);
-  const prefersReducedMotion =
-    typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const overlayComponents: Record<Variant, React.FC<{ onDone: () => void }>> = {
+  glitch: GlitchOverlay,
+  circuit: CircuitOverlay,
+  data: DataOverlay,
+};
 
+/* ── Scroll-hijacking controller ── */
+export const useFullScreenTransitions = (sections: TransitionSection[]) => {
+  const sectionRefs = useRef<(HTMLElement | null)[]>([]);
+  const [activeOverlay, setActiveOverlay] = useState<{ variant: Variant; targetIdx: number } | null>(null);
+  const isTransitioning = useRef(false);
+  const cooldownRef = useRef(false);
+  const lastScrollY = useRef(0);
+
+  const registerRef = useCallback((idx: number) => (el: HTMLElement | null) => {
+    sectionRefs.current[idx] = el;
+  }, []);
+
+  // Detect when user scrolls past a section boundary
   useEffect(() => {
-    if (isInView && !triggered) setTriggered(true);
-  }, [isInView, triggered]);
+    const handleScroll = () => {
+      if (isTransitioning.current || cooldownRef.current) return;
 
-  if (prefersReducedMotion) {
+      const scrollY = window.scrollY;
+      const direction = scrollY > lastScrollY.current ? "down" : "up";
+      lastScrollY.current = scrollY;
+      const viewportMid = scrollY + window.innerHeight * 0.75;
+      const viewportMidUp = scrollY + window.innerHeight * 0.25;
+
+      for (let i = 0; i < sectionRefs.current.length; i++) {
+        const el = sectionRefs.current[i];
+        if (!el) continue;
+
+        const rect = el.getBoundingClientRect();
+        const elTop = rect.top + scrollY;
+        const elBottom = elTop + rect.height;
+
+        if (direction === "down" && viewportMid >= elTop && viewportMid <= elTop + 80) {
+          // Scrolling down, just crossed into this section's top
+          triggerTransition(i, sections[i].variant);
+          return;
+        }
+
+        if (direction === "up" && viewportMidUp <= elBottom && viewportMidUp >= elBottom - 80) {
+          // Scrolling up, just crossed this section's bottom going up — go to previous
+          const prevIdx = Math.max(0, i);
+          triggerTransition(prevIdx, sections[prevIdx].variant);
+          return;
+        }
+      }
+    };
+
+    const triggerTransition = (targetIdx: number, variant: Variant) => {
+      isTransitioning.current = true;
+      // Lock scroll
+      document.body.style.overflow = "hidden";
+      setActiveOverlay({ variant, targetIdx });
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [sections]);
+
+  const handleOverlayDone = useCallback(() => {
+    if (!activeOverlay) return;
+    const el = sectionRefs.current[activeOverlay.targetIdx];
+    if (el) {
+      // Instant scroll to target section
+      el.scrollIntoView({ behavior: "instant" as ScrollBehavior, block: "start" });
+    }
+    // Small delay then clear
+    setTimeout(() => {
+      setActiveOverlay(null);
+      document.body.style.overflow = "";
+      isTransitioning.current = false;
+      // Cooldown to prevent re-triggering
+      cooldownRef.current = true;
+      setTimeout(() => {
+        cooldownRef.current = false;
+        lastScrollY.current = window.scrollY;
+      }, 400);
+    }, 100);
+  }, [activeOverlay]);
+
+  const OverlayPortal = useCallback(() => {
     return (
-      <motion.div
-        ref={ref}
-        initial={{ opacity: 0 }}
-        animate={triggered ? { opacity: 1 } : {}}
-        transition={{ duration: 0.3 }}
-      >
-        {children}
-      </motion.div>
+      <AnimatePresence mode="wait">
+        {activeOverlay && (() => {
+          const Comp = overlayComponents[activeOverlay.variant];
+          return <Comp key={`${activeOverlay.variant}-${activeOverlay.targetIdx}`} onDone={handleOverlayDone} />;
+        })()}
+      </AnimatePresence>
     );
-  }
+  }, [activeOverlay, handleOverlayDone]);
 
+  return { registerRef, OverlayPortal };
+};
+
+/* ── Section marker component ── */
+export const TransitionSection = ({
+  children,
+  registerRef,
+}: {
+  children: React.ReactNode;
+  registerRef: (el: HTMLElement | null) => void;
+}) => {
   return (
-    <div ref={ref} style={{ position: "relative" }}>
-      {variant === "glitch" && <GlitchSlice triggered={triggered}>{children}</GlitchSlice>}
-      {variant === "circuit" && <CircuitWipe triggered={triggered}>{children}</CircuitWipe>}
-      {variant === "data" && <DataDissolve triggered={triggered}>{children}</DataDissolve>}
+    <div ref={registerRef}>
+      {children}
     </div>
   );
 };

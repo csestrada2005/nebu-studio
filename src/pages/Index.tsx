@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useMemo } from "react";
 import { LoadingScreen } from "@/components/motion/LoadingScreen";
 import { HeroSection } from "@/components/motion/HeroSection";
 import { MarqueeTicker } from "@/components/motion/MarqueeTicker";
@@ -17,11 +17,22 @@ import { CustomCursor } from "@/components/motion/CustomCursor";
 import { CornerCrosses } from "@/components/motion/CornerCrosses";
 import { ChatWidget } from "@/components/motion/ChatWidget";
 import { ScrollRevealText } from "@/components/motion/ScrollRevealText";
-import { SectionTransition } from "@/components/motion/SectionTransition";
+import { useFullScreenTransitions, TransitionSection } from "@/components/motion/SectionTransition";
+
+const TRANSITION_SECTIONS = [
+  { id: "services", variant: "glitch" as const },
+  { id: "designlab", variant: "circuit" as const },
+  { id: "process", variant: "data" as const },
+  { id: "growth", variant: "glitch" as const },
+  { id: "work", variant: "circuit" as const },
+  { id: "cta", variant: "data" as const },
+  { id: "contact", variant: "glitch" as const },
+];
 
 const Index = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const cursorZoneRef = useRef<HTMLDivElement>(null);
+  const { registerRef, OverlayPortal } = useFullScreenTransitions(TRANSITION_SECTIONS);
 
   const handleLoadComplete = useCallback(() => {
     setIsLoaded(true);
@@ -37,12 +48,12 @@ const Index = () => {
           <CustomCursor containerRef={cursorZoneRef} />
           <CornerCrosses />
           <ChatWidget />
+          <OverlayPortal />
           <main ref={cursorZoneRef}>
             <HeroSection />
             <MarqueeTicker />
             <StatsStrip />
 
-            {/* Word-by-word scroll reveal statement */}
             <section className="py-20 sm:py-28 relative overflow-hidden">
               <div className="container max-w-4xl">
                 <ScrollRevealText
@@ -52,27 +63,27 @@ const Index = () => {
               </div>
             </section>
 
-            <SectionTransition variant="glitch">
+            <TransitionSection registerRef={registerRef(0)}>
               <ServicesSection />
-            </SectionTransition>
-            <SectionTransition variant="circuit">
+            </TransitionSection>
+            <TransitionSection registerRef={registerRef(1)}>
               <DesignLab />
-            </SectionTransition>
-            <SectionTransition variant="data">
+            </TransitionSection>
+            <TransitionSection registerRef={registerRef(2)}>
               <ProcessSection />
-            </SectionTransition>
-            <SectionTransition variant="glitch">
+            </TransitionSection>
+            <TransitionSection registerRef={registerRef(3)}>
               <GrowthImpact />
-            </SectionTransition>
-            <SectionTransition variant="circuit">
+            </TransitionSection>
+            <TransitionSection registerRef={registerRef(4)}>
               <FeaturedWork />
-            </SectionTransition>
-            <SectionTransition variant="data">
+            </TransitionSection>
+            <TransitionSection registerRef={registerRef(5)}>
               <BigCTA />
-            </SectionTransition>
-            <SectionTransition variant="glitch">
+            </TransitionSection>
+            <TransitionSection registerRef={registerRef(6)}>
               <ContactSection />
-            </SectionTransition>
+            </TransitionSection>
           </main>
           <DramaticFooter />
           <BottomNav />
