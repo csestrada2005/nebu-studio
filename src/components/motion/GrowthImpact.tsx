@@ -28,8 +28,8 @@ const CountUp = ({ end, suffix = "", prefix = "" }: { end: number; suffix?: stri
   return <span ref={ref} className="tabular-nums">{prefix}{value}{suffix}</span>;
 };
 
-/* ── Line chart (SVG) ── */
-const LineChart = ({ isInView }: { isInView: boolean }) => {
+/* ── Scroll-driven Line chart (SVG) ── */
+const ScrollLineChart = () => {
   const points = [10, 18, 15, 28, 25, 40, 38, 55, 52, 70, 68, 82];
   const width = 400;
   const height = 160;
@@ -42,10 +42,17 @@ const LineChart = ({ isInView }: { isInView: boolean }) => {
     return `${i === 0 ? "M" : "L"} ${x} ${y}`;
   }).join(" ");
 
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end center"],
+  });
+  const pathLength = useTransform(scrollYProgress, [0, 1], [0, 1]);
+
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
 
   return (
-    <div className="relative">
+    <div ref={containerRef} className="relative">
       <p className="text-[10px] tracking-widest uppercase text-muted-foreground/80 mb-3">Conversion Rate Over Time</p>
       <svg viewBox={`0 0 ${width} ${height}`} className="w-full max-w-md">
         {[0, 25, 50, 75].map((v) => {
@@ -57,14 +64,14 @@ const LineChart = ({ isInView }: { isInView: boolean }) => {
             </g>
           );
         })}
-        <motion.path d={pathData} fill="none" stroke="hsl(0 100% 50%)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" initial={{ pathLength: 0 }} animate={isInView ? { pathLength: 1 } : { pathLength: 0 }} transition={{ duration: 1.5, ease: "easeOut", delay: 0.3 }} />
-        <motion.path d={pathData} fill="none" stroke="hsl(0 100% 50% / 0.3)" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" initial={{ pathLength: 0 }} animate={isInView ? { pathLength: 1 } : { pathLength: 0 }} transition={{ duration: 1.5, ease: "easeOut", delay: 0.3 }} />
+        <motion.path d={pathData} fill="none" stroke="hsl(0 100% 50%)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ pathLength }} />
         {points.map((p, i) => {
           const x = padX + (i / (points.length - 1)) * (width - padX * 2);
           const y = height - padY - (p / 100) * (height - padY * 2);
+          const pointThreshold = (i + 1) / points.length;
           return (
             <g key={i}>
-              <motion.circle cx={x} cy={y} r={hoveredIdx === i ? 5 : 3} fill="hsl(0 100% 50%)" initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : { opacity: 0 }} transition={{ delay: 0.3 + i * 0.08 }} onMouseEnter={() => setHoveredIdx(i)} onMouseLeave={() => setHoveredIdx(null)} className="cursor-pointer" />
+              <motion.circle cx={x} cy={y} r={hoveredIdx === i ? 5 : 3} fill="hsl(0 100% 50%)" style={{ opacity: useTransform(scrollYProgress, [pointThreshold - 0.05, pointThreshold], [0, 1]) }} onMouseEnter={() => setHoveredIdx(i)} onMouseLeave={() => setHoveredIdx(null)} className="cursor-pointer" />
               {hoveredIdx === i && (
                 <g>
                   <rect x={x - 22} y={y - 28} width="44" height="20" rx="6" fill="hsl(0 12% 8% / 0.9)" stroke="hsl(0 100% 50% / 0.3)" strokeWidth="0.5" />
@@ -79,8 +86,8 @@ const LineChart = ({ isInView }: { isInView: boolean }) => {
   );
 };
 
-/* ── Bar chart (SVG) ── */
-const BarChart = ({ isInView }: { isInView: boolean }) => {
+/* ── Scroll-driven Bar chart (SVG) ── */
+const ScrollBarChart = () => {
   const data = [
     { label: "Before", value: 45 },
     { label: "Month 1", value: 58 },
@@ -97,17 +104,26 @@ const BarChart = ({ isInView }: { isInView: boolean }) => {
   const maxVal = 120;
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
 
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end center"],
+  });
+
   return (
-    <div className="relative">
+    <div ref={containerRef} className="relative">
       <p className="text-[10px] tracking-widest uppercase text-muted-foreground/80 mb-3">Average Order Value ($)</p>
       <svg viewBox={`0 0 ${width} ${height}`} className="w-full max-w-md">
         {data.map((d, i) => {
           const x = padX + i * (barWidth + gap);
           const barH = (d.value / maxVal) * (height - padY * 2);
           const y = height - padY - barH;
+          const barProgress = useTransform(scrollYProgress, [i * 0.15, 0.3 + i * 0.15], [0, 1]);
+          const animatedHeight = useTransform(barProgress, [0, 1], [0, barH]);
+          const animatedY = useTransform(barProgress, [0, 1], [height - padY, y]);
           return (
             <g key={i}>
-              <motion.rect x={x} y={y} width={barWidth} height={barH} rx={4} fill={hoveredIdx === i ? "hsl(0 100% 50%)" : "hsl(0 100% 50% / 0.6)"} initial={{ height: 0, y: height - padY }} animate={isInView ? { height: barH, y } : { height: 0, y: height - padY }} transition={{ duration: 0.6, delay: 0.4 + i * 0.1, ease: [0.33, 1, 0.68, 1] }} onMouseEnter={() => setHoveredIdx(i)} onMouseLeave={() => setHoveredIdx(null)} className="cursor-pointer" />
+              <motion.rect x={x} width={barWidth} rx={4} fill={hoveredIdx === i ? "hsl(0 100% 50%)" : "hsl(0 100% 50% / 0.6)"} style={{ height: animatedHeight, y: animatedY }} onMouseEnter={() => setHoveredIdx(i)} onMouseLeave={() => setHoveredIdx(null)} className="cursor-pointer" />
               {hoveredIdx === i && <rect x={x - 2} y={y - 2} width={barWidth + 4} height={barH + 4} rx={6} fill="none" stroke="hsl(0 100% 50% / 0.3)" strokeWidth="1" />}
               <text x={x + barWidth / 2} y={height - 8} fill="hsl(0 8% 55%)" fontSize="8" textAnchor="middle">{d.label}</text>
               {hoveredIdx === i && (
@@ -170,10 +186,10 @@ export const GrowthImpact = () => {
 
         <div className="grid md:grid-cols-2 gap-12 lg:gap-16">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6, delay: 0.4 }}>
-            <LineChart isInView={isInView} />
+            <ScrollLineChart />
           </motion.div>
           <motion.div initial={{ opacity: 0, y: 30 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6, delay: 0.5 }}>
-            <BarChart isInView={isInView} />
+            <ScrollBarChart />
           </motion.div>
         </div>
 
@@ -191,7 +207,7 @@ export const GrowthImpact = () => {
               See what your revenue looks like now — and what it could look like with our design and technology systems working for you.
             </p>
           </div>
-          <div className="w-full max-w-4xl">
+          <div className="w-full max-w-4xl ml-auto">
             <ROICalculator />
           </div>
         </motion.div>

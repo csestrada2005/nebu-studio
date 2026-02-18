@@ -43,22 +43,22 @@ export const ArchitectureDemo = () => {
             <div
               className="relative w-56 h-36 sm:w-64 sm:h-40 flex items-center justify-center"
               style={{
-                background: "linear-gradient(135deg, hsl(0 40% 12%), hsl(0 40% 8%))",
-                border: "2px solid hsl(0 100% 50% / 0.15)",
+                background: "hsl(0 0% 98%)",
+                border: "2px solid hsl(0 0% 85%)",
                 borderRadius: "0.75rem 0.75rem 0 0",
-                boxShadow: "0 0 40px hsl(0 100% 50% / 0.08), inset 0 1px 0 hsl(0 0% 100% / 0.03)",
+                boxShadow: "0 4px 20px hsl(0 0% 0% / 0.08)",
               }}
             >
               <div
                 className="absolute inset-0 opacity-[0.03]"
                 style={{
-                  backgroundImage: `linear-gradient(hsl(0 100% 50% / 0.4) 1px, transparent 1px), linear-gradient(90deg, hsl(0 100% 50% / 0.4) 1px, transparent 1px)`,
+                  backgroundImage: `linear-gradient(hsl(0 0% 0% / 0.06) 1px, transparent 1px), linear-gradient(90deg, hsl(0 0% 0% / 0.06) 1px, transparent 1px)`,
                   backgroundSize: "16px 16px",
                   borderRadius: "0.75rem 0.75rem 0 0",
                 }}
               />
               <div className="flex flex-col items-center gap-2 relative z-10">
-                <svg viewBox="0 0 40 40" className="w-10 h-10" style={{ color: "hsl(0 100% 50%)" }}>
+                <svg viewBox="0 0 40 40" className="w-10 h-10" style={{ color: "hsl(0 0% 20%)" }}>
                   <rect x="4" y="8" width="32" height="24" rx="3" fill="none" stroke="currentColor" strokeWidth="1.2" />
                   <line x1="4" y1="14" x2="36" y2="14" stroke="currentColor" strokeWidth="0.8" />
                   <circle cx="8" cy="11" r="1" fill="currentColor" opacity="0.5" />
@@ -69,7 +69,7 @@ export const ArchitectureDemo = () => {
                   <rect x="22" y="18" width="10" height="10" rx="1" fill="currentColor" opacity="0.08" />
                 </svg>
                 <motion.p
-                  className="text-xs font-mono text-primary tracking-wider"
+                  className="text-xs font-mono text-black/70 tracking-wider"
                   animate={{ opacity: [0.5, 1, 0.5] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
@@ -81,12 +81,12 @@ export const ArchitectureDemo = () => {
             <div
               className="w-72 h-3 sm:w-80"
               style={{
-                background: "linear-gradient(180deg, hsl(0 30% 18%), hsl(0 30% 14%))",
+                background: "linear-gradient(180deg, hsl(0 0% 88%), hsl(0 0% 82%))",
                 borderRadius: "0 0 0.5rem 0.5rem",
-                borderTop: "1px solid hsl(0 100% 50% / 0.08)",
+                borderTop: "1px solid hsl(0 0% 90%)",
               }}
             />
-            <div className="w-20 h-1 rounded-b-full" style={{ background: "hsl(0 30% 20%)" }} />
+            <div className="w-20 h-1 rounded-b-full" style={{ background: "hsl(0 0% 80%)" }} />
           </motion.div>
         ) : (
           <motion.div

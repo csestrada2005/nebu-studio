@@ -57,9 +57,7 @@ const Index = () => {
 
             <SectionSeparator />
             <ServicesSection />
-            <SectionSeparator />
             <DesignLab />
-            <SectionSeparator />
             <ProcessSection />
             <SectionSeparator />
             <GrowthImpact />

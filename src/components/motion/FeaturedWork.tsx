@@ -82,8 +82,27 @@ const PrivacyBadge = () => (
 const systemCards = [
   { id: "logistics", icon: Route, title: "Autonomous Logistics CRM", subtitle: "", stat: "Automated 90% of driver dispatching.", accentColor: "hsl(350 100% 60%)", accentGlow: "hsl(350 100% 60% / 0.15)", heroType: "blueprint" as const },
   { id: "rag", icon: Cpu, title: "SaaS Powered with AI", subtitle: "", stat: "Smart automation that scales with your business growth.", accentColor: "hsl(15 100% 55%)", accentGlow: "hsl(15 100% 55% / 0.15)", heroType: "binary" as const },
-  { id: "ecom", icon: Zap, title: "Headless Commerce Core", subtitle: "", stat: "+15% average order value through smart product recommendations.", accentColor: "hsl(20 100% 55%)", accentGlow: "hsl(20 100% 55% / 0.15)", heroType: "stats" as const },
+  { id: "ecom", icon: Zap, title: "Headless Commerce Core", subtitle: "", stat: "+15% average order value through smart product recommendations.", accentColor: "hsl(0 100% 50%)", accentGlow: "hsl(0 100% 50% / 0.15)", heroType: "stats" as const },
 ];
+
+/* ── Card with black cover reveal ── */
+const RevealCard = ({ children, delay }: { children: React.ReactNode; delay: number }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-80px" });
+
+  return (
+    <div ref={ref} className="relative overflow-hidden bg-black p-5">
+      {children}
+      {/* Black cover that slides down to reveal */}
+      <motion.div
+        className="absolute inset-0 bg-black z-30 pointer-events-none"
+        initial={{ y: 0 }}
+        animate={isInView ? { y: "100%" } : { y: 0 }}
+        transition={{ duration: 0.8, delay, ease: [0.33, 1, 0.68, 1] }}
+      />
+    </div>
+  );
+};
 
 export const FeaturedWork = () => {
   const ref = useRef<HTMLElement>(null);
@@ -111,32 +130,34 @@ export const FeaturedWork = () => {
             const Icon = card.icon;
             return (
               <motion.div key={card.id} initial={{ opacity: 0, y: 50 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6, delay: i * 0.15 }} className="group relative">
-                {/* Hero area — transparent, just the animation */}
-                <div className="relative aspect-[4/3] overflow-hidden mb-5">
-                  {card.heroType === "blueprint" && <div className="absolute inset-3"><SystemBlueprint compact /></div>}
-                  {card.heroType === "binary" && <div className="absolute inset-0"><BinaryRain /></div>}
-                  {card.heroType === "stats" && (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <motion.div className="text-center" animate={{ opacity: [0.8, 1, 0.8] }} transition={{ duration: 3, repeat: Infinity }}>
-                        <span className="font-display text-5xl sm:text-6xl font-bold" style={{ color: card.accentColor, textShadow: `0 0 40px ${card.accentGlow}` }}>+15%</span>
-                        <p className="text-[10px] font-mono tracking-[0.2em] uppercase text-muted-foreground/70 mt-2">AOV Increase</p>
-                      </motion.div>
+                <RevealCard delay={i * 0.15}>
+                  {/* Hero area */}
+                  <div className="relative aspect-[4/3] overflow-hidden mb-5">
+                    {card.heroType === "blueprint" && <div className="absolute inset-3"><SystemBlueprint compact /></div>}
+                    {card.heroType === "binary" && <div className="absolute inset-0"><BinaryRain /></div>}
+                    {card.heroType === "stats" && (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <motion.div className="text-center" animate={{ opacity: [0.8, 1, 0.8] }} transition={{ duration: 3, repeat: Infinity }}>
+                          <span className="font-display text-5xl sm:text-6xl font-bold text-primary" style={{ textShadow: `0 0 40px ${card.accentGlow}` }}>+15%</span>
+                          <p className="text-[10px] font-mono tracking-[0.2em] uppercase text-muted-foreground/70 mt-2">AOV Increase</p>
+                        </motion.div>
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex items-start gap-3 mb-2">
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5" style={{ background: `${card.accentColor}15`, border: `1px solid ${card.accentColor}20` }}>
+                      <Icon className="w-4 h-4" style={{ color: card.accentColor }} />
                     </div>
-                  )}
-                </div>
-                <div className="flex items-start gap-3 mb-2">
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5" style={{ background: `${card.accentColor}15`, border: `1px solid ${card.accentColor}20` }}>
-                    <Icon className="w-4 h-4" style={{ color: card.accentColor }} />
+                    <div>
+                      <h3 className="font-display text-sm sm:text-base group-hover:text-primary transition-colors duration-300">{card.title}</h3>
+                      {card.subtitle && <p className="text-[10px] font-mono tracking-wider uppercase text-muted-foreground/70">{card.subtitle}</p>}
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-display text-sm sm:text-base group-hover:text-primary transition-colors duration-300">{card.title}</h3>
-                    {card.subtitle && <p className="text-[10px] font-mono tracking-wider uppercase text-muted-foreground/70">{card.subtitle}</p>}
+                  <div className="ml-11">
+                    <motion.div className="h-px mb-3" style={{ background: `linear-gradient(90deg, ${card.accentColor}30, transparent)`, transformOrigin: "left" }} animate={{ scaleX: isInView ? 1 : 0 }} transition={{ delay: 0.4 + i * 0.15, duration: 0.8 }} />
+                    <p className="text-xs text-muted-foreground/80 leading-relaxed">{card.stat}</p>
                   </div>
-                </div>
-                <div className="ml-11">
-                  <motion.div className="h-px mb-3" style={{ background: `linear-gradient(90deg, ${card.accentColor}30, transparent)`, transformOrigin: "left" }} animate={{ scaleX: isInView ? 1 : 0 }} transition={{ delay: 0.4 + i * 0.15, duration: 0.8 }} />
-                  <p className="text-xs text-muted-foreground/80 leading-relaxed">{card.stat}</p>
-                </div>
+                </RevealCard>
               </motion.div>
             );
           })}

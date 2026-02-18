@@ -164,7 +164,7 @@ const PhaseSlide = ({
     >
       {/* Phase number */}
       <motion.span
-        className="font-display text-8xl sm:text-9xl text-primary/20 mb-4 select-none"
+        className="font-display text-8xl sm:text-9xl text-primary mb-4 select-none"
       >
         {phase.number}
       </motion.span>
