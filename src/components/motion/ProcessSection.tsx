@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { motion, useInView, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { useScrollPaint } from "@/hooks/useScrollPaint";
 
 const phases = [
   {
@@ -44,6 +45,7 @@ export const ProcessSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const headerPaint = useScrollPaint({ xDrift: 20 });
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -67,20 +69,14 @@ export const ProcessSection = () => {
       <div className="container relative">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
+          ref={headerPaint.ref}
+          style={headerPaint.style}
           className="mb-6"
         >
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : {}}
-            transition={{ delay: 0.1 }}
-            className="text-muted-foreground text-xs tracking-[0.25em] uppercase mb-4 flex items-center gap-3"
-          >
+          <p className="text-muted-foreground text-xs tracking-[0.25em] uppercase mb-4 flex items-center gap-3">
             <span className="w-8 h-px bg-primary/50" />
             How We Work
-          </motion.p>
+          </p>
           <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-4">
             A PROCESS THAT <span className="text-primary">SHIPS.</span>
           </h2>
