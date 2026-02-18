@@ -64,7 +64,7 @@ export const ROICalculator = () => {
     <div
       className="relative p-8 overflow-hidden"
       style={{
-        border: "1px solid hsl(0 100% 50% / 0.12)",
+        border: "3px solid hsl(0 100% 50% / 0.2)",
       }}
     >
       <div
