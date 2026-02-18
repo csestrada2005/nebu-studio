@@ -131,9 +131,9 @@ export const FeaturedWork = () => {
             return (
               <motion.div key={card.id} initial={{ opacity: 0, y: 50 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6, delay: i * 0.15 }} className="group relative">
                 <RevealCard delay={i * 0.15}>
-                  <div className="p-5" style={{ background: "hsl(0 0% 5%)", border: "1px solid hsl(0 100% 50% / 0.1)" }}>
+                  <div className="p-5">
                     {/* Hero area */}
-                    <div className="relative aspect-[4/3] overflow-hidden mb-5" style={{ background: "hsl(0 0% 8%)" }}>
+                    <div className="relative aspect-[4/3] overflow-hidden mb-5">
                       {card.heroType === "blueprint" && <div className="absolute inset-3"><SystemBlueprint compact /></div>}
                       {card.heroType === "binary" && <div className="absolute inset-0"><BinaryRain /></div>}
                       {card.heroType === "stats" && (
