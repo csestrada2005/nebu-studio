@@ -147,7 +147,7 @@ export const HeroSection = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.33, 1, 0.68, 1] }}
-            className="text-[clamp(3rem,10vw,8rem)] leading-[0.88] tracking-tighter uppercase"
+            className="font-display text-[clamp(3rem,10vw,8rem)] leading-[0.88] tracking-tighter uppercase"
           >
             <span className="block">WE BUILD</span>
             <span className="block text-primary">REVENUE</span>
