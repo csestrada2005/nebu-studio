@@ -1,149 +1,109 @@
 import { useRef, useState, useEffect, useCallback } from "react";
 import { motion, useInView, useScroll, useTransform, AnimatePresence } from "framer-motion";
-import { ArchitectureDemo } from "./ArchitectureDemo";
 
-/* ── Demo 1: Electro Text — Auto-cycling lightning (RED) ── */
-const ElectroText = () => {
-  const [activeIdx, setActiveIdx] = useState<number | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const text = "ELECTRIFY";
+/* ── A: Magnetic cursor / hover distortion on text ── */
+const MagneticText = () => {
+  const [mouse, setMouse] = useState({ x: 0, y: 0 });
+  const [hovering, setHovering] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: false, margin: "-50px" });
+  const words = "PULL ME APART".split(" ");
 
-  useEffect(() => {
-    if (!isInView) { setActiveIdx(null); return; }
-    let idx = 0;
-    const interval = setInterval(() => {
-      setActiveIdx(idx % text.length);
-      idx++;
-    }, 400);
-    return () => clearInterval(interval);
-  }, [isInView]);
-
-  const drawLightning = useCallback(
-    (ctx: CanvasRenderingContext2D, x1: number, y1: number, x2: number, y2: number, depth: number) => {
-      if (depth <= 0) { ctx.lineTo(x2, y2); return; }
-      const midX = (x1 + x2) / 2 + (Math.random() - 0.5) * 30;
-      const midY = (y1 + y2) / 2 + (Math.random() - 0.5) * 20;
-      drawLightning(ctx, x1, y1, midX, midY, depth - 1);
-      drawLightning(ctx, midX, midY, x2, y2, depth - 1);
-    }, []
-  );
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const container = containerRef.current;
-    if (!canvas || !container || activeIdx === null) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    const rect = container.getBoundingClientRect();
-    canvas.width = rect.width;
-    canvas.height = rect.height;
-    let frameId: number;
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const letterX = (activeIdx + 0.5) * (canvas.width / text.length);
-      const letterY = canvas.height * 0.5;
-      const numBolts = 3 + Math.floor(Math.random() * 3);
-      for (let b = 0; b < numBolts; b++) {
-        const endX = letterX + (Math.random() - 0.5) * 160;
-        const endY = letterY + (Math.random() - 0.5) * 100;
-        ctx.beginPath();
-        ctx.moveTo(letterX, letterY);
-        drawLightning(ctx, letterX, letterY, endX, endY, 4);
-        ctx.strokeStyle = `hsla(50, 100%, ${55 + Math.random() * 20}%, ${0.4 + Math.random() * 0.5})`;
-        ctx.lineWidth = 0.5 + Math.random() * 1.5;
-        ctx.shadowColor = "hsl(50, 100%, 50%)";
-        ctx.shadowBlur = 8 + Math.random() * 12;
-        ctx.stroke();
-      }
-      for (let s = 0; s < 6; s++) {
-        const sx = letterX + (Math.random() - 0.5) * 80;
-        const sy = letterY + (Math.random() - 0.5) * 60;
-        ctx.beginPath();
-        ctx.arc(sx, sy, 1 + Math.random() * 2, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(50, 100%, 70%, ${Math.random() * 0.8})`;
-        ctx.shadowColor = "hsl(50, 100%, 60%)";
-        ctx.shadowBlur = 10;
-        ctx.fill();
-      }
-      frameId = requestAnimationFrame(animate);
-    };
-    animate();
-    return () => cancelAnimationFrame(frameId);
-  }, [activeIdx, drawLightning]);
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    setMouse({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  };
 
   return (
-    <div ref={sectionRef}>
-      <div ref={containerRef} className="relative py-12 flex items-center justify-center min-h-[180px]">
-        <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" style={{ mixBlendMode: "screen" }} />
-        <div className="flex gap-1 sm:gap-2 relative z-10">
-          {text.split("").map((char, i) => (
-            <motion.span
-              key={i}
-              className="font-display text-4xl sm:text-6xl lg:text-7xl select-none relative"
-              animate={{
-                color: activeIdx === i ? "hsl(0, 100%, 90%)" : activeIdx !== null && Math.abs(activeIdx - i) <= 1 ? "hsl(0, 100%, 75%)" : "hsl(0, 0%, 100%)",
-                textShadow: activeIdx === i ? "0 0 30px hsl(50 100% 50% / 0.9), 0 0 80px hsl(50 100% 50% / 0.5)" : "none",
-                scale: activeIdx === i ? 1.15 : 1,
-                y: activeIdx === i ? -4 : 0,
-              }}
-              transition={{ duration: 0.1, type: "spring", stiffness: 500, damping: 25 }}
-            >
-              {char}
-            </motion.span>
-          ))}
-        </div>
-        {activeIdx !== null && (
-          <motion.div
-            className="absolute bottom-4 h-8 rounded-full pointer-events-none"
-            style={{
-              left: `${(activeIdx / text.length) * 100}%`,
-              width: "80px",
-              background: "radial-gradient(ellipse, hsl(50 100% 50% / 0.3), transparent 70%)",
-            }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          />
-        )}
+    <div
+      ref={containerRef}
+      className="py-10 flex flex-wrap gap-3 sm:gap-5 items-center justify-center min-h-[140px] cursor-none"
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setHovering(true)}
+      onMouseLeave={() => setHovering(false)}
+    >
+      {words.map((word, wi) => {
+        const wordX = (wi + 0.5) * (320 / words.length);
+        const wordY = 70;
+        const dx = hovering ? mouse.x - wordX : 0;
+        const dy = hovering ? mouse.y - wordY : 0;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const strength = Math.max(0, 1 - dist / 160);
+        const pushX = dx * strength * -0.35;
+        const pushY = dy * strength * -0.35;
+
+        return (
+          <motion.span
+            key={wi}
+            className="font-display text-3xl sm:text-4xl md:text-5xl text-foreground"
+            animate={{ x: pushX, y: pushY, color: strength > 0.3 ? "hsl(0 100% 50%)" : "hsl(0 0% 100%)" }}
+            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+          >
+            {word}
+          </motion.span>
+        );
+      })}
+    </div>
+  );
+};
+
+/* ── B: Kinetic typography that assembles on scroll ── */
+const KineticAssemble = () => {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: false, margin: "-40px" });
+  const letters = "ASSEMBLED".split("");
+
+  return (
+    <div ref={ref} className="py-10 flex items-center justify-center min-h-[140px]">
+      <div className="flex gap-1 sm:gap-2">
+        {letters.map((l, i) => (
+          <motion.span
+            key={i}
+            className="font-display text-3xl sm:text-5xl md:text-6xl"
+            initial={{ opacity: 0, y: 60, rotateX: -90, scale: 0.5 }}
+            animate={
+              isInView
+                ? { opacity: 1, y: 0, rotateX: 0, scale: 1, color: "hsl(0 100% 50%)" }
+                : { opacity: 0, y: 60, rotateX: -90, scale: 0.5, color: "hsl(0 0% 100%)" }
+            }
+            transition={{ duration: 0.5, delay: i * 0.06, ease: [0.25, 1, 0.5, 1] }}
+          >
+            {l}
+          </motion.span>
+        ))}
       </div>
     </div>
   );
 };
 
-/* ── Demo 2: Glass Pop-up — RED ── */
-const GlassPopup = () => {
+/* ── C: Glass card morphs (borderless) ── */
+const GlassMorph = () => {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: false, margin: "-50px" });
+  const isInView = useInView(ref, { once: false, margin: "-40px" });
 
   return (
-    <div ref={ref} className="relative py-12 flex flex-col items-center gap-6 min-h-[220px]">
-      <AnimatePresence>
+    <div ref={ref} className="py-10 flex items-center justify-center min-h-[180px]" style={{ perspective: 1000 }}>
+      <AnimatePresence mode="wait">
         {isInView && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.7, y: 30 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.85, y: 15 }}
-            transition={{ type: "spring", damping: 22, stiffness: 280 }}
-            className="relative p-6 max-w-xs w-full"
+            key="glass"
+            initial={{ opacity: 0, scale: 0.7, rotateY: -40, y: 30 }}
+            animate={{ opacity: 1, scale: 1, rotateY: 0, y: 0 }}
+            exit={{ opacity: 0, scale: 0.85 }}
+            transition={{ type: "spring", damping: 20, stiffness: 200 }}
+            className="w-64 p-6"
             style={{
-              background: "hsl(0 0% 100%)",
-              border: "1px solid hsl(0 0% 90%)",
-              borderRadius: "1.25rem",
-              boxShadow: "0 24px 80px -20px hsl(0 0% 0% / 0.3)",
+              background: "hsl(0 0% 100% / 0.07)",
+              backdropFilter: "blur(20px)",
+              borderRadius: 20,
+              boxShadow: "0 0 0 1px hsl(0 0% 100% / 0.08), 0 20px 60px -15px hsl(0 0% 0% / 0.4), inset 0 1px 0 hsl(0 0% 100% / 0.12)",
             }}
           >
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-2 h-2 rounded-full bg-black/60 animate-pulse" />
-              <span className="text-[10px] tracking-[0.2em] uppercase text-black/60">Notification</span>
-            </div>
-            <p className="text-sm text-black leading-relaxed">
-              Glassmorphism pop-up con spring physics. Escala + profundidad.
+            <div className="w-1.5 h-1.5 rounded-full bg-primary mb-4 animate-pulse" />
+            <p className="font-display text-sm text-foreground mb-2">Glass Morphism</p>
+            <p className="text-[11px] text-muted-foreground leading-relaxed">
+              Backdrop blur + layered transparency. No hard borders.
             </p>
-            <div className="mt-4 h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(0 0% 0% / 0.15), transparent)" }} />
-            <p className="mt-3 text-[9px] text-black/60 tracking-[0.2em] uppercase">Nebu Design System</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -151,131 +111,146 @@ const GlassPopup = () => {
   );
 };
 
-/* ── Demo 3: 3D Tilt Object — RED, auto-animated ── */
-const TiltObject = () => {
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+/* ── D: 3D parallax depth background ── */
+const ParallaxDepth = () => {
+  const [mouse, setMouse] = useState({ x: 0, y: 0 });
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: false, margin: "-50px" });
 
-  useEffect(() => {
-    if (!isInView) { setTilt({ x: 0, y: 0 }); return; }
-    let time = 0;
-    let frameId: number;
-    const animate = () => {
-      time += 0.02;
-      setTilt({
-        x: Math.sin(time) * 15,
-        y: Math.cos(time * 0.7) * 12,
-      });
-      frameId = requestAnimationFrame(animate);
-    };
-    frameId = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(frameId);
-  }, [isInView]);
+  const handleMove = (e: React.MouseEvent) => {
+    const rect = ref.current?.getBoundingClientRect();
+    if (!rect) return;
+    setMouse({
+      x: ((e.clientX - rect.left) / rect.width - 0.5) * 2,
+      y: ((e.clientY - rect.top) / rect.height - 0.5) * 2,
+    });
+  };
+
+  const layers = [
+    { depth: 0.8, size: 120, opacity: 0.08, x: 50, y: 45 },
+    { depth: 0.5, size: 70, opacity: 0.12, x: 25, y: 60 },
+    { depth: 0.3, size: 50, opacity: 0.18, x: 75, y: 30 },
+    { depth: 0.15, size: 30, opacity: 0.3, x: 55, y: 55 },
+  ];
 
   return (
-    <div ref={ref} className="py-12 flex items-center justify-center min-h-[220px]" style={{ perspective: "800px" }}>
-      <motion.div className="relative w-36 h-36 sm:w-44 sm:h-44" animate={{ rotateX: tilt.y, rotateY: tilt.x }} transition={{ type: "spring", stiffness: 180, damping: 18 }}>
-        <div className="absolute inset-0" style={{
-          background: "hsl(0 0% 100% / 0.9)",
-          border: "1px solid hsl(0 0% 90%)",
-          borderRadius: "2rem",
-          boxShadow: `${-tilt.x * 0.8}px ${tilt.y * 0.8}px 40px hsl(0 0% 0% / 0.3)`,
-        }} />
-        <div className="absolute inset-0 pointer-events-none" style={{
-          borderRadius: "2rem",
-          background: `radial-gradient(circle at ${50 + tilt.x * 1.2}% ${50 - tilt.y * 1.2}%, hsl(0 0% 0% / 0.08), transparent 55%)`,
-        }} />
-        <svg className="absolute inset-6" viewBox="0 0 60 60" style={{ color: "hsl(0 0% 0% / 0.4)" }}>
-          <polygon points="30,5 55,20 55,40 30,55 5,40 5,20" fill="none" stroke="currentColor" strokeWidth="0.6" />
-          <circle cx="30" cy="30" r="12" fill="none" stroke="currentColor" strokeWidth="0.4" strokeDasharray="2 4">
-            <animateTransform attributeName="transform" type="rotate" from="0 30 30" to="360 30 30" dur="12s" repeatCount="indefinite" />
-          </circle>
-          <circle cx="30" cy="30" r="3" fill="currentColor" opacity="0.4">
-            <animate attributeName="r" values="2;4;2" dur="3s" repeatCount="indefinite" />
-          </circle>
-        </svg>
-        <div className="absolute -bottom-8 left-1/2 -translate-x-1/2">
-          <span className="text-[9px] tracking-[0.2em] uppercase text-white/60">
-            Tilt: {Math.round(tilt.x)}° / {Math.round(tilt.y)}°
-          </span>
-        </div>
-      </motion.div>
+    <div
+      ref={ref}
+      className="py-10 flex items-center justify-center min-h-[180px] relative overflow-hidden cursor-crosshair"
+      onMouseMove={handleMove}
+    >
+      {layers.map((l, i) => (
+        <motion.div
+          key={i}
+          className="absolute rounded-full"
+          style={{ width: l.size, height: l.size, left: `${l.x}%`, top: `${l.y}%`, background: `hsl(0 100% 50% / ${l.opacity})` }}
+          animate={{ x: mouse.x * l.depth * -20, y: mouse.y * l.depth * -15 }}
+          transition={{ type: "spring", stiffness: 120, damping: 20 }}
+        />
+      ))}
+      <p className="font-display text-base text-muted-foreground/60 z-10 select-none">Move cursor</p>
     </div>
   );
 };
 
-/* ── Demo 4: Scroll Morph Shapes — RED ── */
-const ScrollMorphShapes = () => {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const br1 = useTransform(scrollYProgress, [0, 0.5, 1], ["60% 40% 30% 70%", "30% 60% 70% 40%", "50% 50% 50% 50%"]);
-  const br2 = useTransform(scrollYProgress, [0, 0.5, 1], ["40% 60% 50% 50%", "50% 30% 60% 40%", "60% 40% 30% 70%"]);
-  const s1 = useTransform(scrollYProgress, [0, 0.5, 1], [0.7, 1.15, 0.85]);
-  const s2 = useTransform(scrollYProgress, [0, 0.5, 1], [1.1, 0.8, 1.1]);
-  const r1 = useTransform(scrollYProgress, [0, 1], [0, 200]);
-  const r2 = useTransform(scrollYProgress, [0, 1], [0, -150]);
-
-  return (
-    <div ref={ref} className="py-12 flex items-center justify-center gap-10 min-h-[220px]">
-      <motion.div className="w-24 h-24 sm:w-32 sm:h-32" style={{ borderRadius: br1, scale: s1, rotate: r1, background: "hsl(0 0% 100% / 0.9)", border: "1px solid hsl(0 0% 100%)", boxShadow: "0 0 40px hsl(0 0% 0% / 0.15)" }} />
-      <motion.div className="w-20 h-20 sm:w-28 sm:h-28" style={{ borderRadius: br2, scale: s2, rotate: r2, background: "hsl(0 0% 100% / 0.85)", border: "1px solid hsl(0 0% 100%)", boxShadow: "0 0 40px hsl(0 0% 0% / 0.1)" }} />
-      <p className="absolute text-[9px] tracking-[0.3em] uppercase text-white/60 pointer-events-none">
-        Scroll para morph
-      </p>
-    </div>
-  );
-};
-
-/* ── Demo 5: Reveal Wipe — RED ── */
-const RevealWipe = () => {
+/* ── E: Reveal-on-scroll image mask (liquid wipe) ── */
+const LiquidReveal = () => {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: false, margin: "-40px" });
 
+  const panels = [
+    { bg: "hsl(0 0% 12%)", label: "Papachoa" },
+    { bg: "hsl(0 0% 9%)", label: "Raw Paw" },
+    { bg: "hsl(0 0% 11%)", label: "Jewelry" },
+  ];
+
   return (
-    <div ref={ref} className="py-12 flex items-center justify-center gap-5 min-h-[220px]">
-      {[0, 1, 2].map((i) => (
+    <div ref={ref} className="py-10 flex items-center justify-center gap-3 min-h-[180px]">
+      {panels.map((panel, i) => (
         <motion.div
           key={i}
-          className="relative w-28 h-36 sm:w-36 sm:h-44 overflow-hidden"
-          style={{ borderRadius: "1.25rem" }}
-          initial={{ clipPath: "polygon(0 0, 0 0, 0 100%, 0 100%)" }}
-          animate={isInView ? { clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)" } : { clipPath: "polygon(0 0, 0 0, 0 100%, 0 100%)" }}
-          transition={{ duration: 0.9, delay: i * 0.18, ease: [0.33, 1, 0.68, 1] }}
+          className="relative flex items-end justify-start p-3 overflow-hidden"
+          style={{ width: 80, height: 110, borderRadius: 12, background: panel.bg }}
+          initial={{ clipPath: "inset(100% 0% 0% 0%)" }}
+          animate={
+            isInView
+              ? { clipPath: "inset(0% 0% 0% 0%)" }
+              : { clipPath: "inset(100% 0% 0% 0%)" }
+          }
+          transition={{ duration: 0.9, delay: i * 0.15, ease: [0.76, 0, 0.24, 1] }}
         >
-          <div className="absolute inset-0" style={{ background: `linear-gradient(${135 + i * 30}deg, hsl(0 0% 100%), hsl(0 0% 90%))` }} />
-          <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: `linear-gradient(hsl(0 0% 100% / 0.3) 1px, transparent 1px), linear-gradient(90deg, hsl(0 0% 100% / 0.3) 1px, transparent 1px)`, backgroundSize: "20px 20px" }} />
-          <div className="absolute inset-0 flex items-end p-4">
-            <span className="text-[9px] tracking-[0.2em] uppercase text-black/80 font-medium">Project {i + 1}</span>
-          </div>
+          <div className="absolute inset-0" style={{ background: "linear-gradient(to top, hsl(0 0% 0% / 0.6), transparent 60%)" }} />
+          <span className="relative text-[9px] font-mono tracking-wider text-white/70">{panel.label}</span>
         </motion.div>
       ))}
     </div>
   );
 };
 
+/* ── F: Spotlight cursor effect ── */
+const SpotlightEffect = () => {
+  const [mouse, setMouse] = useState({ x: 50, y: 50 });
+  const ref = useRef<HTMLDivElement>(null);
+
+  const handleMove = (e: React.MouseEvent) => {
+    const rect = ref.current?.getBoundingClientRect();
+    if (!rect) return;
+    setMouse({
+      x: ((e.clientX - rect.left) / rect.width) * 100,
+      y: ((e.clientY - rect.top) / rect.height) * 100,
+    });
+  };
+
+  return (
+    <div
+      ref={ref}
+      className="py-10 flex items-center justify-center min-h-[180px] relative overflow-hidden cursor-none"
+      onMouseMove={handleMove}
+      style={{ background: "hsl(0 0% 4%)", borderRadius: 16 }}
+    >
+      {/* Spotlight */}
+      <motion.div
+        className="absolute pointer-events-none"
+        style={{
+          width: 200,
+          height: 200,
+          borderRadius: "50%",
+          background: "radial-gradient(circle, hsl(0 100% 50% / 0.15) 0%, transparent 70%)",
+          left: `${mouse.x}%`,
+          top: `${mouse.y}%`,
+          transform: "translate(-50%, -50%)",
+        }}
+        animate={{ left: `${mouse.x}%`, top: `${mouse.y}%` }}
+        transition={{ type: "spring", stiffness: 200, damping: 25 }}
+      />
+
+      {/* Text that gets illuminated */}
+      <div className="relative z-10 text-center">
+        <p className="font-display text-2xl sm:text-3xl text-white/20 leading-tight">
+          LIGHT<br />FOLLOWS<br />YOU
+        </p>
+      </div>
+    </div>
+  );
+};
+
 /* ── Demo config ── */
 const demos = [
-  { id: "architecture", label: "SAAS DEMO", desc: "Auto-cycling preview", component: ArchitectureDemo },
-  { id: "electro", label: "ELECTRO TEXT", desc: "Auto-cycling lightning", component: ElectroText },
-  { id: "glass", label: "GLASS POP-UP", desc: "Appears on scroll", component: GlassPopup },
-  { id: "tilt", label: "3D TILT", desc: "Auto-animated lighting", component: TiltObject },
-  { id: "morph", label: "SCROLL MORPH", desc: "Scroll-driven shapes", component: ScrollMorphShapes },
-  { id: "reveal", label: "REVEAL WIPE", desc: "Clip-path transitions", component: RevealWipe },
+  { id: "magnetic", label: "MAGNETIC TEXT", desc: "Hover distortion", component: MagneticText },
+  { id: "kinetic", label: "KINETIC TYPE", desc: "Scroll assembly", component: KineticAssemble },
+  { id: "glass", label: "GLASS MORPH", desc: "No hard borders", component: GlassMorph },
+  { id: "parallax", label: "3D PARALLAX", desc: "Depth on cursor", component: ParallaxDepth },
+  { id: "reveal", label: "LIQUID REVEAL", desc: "Ink-wipe scroll", component: LiquidReveal },
+  { id: "spotlight", label: "SPOTLIGHT", desc: "Cursor light", component: SpotlightEffect },
 ];
 
-/* ── Main Section with scroll-driven red background ── */
+/* ── Main Section ── */
 export const DesignLab = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
-
-  // Scroll-driven red fill: maps scroll progress to background opacity
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"],
   });
-
-  // First 30% of scroll: red fills in (0 → 1). Last 30%: red fades out (1 → 0).
   const redOpacity = useTransform(scrollYProgress, [0.05, 0.25, 0.75, 0.95], [0, 1, 1, 0]);
 
   return (
@@ -283,13 +258,9 @@ export const DesignLab = () => {
       {/* Scroll-driven red background */}
       <motion.div
         className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundColor: "hsl(0 100% 50%)",
-          opacity: redOpacity,
-        }}
+        style={{ backgroundColor: "hsl(0 100% 50%)", opacity: redOpacity }}
         aria-hidden="true"
       />
-      {/* Subtle dark vignette for depth on red */}
       <motion.div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -310,36 +281,81 @@ export const DesignLab = () => {
             <span className="text-primary">DESIGN</span> <span className="text-white">LAB</span>
           </h2>
           <p className="text-white/70 text-sm max-w-md leading-relaxed">
-            Esto es un demo. Todo puede adaptarse a tu marca. Los elementos se activan automáticamente al hacer scroll.
+            Six live interaction demos. Every effect is possible on your project.
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-16 sm:gap-20 lg:gap-24">
-          {demos.map((demo, i) => {
-            const DemoComponent = demo.component;
-            return (
-              <motion.div
-                key={demo.id}
-                initial={{ opacity: 0, y: 60, scale: 0.95 }}
-                whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.7, delay: i * 0.08, ease: [0.33, 1, 0.68, 1] }}
-                className="relative"
-              >
-                <div className="flex items-center gap-3 mb-2">
-                  <motion.div
-                    className="w-2 h-2 rounded-full bg-white"
-                    animate={{ boxShadow: ["0 0 0px hsl(0 0% 100% / 0)", "0 0 12px hsl(0 0% 100% / 0.6)", "0 0 0px hsl(0 0% 100% / 0)"] }}
-                    transition={{ duration: 3, repeat: Infinity, delay: i * 0.5 }}
-                  />
-                  <span className="text-[10px] font-display tracking-[0.2em] text-white">{demo.label}</span>
-                  <span className="text-[9px] text-white/60 tracking-wider ml-auto">{demo.desc}</span>
-                </div>
-                <div className="h-px mb-6" style={{ background: "linear-gradient(90deg, hsl(0 0% 100% / 0.2), transparent 80%)" }} />
-                <DemoComponent />
-              </motion.div>
-            );
-          })}
+        {/* Flowing demo layout — no grid boxes */}
+        <div className="space-y-20 sm:space-y-24">
+          {/* Row 1: 2-col */}
+          <div className="grid md:grid-cols-2 gap-12 sm:gap-16 lg:gap-20">
+            {demos.slice(0, 2).map((demo, i) => {
+              const DemoComponent = demo.component;
+              return (
+                <motion.div
+                  key={demo.id}
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-60px" }}
+                  transition={{ duration: 0.65, delay: i * 0.1 }}
+                >
+                  <div className="flex items-center gap-3 mb-2">
+                    <span className="text-[10px] font-mono tracking-[0.25em] text-white/80">{demo.label}</span>
+                    <div className="h-px flex-1" style={{ background: "hsl(0 0% 100% / 0.12)" }} />
+                    <span className="text-[9px] text-white/40 tracking-wider">{demo.desc}</span>
+                  </div>
+                  <DemoComponent />
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* Row 2: full width + narrow */}
+          <div className="grid md:grid-cols-5 gap-12 sm:gap-16">
+            {demos.slice(2, 4).map((demo, i) => {
+              const DemoComponent = demo.component;
+              return (
+                <motion.div
+                  key={demo.id}
+                  className={i === 0 ? "md:col-span-2" : "md:col-span-3"}
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-60px" }}
+                  transition={{ duration: 0.65, delay: i * 0.1 }}
+                >
+                  <div className="flex items-center gap-3 mb-2">
+                    <span className="text-[10px] font-mono tracking-[0.25em] text-white/80">{demo.label}</span>
+                    <div className="h-px flex-1" style={{ background: "hsl(0 0% 100% / 0.12)" }} />
+                    <span className="text-[9px] text-white/40 tracking-wider">{demo.desc}</span>
+                  </div>
+                  <DemoComponent />
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* Row 3: 2-col */}
+          <div className="grid md:grid-cols-2 gap-12 sm:gap-16 lg:gap-20">
+            {demos.slice(4, 6).map((demo, i) => {
+              const DemoComponent = demo.component;
+              return (
+                <motion.div
+                  key={demo.id}
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-60px" }}
+                  transition={{ duration: 0.65, delay: i * 0.1 }}
+                >
+                  <div className="flex items-center gap-3 mb-2">
+                    <span className="text-[10px] font-mono tracking-[0.25em] text-white/80">{demo.label}</span>
+                    <div className="h-px flex-1" style={{ background: "hsl(0 0% 100% / 0.12)" }} />
+                    <span className="text-[9px] text-white/40 tracking-wider">{demo.desc}</span>
+                  </div>
+                  <DemoComponent />
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

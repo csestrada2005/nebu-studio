@@ -1,185 +1,155 @@
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef, useState } from "react";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 
-const phases = [
+const steps = [
   {
-    id: "discovery",
+    id: "audit",
     number: "01",
-    title: "DESCUBRIMIENTO",
-    description: "Investigamos tu negocio, audiencia y metas para construir sobre una base solida.",
+    title: "Audit & Strategy",
+    desc: "We dissect your market, audience, and competitors to build on real insight.",
+    outcome: "→ Clear positioning + conversion roadmap",
   },
   {
-    id: "strategy",
+    id: "ux",
     number: "02",
-    title: "ESTRATEGIA",
-    description: "Arquitectamos tu sitio alrededor de como los usuarios reales piensan y convierten.",
+    title: "UX Structure",
+    desc: "Information architecture designed for how users actually think and move.",
+    outcome: "→ Wireframes that reduce friction by design",
   },
   {
     id: "design",
     number: "03",
-    title: "DISEÑO",
-    description: "Visuales premium con proposito. Cada pixel sirve a la estrategia.",
+    title: "Design System",
+    desc: "A premium visual identity built for consistency, speed, and brand authority.",
+    outcome: "→ Production-ready UI with zero guesswork",
   },
   {
     id: "build",
     number: "04",
-    title: "BUILD",
-    description: "Codigo limpio, motion fluido, rendimiento solido. Entregado rapido.",
-  },
-  {
-    id: "polish",
-    number: "05",
-    title: "POLISH",
-    description: "Obsesion por el detalle para que tus usuarios no tengan que pensar.",
+    title: "Build & Integrations",
+    desc: "Clean code, fluid motion, and every integration you need — shipped fast.",
+    outcome: "→ Live product, tested on all devices",
   },
   {
     id: "launch",
-    number: "06",
-    title: "LAUNCH",
-    description: "Lanzamiento con confianza. Handoff completo, cero cabos sueltos.",
+    number: "05",
+    title: "Launch & Optimize",
+    desc: "We don't disappear at go-live. We track, test, and improve what matters.",
+    outcome: "→ Conversion-optimized and ready to scale",
   },
 ];
 
-export const ProcessSection = () => {
-  const sectionRef = useRef<HTMLElement>(null);
-  const totalPhases = phases.length;
-  // Each phase gets 100vh of scroll + 1 for the title screen
-  const stickyHeight = `${(totalPhases + 1) * 100}vh`;
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end end"],
-  });
-
-  // Title: visible in [0, 1/(n+1)], then fades out
-  const titleEnd = 1 / (totalPhases + 1);
-  const titleOpacity = useTransform(scrollYProgress, [0, titleEnd * 0.7, titleEnd], [1, 1, 0]);
-  const titleY = useTransform(scrollYProgress, [0, titleEnd], [0, -80]);
-  const titleScale = useTransform(scrollYProgress, [0, titleEnd], [1, 0.85]);
-
-  return (
-    <section
-      ref={sectionRef}
-      className="relative"
-      id="process"
-      style={{ height: stickyHeight }}
-    >
-      <div className="sticky top-0 h-screen flex items-center justify-center overflow-hidden">
-        {/* Title screen */}
-        <motion.div
-          className="absolute inset-0 flex flex-col items-center justify-center z-10"
-          style={{ opacity: titleOpacity, y: titleY, scale: titleScale }}
-        >
-          <h2 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-center">
-            A PROCESS THAT <span className="text-primary">SHIPS.</span>
-          </h2>
-        </motion.div>
-
-        {/* Individual phases */}
-        {phases.map((phase, i) => {
-          const phaseStart = (i + 1) / (totalPhases + 1);
-          const phaseEnd = (i + 2) / (totalPhases + 1);
-          const phaseMid = (phaseStart + phaseEnd) / 2;
-
-          return (
-            <PhaseSlide
-              key={phase.id}
-              phase={phase}
-              scrollYProgress={scrollYProgress}
-              fadeInStart={phaseStart}
-              peak={phaseMid}
-              fadeOutEnd={phaseEnd}
-              isLast={i === totalPhases - 1}
-            />
-          );
-        })}
-
-        {/* Scroll indicator */}
-        <motion.div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-          style={{
-            opacity: useTransform(scrollYProgress, [0, 0.05, 0.9, 1], [1, 0.3, 0.3, 0]),
-          }}
-        >
-          <span className="text-[9px] tracking-[0.3em] uppercase text-muted-foreground">Scroll</span>
-          <motion.div
-            className="w-px h-6 bg-primary/50"
-            animate={{ scaleY: [1, 0.5, 1] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-          />
-        </motion.div>
-      </div>
-    </section>
-  );
-};
-
-/* ── Individual phase slide ── */
-const PhaseSlide = ({
-  phase,
-  scrollYProgress,
-  fadeInStart,
-  peak,
-  fadeOutEnd,
-  isLast,
+const StepRow = ({
+  step,
+  index,
+  total,
 }: {
-  phase: (typeof phases)[number];
-  scrollYProgress: ReturnType<typeof useScroll>["scrollYProgress"];
-  fadeInStart: number;
-  peak: number;
-  fadeOutEnd: number;
-  isLast: boolean;
+  step: (typeof steps)[number];
+  index: number;
+  total: number;
 }) => {
-  // Fade in from fadeInStart to peak, hold, then fade out to fadeOutEnd
-  // Last phase stays visible until scroll ends
-  const opacity = useTransform(
-    scrollYProgress,
-    isLast
-      ? [fadeInStart, fadeInStart + (peak - fadeInStart) * 0.6, fadeOutEnd]
-      : [fadeInStart, fadeInStart + (peak - fadeInStart) * 0.6, peak + (fadeOutEnd - peak) * 0.4, fadeOutEnd],
-    isLast ? [0, 1, 1] : [0, 1, 1, 0]
-  );
-  const y = useTransform(
-    scrollYProgress,
-    isLast
-      ? [fadeInStart, fadeInStart + (peak - fadeInStart) * 0.6, fadeOutEnd]
-      : [fadeInStart, fadeInStart + (peak - fadeInStart) * 0.6, peak + (fadeOutEnd - peak) * 0.4, fadeOutEnd],
-    isLast ? [60, 0, 0] : [60, 0, 0, -40]
-  );
-  const scale = useTransform(
-    scrollYProgress,
-    isLast
-      ? [fadeInStart, fadeInStart + (peak - fadeInStart) * 0.6]
-      : [fadeInStart, fadeInStart + (peak - fadeInStart) * 0.6],
-    [0.9, 1]
-  );
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-60px" });
+  const [hovered, setHovered] = useState(false);
 
   return (
     <motion.div
-      className="absolute inset-0 flex flex-col items-center justify-center z-20 pointer-events-none"
-      style={{ opacity, y, scale }}
+      ref={ref}
+      className="group relative"
+      initial={{ opacity: 0, y: 24 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
     >
-      {/* Phase number */}
-      <motion.span
-        className="font-display text-8xl sm:text-9xl text-primary mb-4 select-none"
-      >
-        {phase.number}
-      </motion.span>
-
-      {/* Phase title */}
-      <h3 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-foreground mb-4 text-center">
-        {phase.title}
-      </h3>
-
-      {/* Separator line */}
       <div
-        className="w-16 h-px mb-6"
-        style={{ background: "linear-gradient(90deg, transparent, hsl(0 100% 50% / 0.5), transparent)" }}
-      />
+        className="flex items-start gap-6 sm:gap-10 py-8 cursor-default"
+        style={{ borderBottom: index < total - 1 ? "1px solid hsl(0 0% 100% / 0.07)" : "none" }}
+      >
+        {/* Number */}
+        <motion.span
+          className="font-mono text-[11px] tracking-[0.25em] flex-shrink-0 w-8 pt-1 transition-colors duration-300"
+          animate={{ color: hovered ? "hsl(0 100% 50%)" : "hsl(0 0% 100% / 0.25)" }}
+        >
+          {step.number}
+        </motion.span>
 
-      {/* Description */}
-      <p className="text-muted-foreground text-sm sm:text-base max-w-md text-center leading-relaxed px-6">
-        {phase.description}
-      </p>
+        {/* Content */}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-start justify-between gap-4">
+            <motion.h3
+              className="font-display text-2xl sm:text-3xl md:text-4xl leading-none transition-colors duration-300"
+              animate={{ color: hovered ? "hsl(0 100% 50%)" : "hsl(0 0% 100%)" }}
+            >
+              {step.title}
+            </motion.h3>
+          </div>
+
+          <AnimatePresence>
+            {hovered && (
+              <motion.div
+                initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                animate={{ opacity: 1, height: "auto", marginTop: 12 }}
+                exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                transition={{ duration: 0.3, ease: [0.25, 1, 0.5, 1] }}
+                className="overflow-hidden"
+              >
+                <p className="text-muted-foreground text-sm leading-relaxed mb-3">
+                  {step.desc}
+                </p>
+                <span className="text-[11px] font-mono tracking-wider text-primary">
+                  {step.outcome}
+                </span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+
+      {/* Progress bar on hover */}
+      <motion.div
+        className="absolute bottom-0 left-0 h-px bg-primary"
+        animate={{ scaleX: hovered ? 1 : 0, opacity: hovered ? 1 : 0 }}
+        style={{ transformOrigin: "left", width: "100%" }}
+        transition={{ duration: 0.4 }}
+      />
     </motion.div>
+  );
+};
+
+export const ProcessSection = () => {
+  const ref = useRef<HTMLElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  return (
+    <section ref={ref} className="py-24 sm:py-32 relative overflow-hidden" id="process">
+      <div className="container relative z-10">
+        {/* Header */}
+        <motion.div
+          className="mb-16 sm:mb-20 max-w-2xl"
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+        >
+          <p className="text-[10px] font-mono tracking-[0.3em] uppercase text-primary mb-4">
+            Process
+          </p>
+          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-5">
+            A PROCESS THAT{" "}
+            <span className="text-primary">SHIPS.</span>
+          </h2>
+          <p className="text-muted-foreground text-sm leading-relaxed max-w-md">
+            Five phases. No surprises. Hover each step to see the outcome.
+          </p>
+        </motion.div>
+
+        {/* Steps */}
+        <div>
+          {steps.map((step, i) => (
+            <StepRow key={step.id} step={step} index={i} total={steps.length} />
+          ))}
+        </div>
+      </div>
+    </section>
   );
 };
