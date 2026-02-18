@@ -2,23 +2,24 @@ import { useRef, useState, useCallback } from "react";
 import { AnimatePresence } from "framer-motion";
 import { HeroSection } from "@/components/motion/HeroSection";
 import { MarqueeTicker } from "@/components/motion/MarqueeTicker";
-import { StatsStrip } from "@/components/motion/StatsStrip";
 import { ServicesSection } from "@/components/motion/ServicesSection";
 import { DesignLab } from "@/components/motion/DesignLab";
 import { ProcessSection } from "@/components/motion/ProcessSection";
 import { GrowthImpact } from "@/components/motion/GrowthImpact";
 import { FeaturedWork } from "@/components/motion/FeaturedWork";
 import { BigCTA } from "@/components/motion/BigCTA";
-import { ContactSection } from "@/components/motion/ContactSection";
+import { ChoosePathContact } from "@/components/motion/ChoosePathContact";
 import { DramaticFooter } from "@/components/motion/DramaticFooter";
 import { BottomNav } from "@/components/motion/BottomNav";
 import { SoundToggle } from "@/components/motion/SoundToggle";
 import { CustomCursor } from "@/components/motion/CustomCursor";
 import { CornerCrosses } from "@/components/motion/CornerCrosses";
-import { ChatWidget } from "@/components/motion/ChatWidget";
-import { ScrollRevealText } from "@/components/motion/ScrollRevealText";
+import { NebuOrb } from "@/components/motion/NebuOrb";
 import { LoadingScreen } from "@/components/motion/LoadingScreen";
 import { SectionSeparator } from "@/components/motion/SectionSeparator";
+import { BuildModes } from "@/components/motion/BuildModes";
+import { StandardsSection } from "@/components/motion/StandardsSection";
+import { SectionNav } from "@/components/motion/SectionNav";
 
 const Index = () => {
   const cursorZoneRef = useRef<HTMLDivElement>(null);
@@ -37,23 +38,13 @@ const Index = () => {
           <SoundToggle />
           <CustomCursor containerRef={cursorZoneRef} />
           <CornerCrosses />
-          <ChatWidget />
+          <NebuOrb />
+          <SectionNav />
           <main ref={cursorZoneRef}>
             <HeroSection />
             <MarqueeTicker />
-            <StatsStrip />
 
-            <section className="py-20 sm:py-28 relative overflow-hidden">
-              <div className="container max-w-4xl">
-                <ScrollRevealText
-                  lines={[
-                    { text: "WE BUILD THE ENGINE;", highlightWords: ["ENGINE;"] },
-                    { text: "YOU BUILD THE", highlightWords: [] },
-                    { text: "EMPIRE.", highlightWords: ["EMPIRE."] },
-                  ]}
-                />
-              </div>
-            </section>
+            <BuildModes />
 
             <SectionSeparator />
             <ServicesSection />
@@ -64,8 +55,10 @@ const Index = () => {
             <SectionSeparator />
             <FeaturedWork />
             <SectionSeparator />
+            <StandardsSection />
+            <SectionSeparator />
             <BigCTA />
-            <ContactSection />
+            <ChoosePathContact />
             <DramaticFooter />
           </main>
           <BottomNav />
