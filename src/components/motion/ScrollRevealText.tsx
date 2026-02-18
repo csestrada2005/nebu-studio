@@ -15,7 +15,7 @@ export const ScrollRevealText = ({ lines, className = "" }: ScrollRevealTextProp
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start 0.85", "end 0.4"],
+    offset: ["start 0.85", "end 0.15"],
   });
 
   const allWords = lines.flatMap(line => line.text.split(" "));
@@ -63,8 +63,9 @@ const Word = ({
   range: [number, number];
   isHighlight: boolean;
 }) => {
-  const opacity = useTransform(progress, range, [0.15, 1]);
-  const y = useTransform(progress, range, [8, 0]);
+  // Paint in and vanish out
+  const opacity = useTransform(progress, [range[0], range[1], Math.min(range[1] + 0.3, 1)], [0.15, 1, 0.15]);
+  const y = useTransform(progress, [range[0], range[1]], [8, 0]);
 
   return (
     <motion.span

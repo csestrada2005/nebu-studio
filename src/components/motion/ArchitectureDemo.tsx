@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence, useInView } from "framer-motion";
+import { useRef } from "react";
 
 const CODE_LINES = [
   { indent: 0, text: "export const SaaSApp = () => {" },
@@ -18,15 +19,25 @@ const CODE_LINES = [
 
 export const ArchitectureDemo = () => {
   const [revealed, setRevealed] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: false, margin: "-50px" });
+
+  // Auto-flip on timer when in view
+  useEffect(() => {
+    if (!isInView) return;
+    const interval = setInterval(() => {
+      setRevealed((prev) => !prev);
+    }, 3500);
+    return () => clearInterval(interval);
+  }, [isInView]);
 
   return (
-    <div className="relative py-6 flex flex-col items-center min-h-[280px] select-none">
+    <div ref={ref} className="relative py-6 flex flex-col items-center min-h-[280px] select-none">
       <AnimatePresence mode="wait">
         {!revealed ? (
           <motion.div
             key="laptop"
-            className="cursor-pointer flex flex-col items-center"
-            onClick={() => setRevealed(true)}
+            className="flex flex-col items-center"
             exit={{ scale: 0.8, opacity: 0, rotateY: 90 }}
             transition={{ duration: 0.4 }}
           >
@@ -40,7 +51,6 @@ export const ArchitectureDemo = () => {
                 boxShadow: "0 0 40px hsl(222 100% 65% / 0.08), inset 0 1px 0 hsl(0 0% 100% / 0.03)",
               }}
             >
-              {/* Grid bg */}
               <div
                 className="absolute inset-0 opacity-[0.03]"
                 style={{
@@ -49,7 +59,6 @@ export const ArchitectureDemo = () => {
                   borderRadius: "0.75rem 0.75rem 0 0",
                 }}
               />
-              {/* SaaS icon */}
               <div className="flex flex-col items-center gap-2 relative z-10">
                 <svg viewBox="0 0 40 40" className="w-10 h-10" style={{ color: "hsl(222 100% 65%)" }}>
                   <rect x="4" y="8" width="32" height="24" rx="3" fill="none" stroke="currentColor" strokeWidth="1.2" />
@@ -66,7 +75,7 @@ export const ArchitectureDemo = () => {
                   animate={{ opacity: [0.5, 1, 0.5] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
-                  Click on me
+                  SaaS Dashboard
                 </motion.p>
               </div>
             </div>
@@ -79,11 +88,7 @@ export const ArchitectureDemo = () => {
                 borderTop: "1px solid hsl(222 100% 65% / 0.08)",
               }}
             />
-            {/* Laptop bottom edge */}
-            <div
-              className="w-20 h-1 rounded-b-full"
-              style={{ background: "hsl(222 30% 20%)" }}
-            />
+            <div className="w-20 h-1 rounded-b-full" style={{ background: "hsl(222 30% 20%)" }} />
           </motion.div>
         ) : (
           <motion.div
@@ -91,10 +96,8 @@ export const ArchitectureDemo = () => {
             initial={{ scale: 0.8, opacity: 0, rotateY: -90 }}
             animate={{ scale: 1, opacity: 1, rotateY: 0 }}
             transition={{ duration: 0.5, type: "spring", damping: 20 }}
-            className="w-full max-w-sm cursor-pointer"
-            onClick={() => setRevealed(false)}
+            className="w-full max-w-sm"
           >
-            {/* Code editor */}
             <div
               className="relative overflow-hidden"
               style={{
@@ -104,14 +107,12 @@ export const ArchitectureDemo = () => {
                 boxShadow: "0 12px 40px hsl(222 100% 10% / 0.4)",
               }}
             >
-              {/* Title bar */}
               <div className="flex items-center gap-1.5 px-4 py-2.5 border-b" style={{ borderColor: "hsl(222 100% 65% / 0.06)" }}>
                 <div className="w-2 h-2 rounded-full" style={{ background: "hsl(0 70% 55%)" }} />
                 <div className="w-2 h-2 rounded-full" style={{ background: "hsl(45 80% 55%)" }} />
                 <div className="w-2 h-2 rounded-full" style={{ background: "hsl(140 60% 45%)" }} />
                 <span className="ml-3 text-[9px] font-mono text-muted-foreground/30 tracking-wider">app.tsx</span>
               </div>
-              {/* Code */}
               <div className="p-4 space-y-0.5 font-mono text-[10px] sm:text-[11px] leading-relaxed">
                 {CODE_LINES.map((line, i) => (
                   <motion.div
@@ -140,13 +141,12 @@ export const ArchitectureDemo = () => {
                   </motion.div>
                 ))}
               </div>
-              {/* Bottom hint */}
               <motion.p
                 className="text-center text-[8px] font-mono text-muted-foreground/20 tracking-[0.2em] uppercase pb-3"
                 animate={{ opacity: [0.2, 0.5, 0.2] }}
                 transition={{ duration: 3, repeat: Infinity }}
               >
-                Click to go back
+                Auto-cycling demo
               </motion.p>
             </div>
           </motion.div>

@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { ROICalculator } from "@/components/tools/ROICalculator";
+import { useScrollPaint } from "@/hooks/useScrollPaint";
 
 /* ── Animated counter ── */
 const CountUp = ({ end, suffix = "", prefix = "" }: { end: number; suffix?: string; prefix?: string }) => {
@@ -24,11 +25,7 @@ const CountUp = ({ end, suffix = "", prefix = "" }: { end: number; suffix?: stri
     return () => cancelAnimationFrame(raf);
   }, [isInView, end]);
 
-  return (
-    <span ref={ref} className="tabular-nums">
-      {prefix}{value}{suffix}
-    </span>
-  );
+  return <span ref={ref} className="tabular-nums">{prefix}{value}{suffix}</span>;
 };
 
 /* ── Line chart (SVG) ── */
@@ -51,7 +48,6 @@ const LineChart = ({ isInView }: { isInView: boolean }) => {
     <div className="relative">
       <p className="text-[10px] tracking-widest uppercase text-muted-foreground/50 mb-3">Conversion Rate Over Time</p>
       <svg viewBox={`0 0 ${width} ${height}`} className="w-full max-w-md">
-        {/* Grid lines */}
         {[0, 25, 50, 75].map((v) => {
           const y = height - padY - (v / 100) * (height - padY * 2);
           return (
@@ -61,63 +57,18 @@ const LineChart = ({ isInView }: { isInView: boolean }) => {
             </g>
           );
         })}
-
-        {/* Animated path */}
-        <motion.path
-          d={pathData}
-          fill="none"
-          stroke="hsl(0 100% 50%)"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          initial={{ pathLength: 0 }}
-          animate={isInView ? { pathLength: 1 } : { pathLength: 0 }}
-          transition={{ duration: 1.5, ease: "easeOut", delay: 0.3 }}
-        />
-
-        {/* Glow path */}
-        <motion.path
-          d={pathData}
-          fill="none"
-          stroke="hsl(0 100% 50% / 0.3)"
-          strokeWidth="6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          filter="blur(4px)"
-          initial={{ pathLength: 0 }}
-          animate={isInView ? { pathLength: 1 } : { pathLength: 0 }}
-          transition={{ duration: 1.5, ease: "easeOut", delay: 0.3 }}
-        />
-
-        {/* Data points */}
+        <motion.path d={pathData} fill="none" stroke="hsl(0 100% 50%)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" initial={{ pathLength: 0 }} animate={isInView ? { pathLength: 1 } : { pathLength: 0 }} transition={{ duration: 1.5, ease: "easeOut", delay: 0.3 }} />
+        <motion.path d={pathData} fill="none" stroke="hsl(0 100% 50% / 0.3)" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" filter="blur(4px)" initial={{ pathLength: 0 }} animate={isInView ? { pathLength: 1 } : { pathLength: 0 }} transition={{ duration: 1.5, ease: "easeOut", delay: 0.3 }} />
         {points.map((p, i) => {
           const x = padX + (i / (points.length - 1)) * (width - padX * 2);
           const y = height - padY - (p / 100) * (height - padY * 2);
           return (
             <g key={i}>
-              <motion.circle
-                cx={x}
-                cy={y}
-                r={hoveredIdx === i ? 5 : 3}
-                fill="hsl(0 100% 50%)"
-                initial={{ opacity: 0 }}
-                animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-                transition={{ delay: 0.3 + i * 0.08 }}
-                onMouseEnter={() => setHoveredIdx(i)}
-                onMouseLeave={() => setHoveredIdx(null)}
-                className="cursor-pointer"
-              />
+              <motion.circle cx={x} cy={y} r={hoveredIdx === i ? 5 : 3} fill="hsl(0 100% 50%)" initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : { opacity: 0 }} transition={{ delay: 0.3 + i * 0.08 }} onMouseEnter={() => setHoveredIdx(i)} onMouseLeave={() => setHoveredIdx(null)} className="cursor-pointer" />
               {hoveredIdx === i && (
                 <g>
-                  <rect
-                    x={x - 22} y={y - 28} width="44" height="20" rx="6"
-                    fill="hsl(0 12% 8% / 0.9)"
-                    stroke="hsl(0 100% 50% / 0.3)"
-                    strokeWidth="0.5"
-                  />
-                  <text x={x} y={y - 15} fill="hsl(0 100% 50%)" fontSize="9" textAnchor="middle" fontWeight="600">
-                    {p}%
-                  </text>
+                  <rect x={x - 22} y={y - 28} width="44" height="20" rx="6" fill="hsl(0 12% 8% / 0.9)" stroke="hsl(0 100% 50% / 0.3)" strokeWidth="0.5" />
+                  <text x={x} y={y - 15} fill="hsl(0 100% 50%)" fontSize="9" textAnchor="middle" fontWeight="600">{p}%</text>
                 </g>
               )}
             </g>
@@ -144,7 +95,6 @@ const BarChart = ({ isInView }: { isInView: boolean }) => {
   const barWidth = 30;
   const gap = (width - padX * 2 - barWidth * data.length) / (data.length - 1);
   const maxVal = 120;
-
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
 
   return (
@@ -155,43 +105,15 @@ const BarChart = ({ isInView }: { isInView: boolean }) => {
           const x = padX + i * (barWidth + gap);
           const barH = (d.value / maxVal) * (height - padY * 2);
           const y = height - padY - barH;
-
           return (
             <g key={i}>
-              <motion.rect
-                x={x}
-                y={y}
-                width={barWidth}
-                height={barH}
-                rx={4}
-                fill={hoveredIdx === i ? "hsl(0 100% 50%)" : "hsl(0 100% 50% / 0.6)"}
-                initial={{ height: 0, y: height - padY }}
-                animate={isInView ? { height: barH, y } : { height: 0, y: height - padY }}
-                transition={{ duration: 0.6, delay: 0.4 + i * 0.1, ease: [0.33, 1, 0.68, 1] }}
-                onMouseEnter={() => setHoveredIdx(i)}
-                onMouseLeave={() => setHoveredIdx(null)}
-                className="cursor-pointer"
-              />
-              {/* Glow */}
-              {hoveredIdx === i && (
-                <rect x={x - 2} y={y - 2} width={barWidth + 4} height={barH + 4} rx={6} fill="none" stroke="hsl(0 100% 50% / 0.3)" strokeWidth="1" />
-              )}
-              <text
-                x={x + barWidth / 2}
-                y={height - 8}
-                fill="hsl(0 8% 55%)"
-                fontSize="8"
-                textAnchor="middle"
-              >
-                {d.label}
-              </text>
+              <motion.rect x={x} y={y} width={barWidth} height={barH} rx={4} fill={hoveredIdx === i ? "hsl(0 100% 50%)" : "hsl(0 100% 50% / 0.6)"} initial={{ height: 0, y: height - padY }} animate={isInView ? { height: barH, y } : { height: 0, y: height - padY }} transition={{ duration: 0.6, delay: 0.4 + i * 0.1, ease: [0.33, 1, 0.68, 1] }} onMouseEnter={() => setHoveredIdx(i)} onMouseLeave={() => setHoveredIdx(null)} className="cursor-pointer" />
+              {hoveredIdx === i && <rect x={x - 2} y={y - 2} width={barWidth + 4} height={barH + 4} rx={6} fill="none" stroke="hsl(0 100% 50% / 0.3)" strokeWidth="1" />}
+              <text x={x + barWidth / 2} y={height - 8} fill="hsl(0 8% 55%)" fontSize="8" textAnchor="middle">{d.label}</text>
               {hoveredIdx === i && (
                 <g>
-                  <rect x={x + barWidth / 2 - 18} y={y - 22} width="36" height="18" rx="5"
-                    fill="hsl(0 12% 8% / 0.9)" stroke="hsl(0 100% 50% / 0.3)" strokeWidth="0.5" />
-                  <text x={x + barWidth / 2} y={y - 10} fill="hsl(0 100% 50%)" fontSize="9" textAnchor="middle" fontWeight="600">
-                    ${d.value}
-                  </text>
+                  <rect x={x + barWidth / 2 - 18} y={y - 22} width="36" height="18" rx="5" fill="hsl(0 12% 8% / 0.9)" stroke="hsl(0 100% 50% / 0.3)" strokeWidth="0.5" />
+                  <text x={x + barWidth / 2} y={y - 10} fill="hsl(0 100% 50%)" fontSize="9" textAnchor="middle" fontWeight="600">${d.value}</text>
                 </g>
               )}
             </g>
@@ -213,32 +135,18 @@ const metrics = [
 export const GrowthImpact = () => {
   const ref = useRef<HTMLElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const headerPaint = useScrollPaint({ xDrift: 20 });
 
   return (
     <section ref={ref} className="py-24 sm:py-32 relative overflow-hidden" id="growth">
-      {/* Background ambient */}
-      <div
-        className="absolute top-0 right-0 w-1/2 h-full pointer-events-none"
-        style={{ background: "radial-gradient(ellipse at 80% 40%, hsl(0 100% 50% / 0.04), transparent 60%)" }}
-        aria-hidden="true"
-      />
+      <div className="absolute top-0 right-0 w-1/2 h-full pointer-events-none" style={{ background: "radial-gradient(ellipse at 80% 40%, hsl(0 100% 50% / 0.04), transparent 60%)" }} aria-hidden="true" />
 
       <div className="container relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="mb-16"
-        >
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : {}}
-            transition={{ delay: 0.1 }}
-            className="text-muted-foreground text-xs tracking-[0.25em] uppercase mb-4 flex items-center gap-3"
-          >
+        <motion.div ref={headerPaint.ref} style={headerPaint.style} className="mb-16">
+          <p className="text-muted-foreground text-xs tracking-[0.25em] uppercase mb-4 flex items-center gap-3">
             <span className="w-8 h-px bg-primary/50" />
             Results
-          </motion.p>
+          </p>
           <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-4">
             GROWTH <span className="text-primary">IMPACT</span>
           </h2>
@@ -247,68 +155,34 @@ export const GrowthImpact = () => {
           </p>
         </motion.div>
 
-        {/* Metrics row */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-10 mb-20">
           {metrics.map((m, i) => (
-            <motion.div
-              key={m.label}
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.2 + i * 0.1 }}
-              className="relative"
-            >
+            <motion.div key={m.label} initial={{ opacity: 0, y: 30 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5, delay: 0.2 + i * 0.1 }} className="relative">
               <p className="font-display text-3xl sm:text-4xl md:text-5xl text-primary mb-2">
                 <CountUp end={m.value} suffix={m.suffix} prefix={m.prefix} />
               </p>
               <p className="text-foreground/80 text-sm font-medium mb-1">{m.label}</p>
               <p className="text-muted-foreground/50 text-[10px] tracking-wider">{m.sub}</p>
-              {/* Decorative line */}
-              <motion.div
-                className="absolute -bottom-4 left-0 h-px"
-                style={{ background: "linear-gradient(90deg, hsl(0 100% 50% / 0.3), transparent)" }}
-                initial={{ width: 0 }}
-                animate={isInView ? { width: "80%" } : { width: 0 }}
-                transition={{ duration: 0.8, delay: 0.5 + i * 0.1 }}
-              />
+              <motion.div className="absolute -bottom-4 left-0 h-px" style={{ background: "linear-gradient(90deg, hsl(0 100% 50% / 0.3), transparent)" }} initial={{ width: 0 }} animate={isInView ? { width: "80%" } : { width: 0 }} transition={{ duration: 0.8, delay: 0.5 + i * 0.1 }} />
             </motion.div>
           ))}
         </div>
 
-        {/* Charts */}
         <div className="grid md:grid-cols-2 gap-12 lg:gap-16">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.4 }}
-          >
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6, delay: 0.4 }}>
             <LineChart isInView={isInView} />
           </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.5 }}
-          >
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6, delay: 0.5 }}>
             <BarChart isInView={isInView} />
           </motion.div>
         </div>
 
-        {/* Revenue Simulator */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, delay: 0.6 }}
-          className="mt-24 sm:mt-32"
-        >
+        <motion.div initial={{ opacity: 0, y: 40 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.7, delay: 0.6 }} className="mt-24 sm:mt-32">
           <div className="mb-10">
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={isInView ? { opacity: 1 } : {}}
-              transition={{ delay: 0.7 }}
-              className="text-muted-foreground text-[10px] tracking-[0.3em] uppercase mb-4 flex items-center gap-3"
-            >
+            <p className="text-muted-foreground text-[10px] tracking-[0.3em] uppercase mb-4 flex items-center gap-3">
               <span className="w-8 h-px bg-primary/50" />
               Revenue Simulator
-            </motion.p>
+            </p>
             <h3 className="font-display text-2xl sm:text-3xl md:text-4xl mb-3">
               Good Design Costs Money.{" "}
               <span className="text-primary">Bad Design Costs Revenue.</span>
@@ -317,19 +191,12 @@ export const GrowthImpact = () => {
               See what your revenue looks like now — and what it could look like with our design and technology systems working for you.
             </p>
           </div>
-
           <div className="max-w-xl">
             <ROICalculator />
           </div>
         </motion.div>
 
-        {/* Disclaimer */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
-          transition={{ delay: 1.2 }}
-          className="text-muted-foreground/30 text-[10px] tracking-wider mt-10 max-w-md"
-        >
+        <motion.p initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}} transition={{ delay: 1.2 }} className="text-muted-foreground/30 text-[10px] tracking-wider mt-10 max-w-md">
           * Los numeros mostrados son rangos tipicos basados en proyectos anteriores. Los resultados reales varian segun industria, producto y estrategia.
         </motion.p>
       </div>
