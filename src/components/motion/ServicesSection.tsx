@@ -1,8 +1,7 @@
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { Store, Cog, Rocket } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { TierDemoChat } from "./TierDemoChat";
 
 const tiers = [
   {
@@ -10,7 +9,6 @@ const tiers = [
     name: "Brand Storefront",
     category: "High-End Web",
     icon: Store,
-    tierKey: "storefront",
     features: ["Premium Online Store", "Eye-Catching Animations", "Built to Rank on Google"],
     bestFor: "D2C Brands needing a premium face.",
     accentColor: "hsl(350 100% 60%)",
@@ -22,7 +20,6 @@ const tiers = [
     name: "Business Engine",
     category: "Web + Systems",
     icon: Cog,
-    tierKey: "engine",
     features: [
       "Everything in Tier 1",
       "Customer Management Systems",
@@ -39,7 +36,6 @@ const tiers = [
     name: "SaaS Architect",
     category: "Full Product",
     icon: Rocket,
-    tierKey: "saas",
     features: [
       "Custom Backends",
       "Personalized AI Solutions & Integrations",
@@ -57,15 +53,6 @@ export const ServicesSection = () => {
   const ref = useRef<HTMLElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
-  const [showPanel, setShowPanel] = useState(false);
-  const panelRef = useRef<HTMLDivElement>(null);
-
-  const openPanel = useCallback(() => {
-    setShowPanel(true);
-    setTimeout(() => {
-      panelRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-    }, 100);
-  }, []);
 
   return (
     <section ref={ref} className="py-24 sm:py-32 relative overflow-hidden" id="services">
@@ -110,8 +97,7 @@ export const ServicesSection = () => {
                 transition={{ duration: 0.6, delay: i * 0.15 }}
                 onMouseEnter={() => setHoveredIdx(i)}
                 onMouseLeave={() => setHoveredIdx(null)}
-                onClick={openPanel}
-                className="relative group cursor-pointer"
+                className="relative group"
                 data-cursor="expand"
               >
                 {tier.popular && (
@@ -135,9 +121,7 @@ export const ServicesSection = () => {
                     background: "transparent",
                     borderColor: isHovered ? `${tier.accentColor}60` : "hsl(0 100% 50% / 0.25)",
                     borderRadius: "1.25rem",
-                    boxShadow: isHovered
-                      ? `0 0 40px ${tier.accentGlow}`
-                      : "none",
+                    boxShadow: isHovered ? `0 0 40px ${tier.accentGlow}` : "none",
                   }}
                 >
                   <motion.div
@@ -232,29 +216,12 @@ export const ServicesSection = () => {
                         {tier.bestFor}
                       </p>
                     </div>
-
-                    <span
-                      className="inline-flex items-center text-[10px] tracking-[0.2em] uppercase mt-5 transition-colors duration-300"
-                      style={{ color: `${tier.accentColor}50` }}
-                    >
-                      Prompt a demo with our AI
-                    </span>
                   </CardContent>
                 </Card>
               </motion.div>
             );
           })}
         </div>
-
-        {showPanel && (
-          <div
-            ref={panelRef}
-            className="mt-8 rounded-2xl overflow-hidden border border-primary/10"
-            style={{ height: 560, background: "transparent" }}
-          >
-            <TierDemoChat onClose={() => setShowPanel(false)} />
-          </div>
-        )}
       </div>
     </section>
   );
