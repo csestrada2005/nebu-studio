@@ -20,6 +20,7 @@ import { SectionSeparator } from "@/components/motion/SectionSeparator";
 import { BuildModes } from "@/components/motion/BuildModes";
 import { StandardsSection } from "@/components/motion/StandardsSection";
 import { SectionNav } from "@/components/motion/SectionNav";
+import { HeroTransition } from "@/components/motion/HeroTransition";
 
 const Index = () => {
   const cursorZoneRef = useRef<HTMLDivElement>(null);
@@ -40,6 +41,7 @@ const Index = () => {
           <CornerCrosses />
           <NebuOrb />
           <SectionNav />
+          <HeroTransition />
           <main ref={cursorZoneRef}>
             <HeroSection />
             <MarqueeTicker />
