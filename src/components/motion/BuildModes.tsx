@@ -95,9 +95,9 @@ export const BuildModes = () => {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}>
 
-          <p className="text-[10px] font-mono tracking-[0.3em] uppercase text-primary mb-4">
-            What We Build
-          </p>
+          
+
+
           <h2 className="font-display text-3xl sm:text-4xl md:text-5xl text-foreground">
             EVERY FORMAT.
             <br />

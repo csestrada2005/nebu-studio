@@ -823,7 +823,7 @@ export const DesignLab = () => {
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.6, delay: 0.4 }}>
 
-              Six live demos. Move, click, brush, play — every effect ships with your project.
+              ​Add  UI components that to enhance and personalize your React web applications   
             </motion.p>
           </div>
 
