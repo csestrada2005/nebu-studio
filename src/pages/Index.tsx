@@ -18,14 +18,14 @@ import { BuildModes } from "@/components/motion/BuildModes";
 import { StandardsSection } from "@/components/motion/StandardsSection";
 import { SectionNav } from "@/components/motion/SectionNav";
 import { HeroTransition } from "@/components/motion/HeroTransition";
-import { TopMenu } from "@/components/motion/TopMenu";
+
 
 const Index = () => {
   const cursorZoneRef = useRef<HTMLDivElement>(null);
 
   return (
     <div className="min-h-screen text-foreground">
-      <TopMenu />
+      
       <SoundToggle />
       <CustomCursor containerRef={cursorZoneRef} />
       <CornerCrosses />
