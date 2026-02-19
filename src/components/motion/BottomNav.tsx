@@ -15,14 +15,6 @@ const menuLinks = [
 
 export const BottomNav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => setIsVisible(window.scrollY > 200);
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   useEffect(() => {
     document.body.style.overflow = isMenuOpen ? "hidden" : "";
@@ -41,9 +33,7 @@ export const BottomNav = () => {
     <>
       {/* Bottom bar */}
       <nav
-        className={`fixed bottom-4 left-1/2 -translate-x-1/2 z-[65] transition-all duration-500 ${
-          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8 pointer-events-none"
-        }`}
+        className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[70]"
         aria-label="Main navigation"
       >
         <div
