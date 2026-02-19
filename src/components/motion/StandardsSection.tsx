@@ -83,7 +83,7 @@ export const StandardsSection = () => {
           <BlackSandReveal mode="text" delay={100}>
             <div>
               <p className="text-[10px] font-mono tracking-[0.3em] uppercase text-primary mb-4">
-                Standards
+
               </p>
               <KineticType
                 text="THINGS WE DON'T NEGOTIATE ON."

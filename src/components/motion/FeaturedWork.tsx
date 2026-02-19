@@ -439,7 +439,7 @@ export const FeaturedWork = () => {
             viewport={{ once: true }}>
 
             <p className="text-[9px] font-mono tracking-[0.35em] uppercase text-primary mb-4">
-              Selected Work
+              ​ 
             </p>
             <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-4 text-foreground">
               WORK THAT <span className="text-primary">PERFORMS</span>

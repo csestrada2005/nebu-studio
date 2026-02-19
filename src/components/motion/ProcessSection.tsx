@@ -170,9 +170,9 @@ export const ProcessSection = () => {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}>
 
-          <p className="text-[10px] font-mono tracking-[0.3em] uppercase text-primary mb-4">
-            Process
-          </p>
+          
+
+
           <KineticType
             text="A PROCESS THAT SHIPS."
             as="h2"
