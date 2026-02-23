@@ -1,24 +1,58 @@
 
-## Fix: Bottom Navigation Bar Visibility
 
-### Problem
-The bottom nav bar uses `window.addEventListener("scroll", ...)` to detect scrolling, but **Lenis smooth scroll** (which wraps all scrolling in the app) can sometimes delay or skip native scroll events, causing `window.scrollY` to read as 0 and the bar to stay hidden (`opacity-0`, `pointer-events-none`).
+## Plan: Fix Hero Animation, Upward Overlap Feel, and Single Red Line
 
-### Solution
+### 1. Hero Glitch Animation — Full Screen + Auto-Scroll
 
-1. **Make the bar visible by default** -- Remove the scroll-based show/hide logic entirely. The bar should always be visible as a fixed element at the bottom of the screen (matching the old "Refactor Tron palette" behavior where it was always present).
+**Problem**: The glitch animation elements are `absolute` inside the hero `<motion.section>` which has `overflow-hidden`. They only appear within the hero bounds.
 
-2. **Increase z-index to `z-[70]`** -- Ensures it sits above the NebuOrb (`z-[60]`) and any other overlays.
+**Fix**:
+- Move the entire glitch/boot animation into a **`fixed inset-0 z-[9999]`** overlay that renders on top of the entire page (similar to how `HeroTransition` works).
+- After the glitch animation completes (~1.8s), programmatically smooth-scroll the user down to the `BuildModes` section (the "What we build" area). Add an `id="build"` to `BuildModes` if it doesn't have one, then call `document.getElementById("build")?.scrollIntoView({ behavior: "smooth" })`.
+- The animation still triggers once on first scroll/interaction and never re-triggers.
 
-3. **Remove the `isVisible` state and scroll listener** -- No more conditional opacity/translate. The bar is simply always there once the component mounts.
+**Files**: `src/components/motion/HeroSection.tsx`
 
-### Technical Details
+---
 
-**File: `src/components/motion/BottomNav.tsx`**
+### 2. Upward Overlap Effect — Sections Slide Over Previous
 
-- Remove the `isVisible` state and the `useEffect` that listens for scroll
-- Remove the conditional classes `opacity-0 translate-y-8 pointer-events-none`
-- Change z-index from `z-[65]` to `z-[70]`
-- The nav element becomes simply: `fixed bottom-4 left-1/2 -translate-x-1/2 z-[70]`
+**Problem**: Current `useScrollPaint` just fades/translates elements but doesn't create the visual illusion of sections overlapping upward.
 
-This matches the previous versions where the bar was always visible at the bottom without any scroll-dependent visibility logic.
+**Fix**:
+- Give each major section a **`position: relative`** with incrementing **`z-index`** (each section higher than the previous).
+- Add a solid background to each section so it visually covers the section above as the user scrolls.
+- Apply a subtle **negative top margin** (e.g., `-40px` to `-60px`) so sections slightly overlap the tail of the previous one, creating a "sliding over" sensation.
+- Adjust `useScrollPaint` to keep the strong upward entry (from below) but remove the exit-upward animation so sections stay put once visible — the next section sliding over them creates the "going up" feel naturally.
+
+**Files**: `src/hooks/useScrollPaint.ts`, `src/pages/Index.tsx` (wrapper divs with z-index + bg)
+
+---
+
+### 3. Single Red Line — Persistent Width on Scroll
+
+**Problem**: Two lines exist; the line width follows `scrollYProgress` which goes 0 to 1 to 0, causing the line to disappear while still visible.
+
+**Fix**:
+- Revert to a **single red line** (remove the second line and center glow).
+- Replace the symmetric `progress` curve with a **ratchet-style approach**:
+  - Track a `committedWidth` state using `useMotionValueEvent` on `scrollYProgress`.
+  - **Scrolling down**: the line grows from left to right, width increases and **stays** at its max reached value.
+  - **Scrolling up**: the line shrinks back from where it was (right to left), resuming from its last position.
+  - The line's width is driven by `scrollYProgress` mapped `[0, 1]` to `[0%, 100%]` but clamped so it only moves in the current scroll direction.
+- Reduce separator height from `h-28` to `h-16` for a tighter single-line feel.
+
+**Files**: `src/components/motion/SectionSeparator.tsx`
+
+---
+
+### Technical Summary
+
+| File | Change |
+|------|--------|
+| `HeroSection.tsx` | Move glitch overlay to `fixed inset-0 z-[9999]`, add auto-scroll to `#build` after animation |
+| `BuildModes.tsx` | Add `id="build"` to the section wrapper |
+| `useScrollPaint.ts` | Remove exit-upward animation; sections stay once visible |
+| `Index.tsx` | Wrap sections with incrementing z-index + bg + slight negative margin |
+| `SectionSeparator.tsx` | Single line, directional grow/shrink that persists width |
+
