@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
+import nebuOwl from "@/assets/nebu-owl.png";
 
 type Phase = 0 | 1 | 2 | 3 | 4;
 
@@ -217,8 +218,13 @@ export const HeroSection = () => {
         }}
       />
 
-      {/* Sumi reveal centered */}
-      <div className="relative z-10 w-full px-4">
+      {/* Owl logo + Sumi reveal centered */}
+      <div className="relative z-10 w-full px-4 flex flex-col items-center">
+        <img
+          src={nebuOwl}
+          alt="Nebu Studio owl logo"
+          className="w-24 sm:w-32 md:w-40 mb-4 sm:mb-6"
+        />
         <SumiHeroReveal />
       </div>
     </section>
