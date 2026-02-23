@@ -223,10 +223,16 @@ export const HeroSection = () => {
         <img
           src={nebuOwl}
           alt="Nebu Studio owl logo"
-          className="w-48 sm:w-64 md:w-80 lg:w-96 mb-6 sm:mb-8"
+          className="w-36 sm:w-48 md:w-60 lg:w-72 mb-6 sm:mb-8"
         />
         <SumiHeroReveal />
       </div>
+
+      {/* Static thick red line at bottom */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-[6px] bg-primary"
+        style={{ boxShadow: "0 0 16px hsl(0 100% 50% / 0.5), 0 0 50px hsl(0 100% 50% / 0.15)" }}
+      />
     </section>
   );
 };
