@@ -34,9 +34,7 @@ export const HeroSection = () => {
     offset: ["start start", "end start"],
   });
 
-  const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.6], [1, 0.92]);
-  const y = useTransform(scrollYProgress, [0, 0.6], [0, -60]);
+  // Hero is fully static — no scroll-based transforms
 
   // Aggressive boot animation — triggers once on ANY input
   const [bootPhase, setBootPhase] = useState<"idle" | "glitch" | "done">("idle");
@@ -75,7 +73,7 @@ export const HeroSection = () => {
       ref={ref}
       className="relative h-[100dvh] flex items-center justify-center overflow-hidden"
       id="hero"
-      style={{ opacity, scale, y }}
+      style={{}}
     >
       <div
         className="absolute inset-0"
