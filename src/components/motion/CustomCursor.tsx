@@ -1,48 +1,44 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, useSpring } from "framer-motion";
 
 interface CustomCursorProps {
-  containerRef: React.RefObject<HTMLElement>;
+  containerRef?: React.RefObject<HTMLElement>;
 }
 
 export const CustomCursor = ({ containerRef }: CustomCursorProps) => {
   const [visible, setVisible] = useState(false);
 
-  // Glow follows with smooth lag
   const glowX = useSpring(0, { stiffness: 120, damping: 22, mass: 0.8 });
   const glowY = useSpring(0, { stiffness: 120, damping: 22, mass: 0.8 });
 
   useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-
     const mq = window.matchMedia("(pointer: fine)");
     if (!mq.matches) return;
 
     const onMove = (e: MouseEvent) => {
       glowX.set(e.clientX);
       glowY.set(e.clientY);
+      if (!visible) setVisible(true);
     };
 
-    const onEnter = () => setVisible(true);
     const onLeave = () => setVisible(false);
+    const onEnter = () => setVisible(true);
 
-    el.addEventListener("mousemove", onMove, { passive: true });
-    el.addEventListener("mouseenter", onEnter);
-    el.addEventListener("mouseleave", onLeave);
+    document.addEventListener("mousemove", onMove, { passive: true });
+    document.documentElement.addEventListener("mouseleave", onLeave);
+    document.documentElement.addEventListener("mouseenter", onEnter);
 
     return () => {
-      el.removeEventListener("mousemove", onMove);
-      el.removeEventListener("mouseenter", onEnter);
-      el.removeEventListener("mouseleave", onLeave);
+      document.removeEventListener("mousemove", onMove);
+      document.documentElement.removeEventListener("mouseleave", onLeave);
+      document.documentElement.removeEventListener("mouseenter", onEnter);
     };
-  }, [containerRef, glowX, glowY]);
+  }, [glowX, glowY, visible]);
 
   if (!visible) return null;
 
   return (
     <div className="pointer-events-none fixed inset-0 z-[9999] hidden md:block">
-      {/* Subtle red ambient glow — floats behind cursor */}
       <motion.div
         className="fixed top-0 left-0 rounded-full"
         style={{
@@ -60,4 +56,3 @@ export const CustomCursor = ({ containerRef }: CustomCursorProps) => {
     </div>
   );
 };
-
