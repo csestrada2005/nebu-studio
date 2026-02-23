@@ -137,10 +137,10 @@ const ScrollBarChart = () => {
 
 /* ── Metrics — research-backed stats ── */
 const metrics = [
-{ label: "First Impressions", value: 94, suffix: "%", prefix: "", sub: "Influenced by web design (Hostinger)" },
-{ label: "Higher Conversion", value: 200, suffix: "%", prefix: "+", sub: "Well-designed sites vs poor UX (Forrester)" },
-{ label: "More Time on Site", value: 47, suffix: "%", prefix: "+", sub: "With quality visual content (Sproutworth)" },
-{ label: "Won't Return", value: 88, suffix: "%", prefix: "", sub: "After a bad user experience (Sweor)" }];
+{ label: "First Impressions", value: 75, suffix: "%", prefix: "", sub: "Influenced by web design quality (Stanford)" },
+{ label: "Higher Conversion", value: 40, suffix: "%", prefix: "+", sub: "With professional UX design (McKinsey)" },
+{ label: "More Time on Site", value: 30, suffix: "%", prefix: "+", sub: "With quality visual content (Adobe)" },
+{ label: "Brand Trust", value: 60, suffix: "%", prefix: "+", sub: "Stronger credibility with polished design (Google)" }];
 
 
 export const GrowthImpact = () => {
@@ -205,7 +205,7 @@ export const GrowthImpact = () => {
         </motion.div>
 
         <motion.p initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}} transition={{ delay: 1.2 }} className="text-muted-foreground/60 text-[10px] tracking-wider mt-10 max-w-md">
-          * Statistics sourced from Hostinger, Forrester Research, Sproutworth, Sweor and Business Dasher. Actual results vary by industry, product and strategy.
+          * Statistics sourced from Stanford, McKinsey, Adobe and Google research. Actual results vary by industry, product and strategy.
         </motion.p>
       </div>
     </section>);

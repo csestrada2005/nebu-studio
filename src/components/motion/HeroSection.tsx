@@ -2,6 +2,31 @@ import { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import heroLogo from "@/assets/hero-logo.jpeg";
 
+/* ── Glitch line component ── */
+const GlitchLine = ({ delay, y }: { delay: number; y: string }) => (
+  <motion.div
+    className="absolute left-0 right-0 pointer-events-none"
+    style={{
+      top: y,
+      height: 2,
+      background: "hsl(0 100% 50%)",
+      boxShadow: "0 0 20px hsl(0 100% 50% / 0.8), 0 0 60px hsl(0 100% 50% / 0.4)",
+      zIndex: 52,
+    }}
+    initial={{ scaleX: 0, opacity: 0 }}
+    animate={{
+      scaleX: [0, 1, 1, 0],
+      opacity: [0, 1, 0.8, 0],
+      x: ["-5%", "0%", "3%", "0%"],
+    }}
+    transition={{
+      duration: 0.3,
+      delay,
+      ease: "easeOut",
+    }}
+  />
+);
+
 export const HeroSection = () => {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
@@ -13,30 +38,30 @@ export const HeroSection = () => {
   const scale = useTransform(scrollYProgress, [0, 0.6], [1, 0.92]);
   const y = useTransform(scrollYProgress, [0, 0.6], [0, -60]);
 
-  // Laser animation — triggers once on first scroll attempt
-  const [laserFired, setLaserFired] = useState(false);
-  const laserDone = useRef(false);
+  // Aggressive boot animation — triggers once on first scroll
+  const [bootPhase, setBootPhase] = useState<"idle" | "glitch" | "done">("idle");
+  const bootDone = useRef(false);
 
   useEffect(() => {
-    if (laserDone.current) return;
-    const handleScroll = () => {
-      if (laserDone.current) return;
-      laserDone.current = true;
-      setLaserFired(true);
+    if (bootDone.current) return;
+
+    const trigger = () => {
+      if (bootDone.current) return;
+      bootDone.current = true;
+      setBootPhase("glitch");
+
+      // End after animation
+      setTimeout(() => setBootPhase("done"), 1800);
     };
-    window.addEventListener("scroll", handleScroll, { passive: true, once: true });
-    // Also handle wheel for when smooth scroll hasn't started yet
-    const handleWheel = () => {
-      if (laserDone.current) return;
-      laserDone.current = true;
-      setLaserFired(true);
-    };
-    window.addEventListener("wheel", handleWheel, { passive: true, once: true });
-    window.addEventListener("touchmove", handleWheel, { passive: true, once: true });
+
+    window.addEventListener("scroll", trigger, { passive: true, once: true });
+    window.addEventListener("wheel", trigger, { passive: true, once: true });
+    window.addEventListener("touchmove", trigger, { passive: true, once: true });
+
     return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("wheel", handleWheel);
-      window.removeEventListener("touchmove", handleWheel);
+      window.removeEventListener("scroll", trigger);
+      window.removeEventListener("wheel", trigger);
+      window.removeEventListener("touchmove", trigger);
     };
   }, []);
 
@@ -76,55 +101,109 @@ export const HeroSection = () => {
         }}
       />
 
-      {/* Laser animation — one-time on first scroll */}
+      {/* Aggressive glitch/boot animation */}
       <AnimatePresence>
-        {laserFired && (
+        {bootPhase === "glitch" && (
           <>
-            {/* Horizontal laser sweep */}
+            {/* Screen shake */}
             <motion.div
-              key="laser-h"
-              className="absolute pointer-events-none"
-              style={{
-                left: 0,
-                right: 0,
-                height: 2,
-                top: "50%",
-                background: "linear-gradient(90deg, transparent, hsl(0 100% 50%) 20%, hsl(0 100% 70%) 50%, hsl(0 100% 50%) 80%, transparent)",
-                boxShadow: "0 0 30px hsl(0 100% 50% / 0.8), 0 0 60px hsl(0 100% 50% / 0.4), 0 0 120px hsl(0 100% 50% / 0.2)",
-                zIndex: 50,
+              key="shake-overlay"
+              className="absolute inset-0 pointer-events-none"
+              style={{ zIndex: 60 }}
+              animate={{
+                x: [0, -8, 6, -4, 3, -1, 0],
+                y: [0, 3, -5, 2, -1, 0],
               }}
-              initial={{ scaleX: 0, opacity: 0 }}
-              animate={{ scaleX: [0, 1, 1, 0], opacity: [0, 1, 1, 0] }}
-              transition={{ duration: 1.2, times: [0, 0.3, 0.7, 1], ease: [0.25, 1, 0.5, 1] }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
             />
-            {/* Vertical laser sweep */}
+
+            {/* Multiple horizontal glitch scan lines */}
+            {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
+              <GlitchLine
+                key={`gl-${i}`}
+                delay={i * 0.06}
+                y={`${10 + i * 11}%`}
+              />
+            ))}
+
+            {/* Full screen flash — white */}
             <motion.div
-              key="laser-v"
-              className="absolute pointer-events-none"
-              style={{
-                top: 0,
-                bottom: 0,
-                width: 2,
-                left: "50%",
-                background: "linear-gradient(180deg, transparent, hsl(0 100% 50%) 20%, hsl(0 100% 70%) 50%, hsl(0 100% 50%) 80%, transparent)",
-                boxShadow: "0 0 30px hsl(0 100% 50% / 0.8), 0 0 60px hsl(0 100% 50% / 0.4), 0 0 120px hsl(0 100% 50% / 0.2)",
-                zIndex: 50,
-              }}
-              initial={{ scaleY: 0, opacity: 0 }}
-              animate={{ scaleY: [0, 1, 1, 0], opacity: [0, 1, 1, 0] }}
-              transition={{ duration: 1.2, times: [0, 0.3, 0.7, 1], ease: [0.25, 1, 0.5, 1], delay: 0.15 }}
-            />
-            {/* Flash */}
-            <motion.div
-              key="laser-flash"
+              key="flash-white"
               className="absolute inset-0 pointer-events-none"
               style={{
-                background: "radial-gradient(circle at 50% 50%, hsl(0 100% 50% / 0.15), transparent 60%)",
-                zIndex: 49,
+                background: "hsl(0 0% 100%)",
+                zIndex: 55,
               }}
               initial={{ opacity: 0 }}
-              animate={{ opacity: [0, 0.6, 0] }}
-              transition={{ duration: 1.0, delay: 0.3, ease: "easeOut" }}
+              animate={{ opacity: [0, 0.9, 0, 0.4, 0] }}
+              transition={{ duration: 0.5, times: [0, 0.1, 0.2, 0.3, 0.5], ease: "easeOut" }}
+            />
+
+            {/* Red flash overlay */}
+            <motion.div
+              key="flash-red"
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: "radial-gradient(circle at 50% 50%, hsl(0 100% 50% / 0.3), transparent 70%)",
+                zIndex: 54,
+              }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 1, 0, 0.6, 0] }}
+              transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+            />
+
+            {/* CRT-style noise bars */}
+            <motion.div
+              key="noise-bars"
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                zIndex: 53,
+                backgroundImage:
+                  "repeating-linear-gradient(0deg, transparent, transparent 2px, hsl(0 0% 0% / 0.08) 2px, hsl(0 0% 0% / 0.08) 4px)",
+              }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 0.8, 0.5, 0] }}
+              transition={{ duration: 1.2, ease: "easeOut", delay: 0.1 }}
+            />
+
+            {/* Vertical glitch displacement blocks */}
+            {[1, 2, 3].map((i) => (
+              <motion.div
+                key={`vblock-${i}`}
+                className="absolute pointer-events-none"
+                style={{
+                  left: `${15 + i * 22}%`,
+                  top: 0,
+                  bottom: 0,
+                  width: `${6 + i * 3}%`,
+                  background: `hsl(0 100% 50% / ${0.06 + i * 0.03})`,
+                  zIndex: 51,
+                }}
+                initial={{ scaleY: 0, opacity: 0 }}
+                animate={{
+                  scaleY: [0, 1, 1, 0],
+                  opacity: [0, 0.8, 0.4, 0],
+                  x: [0, i % 2 === 0 ? 15 : -15, 0],
+                }}
+                transition={{
+                  duration: 0.5,
+                  delay: 0.1 + i * 0.08,
+                  ease: "easeOut",
+                }}
+              />
+            ))}
+
+            {/* Final black-to-clear wipe */}
+            <motion.div
+              key="wipe"
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: "hsl(0 0% 0%)",
+                zIndex: 50,
+              }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 0.7, 0] }}
+              transition={{ duration: 1.0, delay: 0.5, ease: [0.25, 1, 0.5, 1] }}
             />
           </>
         )}

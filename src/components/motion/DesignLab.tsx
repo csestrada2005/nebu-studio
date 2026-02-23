@@ -695,7 +695,6 @@ const DemoTile = ({ demo, index }: {demo: DemoConfig;index: number;}) => {
 export const DesignLab = () => {
   return (
     <section className="relative" id="lab">
-      <BlackSandReveal mode="section">
         <div className="container relative z-10 py-32 sm:py-40">
           {/* heading */}
           <div className="mb-24 sm:mb-32">
@@ -726,6 +725,5 @@ export const DesignLab = () => {
             </div>
           </div>
         </div>
-      </BlackSandReveal>
     </section>);
 };

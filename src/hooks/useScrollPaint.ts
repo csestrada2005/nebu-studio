@@ -31,13 +31,11 @@ export const useScrollPaint = (options: ScrollPaintOptions = {}): ScrollPaintRes
     offset: ["start 0.95", "end 0.05"],
   });
 
-  // Paint in: 0 → 0.3 of progress
-  // Visible: 0.3 → 0.7
-  // Vanish: 0.7 → 1.0
-  const opacity = useTransform(scrollYProgress, [0, 0.25, 0.75, 1], [0, 1, 1, 0]);
-  const y = useTransform(scrollYProgress, [0, 0.25, 0.75, 1], [yDrift, 0, 0, -yDrift]);
-  const x = useTransform(scrollYProgress, [0, 0.25, 0.75, 1], [xDrift, 0, 0, -xDrift * 0.5]);
-  const scale = useTransform(scrollYProgress, [0, 0.25, 0.75, 1], [0.95, 1, 1, 0.97]);
+  // Elements rise up into view (come from below) and continue rising out
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+  const y = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [yDrift * 1.5, 0, 0, -yDrift * 2]);
+  const x = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 0, 0, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.97, 1, 1, 0.95]);
 
   return { ref, style: { opacity, x, y, scale } };
 };
