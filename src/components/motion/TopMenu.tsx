@@ -54,37 +54,23 @@ export const TopMenu = () => {
 
   return (
     <>
-      {/* Top bar */}
-      <motion.header
-        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-5 sm:px-8"
-        initial={prefersReducedMotion ? {} : { y: -60 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
+      {/* Hamburger button — fixed top-right in a black circle */}
+      <motion.button
+        onClick={() => setOpen(true)}
+        className="fixed top-4 right-4 sm:top-5 sm:right-6 z-50 w-11 h-11 flex items-center justify-center rounded-full"
         style={{
-          height: 56,
-          background: scrolled
-            ? "hsl(var(--background) / 0.7)"
-            : "transparent",
-          backdropFilter: scrolled ? "blur(16px) saturate(1.4)" : "none",
-          WebkitBackdropFilter: scrolled ? "blur(16px) saturate(1.4)" : "none",
-          borderBottom: scrolled
-            ? "1px solid hsl(0 0% 100% / 0.06)"
-            : "1px solid transparent",
-          transition: "background 0.4s, border-color 0.4s, backdrop-filter 0.4s",
+          background: "hsl(0 0% 0%)",
+          boxShadow: "0 2px 12px hsl(0 0% 0% / 0.5)",
         }}
+        initial={prefersReducedMotion ? {} : { scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.4, ease: [0.25, 1, 0.5, 1] }}
+        whileHover={{ scale: 1.08 }}
+        whileTap={{ scale: 0.95 }}
+        aria-label="Open menu"
       >
-        <span className="font-display text-sm tracking-[0.15em] text-foreground">
-          NEBU STUDIO
-        </span>
-
-        <button
-          onClick={() => setOpen(true)}
-          className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-primary/10 transition-colors"
-          aria-label="Open menu"
-        >
-          <Menu className="w-[18px] h-[18px] text-foreground" />
-        </button>
-      </motion.header>
+        <Menu className="w-5 h-5 text-white" />
+      </motion.button>
 
       {/* Fullscreen overlay */}
       <AnimatePresence>
