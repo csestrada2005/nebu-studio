@@ -7,11 +7,22 @@ interface CustomCursorProps {
 
 export const CustomCursor = ({ containerRef }: CustomCursorProps) => {
   const [visible, setVisible] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   const glowX = useSpring(0, { stiffness: 120, damping: 22, mass: 0.8 });
   const glowY = useSpring(0, { stiffness: 120, damping: 22, mass: 0.8 });
 
   useEffect(() => {
+    // Detect touch devices — return null behavior
+    if (window.matchMedia("(hover: none) and (pointer: coarse)").matches) {
+      setIsTouchDevice(true);
+      return;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isTouchDevice) return;
+
     const mq = window.matchMedia("(pointer: fine)");
     if (!mq.matches) return;
 
@@ -33,9 +44,9 @@ export const CustomCursor = ({ containerRef }: CustomCursorProps) => {
       document.documentElement.removeEventListener("mouseleave", onLeave);
       document.documentElement.removeEventListener("mouseenter", onEnter);
     };
-  }, [glowX, glowY, visible]);
+  }, [glowX, glowY, visible, isTouchDevice]);
 
-  if (!visible) return null;
+  if (isTouchDevice || !visible) return null;
 
   return (
     <div className="pointer-events-none fixed inset-0 z-[9999] hidden md:block">

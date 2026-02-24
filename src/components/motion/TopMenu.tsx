@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Menu, X, ArrowRight } from "lucide-react";
 
 const menuLinks = [
@@ -16,9 +16,24 @@ const menuLinks = [
 export const TopMenu = () => {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activeId, setActiveId] = useState("hero");
+  const prefersReducedMotion = useReducedMotion();
 
+  // Scrollspy: track which section is in view
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 40);
+
+      const scrollPos = window.scrollY + window.innerHeight / 3;
+      let current = "hero";
+      for (const link of menuLinks) {
+        const el = document.getElementById(link.id);
+        if (el && el.offsetTop <= scrollPos) {
+          current = link.id;
+        }
+      }
+      setActiveId(current);
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
     return () => window.removeEventListener("scroll", onScroll);
@@ -42,7 +57,7 @@ export const TopMenu = () => {
       {/* Top bar */}
       <motion.header
         className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-5 sm:px-8"
-        initial={{ y: -60 }}
+        initial={prefersReducedMotion ? {} : { y: -60 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
         style={{
@@ -102,22 +117,39 @@ export const TopMenu = () => {
 
             {/* Links */}
             <nav className="flex-1 flex flex-col justify-center px-8 sm:px-12 gap-0">
-              {menuLinks.map((link, i) => (
-                <motion.button
-                  key={link.id}
-                  onClick={() => scrollTo(link.id)}
-                  initial={{ opacity: 0, x: -24 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.4, delay: i * 0.05 }}
-                  className="group text-left font-display text-2xl sm:text-4xl md:text-5xl py-3 sm:py-4 border-b flex items-center justify-between hover:text-primary transition-colors duration-300"
-                  style={{ borderColor: "hsl(0 0% 100% / 0.07)" }}
-                >
-                  <span>{link.label}</span>
-                  <span className="text-[10px] font-mono tracking-[0.2em] text-muted-foreground/40 group-hover:text-primary/60 transition-colors">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                </motion.button>
-              ))}
+              {menuLinks.map((link, i) => {
+                const isActive = activeId === link.id;
+                return (
+                  <motion.button
+                    key={link.id}
+                    onClick={() => scrollTo(link.id)}
+                    initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: -24 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.4, delay: i * 0.05 }}
+                    className={`group text-left font-display text-2xl sm:text-4xl md:text-5xl py-3 sm:py-4 border-b flex items-center justify-between transition-colors duration-300 ${
+                      isActive ? "text-primary" : "text-foreground hover:text-primary"
+                    }`}
+                    style={{ borderColor: "hsl(0 0% 100% / 0.07)" }}
+                  >
+                    <span className="flex items-center gap-4">
+                      {/* Active dot indicator */}
+                      <span
+                        className={`inline-block w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                          isActive
+                            ? "bg-primary scale-100 opacity-100"
+                            : "bg-primary/0 scale-0 opacity-0 group-hover:bg-primary/40 group-hover:scale-75 group-hover:opacity-100"
+                        }`}
+                      />
+                      {link.label}
+                    </span>
+                    <span className={`text-[10px] font-mono tracking-[0.2em] transition-colors duration-300 ${
+                      isActive ? "text-primary/70" : "text-muted-foreground/40 group-hover:text-primary/60"
+                    }`}>
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                  </motion.button>
+                );
+              })}
             </nav>
 
             {/* Bottom CTA */}

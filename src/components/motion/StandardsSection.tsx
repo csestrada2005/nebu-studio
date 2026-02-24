@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, useReducedMotion } from "framer-motion";
 import { BlackSandReveal } from "@/components/motion/BlackSandReveal";
 import { KineticType } from "@/components/motion/KineticType";
 import { useGlassParallax } from "@/hooks/useGlassParallax";
@@ -41,6 +41,7 @@ const standards = [
 export const StandardsSection = () => {
   const ref = useRef<HTMLElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const prefersReducedMotion = useReducedMotion();
   const { sectionRef, bgY, lightX, lightOp } = useGlassParallax(28);
 
   return (
@@ -115,9 +116,9 @@ export const StandardsSection = () => {
               borderRight: "1px solid hsl(0 0% 100% / 0.07)",
               borderBottom: "1px solid hsl(0 0% 100% / 0.07)"
             }}
-            initial={{ opacity: 0, y: 20 }}
+            initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: i * 0.07 }}>
+            transition={{ duration: 0.7, delay: i * 0.07, ease: "easeOut" }}>
 
               {/* Number */}
               <span className="block font-mono text-[10px] tracking-[0.25em] text-primary/40 mb-4 group-hover:text-primary/70 transition-colors">
