@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import { ReactLenis } from "lenis/react";
-import { BottomNav } from "@/components/motion/BottomNav";
+import { TopMenu } from "@/components/motion/TopMenu";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import { FilmGrain } from "@/components/motion/FilmGrain";
@@ -53,7 +53,7 @@ const App = () => (
               </Routes>
             </BrowserRouter>
           </div>
-          <BottomNav />
+          <TopMenu />
         </ReactLenis>
       </TooltipProvider>
     </ThemeProvider>
