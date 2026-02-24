@@ -1,16 +1,16 @@
 /**
  * FeaturedWork — Awwwards-level "Our Work" gallery
  *
- * - layoutId shared-element transitions
+ * - Origin-based shared-element expansion (getBoundingClientRect → scale morph)
  * - Magnetic hover effect (spring-based)
  * - Responsive CSS grid (3×2 desktop, 2×3 mobile)
  * - Full keyboard accessibility + focus trap
- * - Glassmorphism backdrop + object-cover → object-contain crossfade
+ * - Glassmorphism backdrop
  */
 
 import { useRef, useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { motion, AnimatePresence, useSpring, useInView, LayoutGroup } from "framer-motion";
+import { motion, AnimatePresence, useSpring, useInView } from "framer-motion";
 import { X } from "lucide-react";
 
 import workPapachoa from "@/assets/work-papachoa.png";
@@ -31,7 +31,13 @@ const PROJECTS = [
 
 type Project = (typeof PROJECTS)[number];
 
-// Organic offsets to break grid rigidity (percentage-based transforms)
+interface OriginRect {
+  x: number;
+  y: number;
+  size: number;
+}
+
+// Organic offsets to break grid rigidity
 const OFFSETS = [
   "translate-x-2 -translate-y-3",
   "-translate-x-3 translate-y-2",
@@ -45,16 +51,14 @@ const OFFSETS = [
 const MagneticCircle = ({
   project,
   index,
-  isActive,
   onOpen,
 }: {
   project: Project;
   index: number;
-  isActive: boolean;
-  onOpen: () => void;
+  onOpen: (origin: OriginRect) => void;
 }) => {
-  const btnRef = useRef<HTMLButtonElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const circleRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, { once: true, margin: "-40px" });
 
   const springX = useSpring(0, { stiffness: 200, damping: 18 });
@@ -75,6 +79,17 @@ const MagneticCircle = ({
     springY.set(0);
   }, [springX, springY]);
 
+  const handleClick = () => {
+    const el = circleRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    onOpen({
+      x: rect.left + rect.width / 2,
+      y: rect.top + rect.height / 2,
+      size: rect.width,
+    });
+  };
+
   return (
     <motion.div
       ref={containerRef}
@@ -87,34 +102,24 @@ const MagneticCircle = ({
       onMouseLeave={handleMouseLeave}
     >
       <motion.button
-        ref={btnRef}
         className="flex flex-col items-center cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-full"
         aria-label={`View ${project.title} project`}
-        onClick={onOpen}
+        onClick={handleClick}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.96 }}
         data-project-id={project.id}
       >
-        {/* Only render the layoutId element when NOT expanded */}
-        {!isActive && (
-          <motion.div
-            layoutId={project.id}
-            initial={false}
-            className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-2 border-transparent group-hover:border-primary transition-colors duration-300"
-            style={{ borderRadius: "50%" }}
-          >
-            <img
-              src={project.image}
-              alt={project.title}
-              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-              loading="lazy"
-            />
-          </motion.div>
-        )}
-        {/* Invisible placeholder to keep layout when circle morphs away */}
-        {isActive && (
-          <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40" />
-        )}
+        <div
+          ref={circleRef}
+          className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-2 border-transparent group-hover:border-primary transition-colors duration-300"
+        >
+          <img
+            src={project.image}
+            alt={project.title}
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+            loading="lazy"
+          />
+        </div>
         <span className="mt-3 text-xs sm:text-sm font-display text-foreground/70 group-hover:text-primary transition-colors duration-300 text-center whitespace-nowrap">
           {project.title}
         </span>
@@ -126,27 +131,25 @@ const MagneticCircle = ({
 // ── Expanded View ────────────────────────────────────────────────────────────
 const ExpandedView = ({
   project,
+  origin,
   onClose,
 }: {
   project: Project;
+  origin: OriginRect;
   onClose: () => void;
 }) => {
   const closeRef = useRef<HTMLButtonElement>(null);
-  const [morphComplete, setMorphComplete] = useState(false);
 
-  // Lock body scroll + keyboard handlers
   useEffect(() => {
     document.body.style.overflow = "hidden";
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
-      // Focus trap: keep Tab on the close button
       if (e.key === "Tab") {
         e.preventDefault();
         closeRef.current?.focus();
       }
     };
     window.addEventListener("keydown", handler);
-    // Focus the close button on open
     setTimeout(() => closeRef.current?.focus(), 100);
     return () => {
       document.body.style.overflow = "";
@@ -154,16 +157,21 @@ const ExpandedView = ({
     };
   }, [onClose]);
 
-  // Return focus to the originating button on close
+  // Return focus on unmount
   useEffect(() => {
     const originBtn = document.querySelector(`[data-project-id="${project.id}"]`) as HTMLElement;
-    return () => {
-      setTimeout(() => originBtn?.focus(), 50);
-    };
+    return () => { setTimeout(() => originBtn?.focus(), 50); };
   }, [project.id]);
 
-  const targetW = Math.min(window.innerWidth * 0.9, 1100);
-  const targetH = Math.min(window.innerHeight * 0.8, 700);
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const targetW = Math.min(vw * 0.9, 1100);
+  const targetH = Math.min(vh * 0.8, 700);
+
+  // Calculate origin offset from viewport center
+  const originXOffset = origin.x - vw / 2;
+  const originYOffset = origin.y - vh / 2;
+  const initialScale = origin.size / targetW;
 
   return (
     <motion.div
@@ -186,7 +194,6 @@ const ExpandedView = ({
         exit={{ opacity: 0 }}
         transition={{ duration: 0.3 }}
       >
-        {/* Subtle radial gradient overlay for depth */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
@@ -195,18 +202,37 @@ const ExpandedView = ({
         />
       </motion.div>
 
-      {/* Morphing image container via layoutId */}
+      {/* Image container — morphs from bubble origin */}
       <motion.div
-        layoutId={project.id}
         className="relative z-10 overflow-hidden"
-        style={{
-          width: targetW,
-          height: targetH,
-          borderRadius: 12,
+        style={{ width: targetW, height: targetH }}
+        initial={{
+          scale: initialScale,
+          borderRadius: "50%",
+          opacity: 0.9,
+          x: originXOffset,
+          y: originYOffset,
         }}
-        onLayoutAnimationComplete={() => setMorphComplete(true)}
+        animate={{
+          scale: 1,
+          borderRadius: 12,
+          opacity: 1,
+          x: 0,
+          y: 0,
+        }}
+        exit={{
+          scale: initialScale,
+          borderRadius: "50%",
+          opacity: 0,
+          x: originXOffset,
+          y: originYOffset,
+        }}
+        transition={{
+          duration: 0.55,
+          ease: [0.16, 1, 0.3, 1],
+        }}
       >
-        {/* Close button — glassmorphic pill */}
+        {/* Close button */}
         <motion.button
           ref={closeRef}
           onClick={(e) => { e.stopPropagation(); onClose(); }}
@@ -224,7 +250,6 @@ const ExpandedView = ({
           <X className="w-4 h-4 text-white" />
         </motion.button>
 
-        {/* Image: object-cover during morph, crossfade to object-contain after */}
         <img
           src={project.image}
           alt={project.title}
@@ -232,13 +257,13 @@ const ExpandedView = ({
         />
       </motion.div>
 
-      {/* Title — fades in after morph */}
+      {/* Title */}
       <motion.p
         className="absolute bottom-8 font-display text-xl sm:text-2xl text-white/80 z-10"
         initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: morphComplete ? 1 : 0, y: morphComplete ? 0 : 12 }}
+        animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 12 }}
-        transition={{ duration: 0.3 }}
+        transition={{ delay: 0.4, duration: 0.3 }}
       >
         {project.title}
       </motion.p>
@@ -251,9 +276,15 @@ export const FeaturedWork = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
   const [activeProject, setActiveProject] = useState<Project | null>(null);
+  const [originRect, setOriginRect] = useState<OriginRect | null>(null);
+
+  const handleOpen = useCallback((project: Project, origin: OriginRect) => {
+    setOriginRect(origin);
+    setActiveProject(project);
+  }, []);
 
   return (
-    <LayoutGroup>
+    <>
       <section
         ref={sectionRef}
         className="py-24 sm:py-32 relative overflow-hidden"
@@ -281,8 +312,7 @@ export const FeaturedWork = () => {
                 key={project.id}
                 project={project}
                 index={i}
-                isActive={activeProject?.id === project.id}
-                onOpen={() => setActiveProject(project)}
+                onOpen={(origin) => handleOpen(project, origin)}
               />
             ))}
           </div>
@@ -306,17 +336,18 @@ export const FeaturedWork = () => {
       </section>
 
       {createPortal(
-        <AnimatePresence mode="wait">
-          {activeProject && (
+        <AnimatePresence>
+          {activeProject && originRect && (
             <ExpandedView
               key={activeProject.id}
               project={activeProject}
-              onClose={() => setActiveProject(null)}
+              origin={originRect}
+              onClose={() => { setActiveProject(null); setOriginRect(null); }}
             />
           )}
         </AnimatePresence>,
         document.body
       )}
-    </LayoutGroup>
+    </>
   );
 };
