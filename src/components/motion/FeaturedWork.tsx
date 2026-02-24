@@ -5,6 +5,7 @@
  */
 
 import { useRef, useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { X } from "lucide-react";
 
@@ -28,12 +29,12 @@ type Project = (typeof PROJECTS)[number];
 
 // Floating positions for each circle — spread across the section
 const POSITIONS = [
-  { top: "8%", left: "18%" },
-  { top: "5%", left: "62%" },
-  { top: "38%", left: "38%" },
-  { top: "35%", left: "76%" },
-  { top: "65%", left: "20%" },
-  { top: "62%", left: "65%" },
+  { top: "8%", left: "15%" },
+  { top: "5%", left: "58%" },
+  { top: "38%", left: "35%" },
+  { top: "35%", left: "72%" },
+  { top: "65%", left: "16%" },
+  { top: "62%", left: "60%" },
 ];
 
 // ── Floating Circle ──────────────────────────────────────────────────────────
@@ -128,74 +129,58 @@ const ExpandedView = ({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.25 }}
     >
       {/* Backdrop */}
-      <div
+      <motion.div
         className="absolute inset-0 cursor-pointer"
         style={{
-          background: "hsl(0 0% 4% / 0.95)",
-          backdropFilter: "blur(8px)",
+          background: "hsl(0 0% 4% / 0.92)",
+          backdropFilter: "blur(12px)",
         }}
         onClick={onClose}
       />
 
-      {/* Expanding container: circle morphs to rectangle */}
+      {/* Image container — scale-based morph */}
       <motion.div
-        className="relative z-10 overflow-hidden"
-        initial={{
-          width: 160,
-          height: 160,
-          borderRadius: "50%",
-          opacity: 0.8,
-        }}
-        animate={{
-          width: "min(90vw, 1000px)",
-          height: "min(80vh, 600px)",
-          borderRadius: "12px",
-          opacity: 1,
-        }}
-        exit={{
-          width: 160,
-          height: 160,
-          borderRadius: "50%",
-          opacity: 0,
-        }}
+        className="relative z-10 w-[90vw] max-w-[1000px] overflow-hidden"
+        style={{ aspectRatio: "16/10" }}
+        initial={{ scale: 0.15, borderRadius: "50%", opacity: 0 }}
+        animate={{ scale: 1, borderRadius: "12px", opacity: 1 }}
+        exit={{ scale: 0.15, borderRadius: "50%", opacity: 0 }}
         transition={{
           duration: 0.5,
-          ease: [0.25, 1, 0.5, 1],
+          ease: [0.16, 1, 0.3, 1],
         }}
       >
         {/* Close button */}
         <motion.button
-          onClick={onClose}
-          className="absolute top-3 right-3 z-20 w-8 h-8 flex items-center justify-center rounded-full"
-          style={{ background: "hsl(0 0% 0% / 0.5)" }}
+          onClick={(e) => { e.stopPropagation(); onClose(); }}
+          className="absolute top-3 right-3 z-20 w-9 h-9 flex items-center justify-center rounded-full"
+          style={{ background: "hsl(0 0% 0% / 0.6)" }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
+          transition={{ delay: 0.3 }}
+          whileHover={{ scale: 1.1 }}
         >
-          <X className="w-4 h-4 text-white/80" />
+          <X className="w-4 h-4 text-white" />
         </motion.button>
 
         {/* Image */}
-        <motion.img
+        <img
           src={project.image}
           alt={project.title}
           className="w-full h-full object-cover"
-          initial={{ opacity: 0, scale: 1.1 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.15 }}
         />
       </motion.div>
 
       {/* Title */}
       <motion.p
         className="absolute bottom-8 font-display text-xl sm:text-2xl text-white/80 z-10"
-        initial={{ opacity: 0, y: 10 }}
+        initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 10 }}
-        transition={{ delay: 0.45 }}
+        exit={{ opacity: 0, y: 12 }}
+        transition={{ delay: 0.35, duration: 0.3 }}
       >
         {project.title}
       </motion.p>
@@ -265,16 +250,19 @@ export const FeaturedWork = () => {
         </div>
       </section>
 
-      {/* Expanded overlay */}
-      <AnimatePresence>
-        {activeProject && (
-          <ExpandedView
-            key={activeProject.id}
-            project={activeProject}
-            onClose={() => setActiveProject(null)}
-          />
-        )}
-      </AnimatePresence>
+      {/* Expanded overlay — portal to avoid ancestor transforms breaking fixed positioning */}
+      {createPortal(
+        <AnimatePresence>
+          {activeProject && (
+            <ExpandedView
+              key={activeProject.id}
+              project={activeProject}
+              onClose={() => setActiveProject(null)}
+            />
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </>
   );
 };
