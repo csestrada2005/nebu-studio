@@ -1,5 +1,6 @@
 import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
+import { useState } from "react";
 
 const steps = [
   { id: "audit", number: "01", title: "Audit & Strategy", desc: "We dissect your market, audience, and competitors to build on real insight." },
@@ -9,55 +10,18 @@ const steps = [
   { id: "launch", number: "05", title: "Launch & Optimize", desc: "We track, test, and improve what matters after go-live." },
 ];
 
-const StepSlide = ({
-  step,
-  index,
-  total,
-  scrollYProgress,
-}: {
-  step: (typeof steps)[number];
-  index: number;
-  total: number;
-  scrollYProgress: any;
-}) => {
-  const segmentSize = 1 / total;
-  const start = index * segmentSize;
-  const fadeIn = start + segmentSize * 0.15;
-  const holdEnd = start + segmentSize * 0.85;
-  const end = Math.min(start + segmentSize, 1);
-
-  const isLast = index === total - 1;
-
-  // No blur, no fade — snap between 0 and 1
-  const opacity = useTransform(
-    scrollYProgress,
-    isLast ? [start, fadeIn, end] : [start, fadeIn, holdEnd, end],
-    isLast ? [index === 0 ? 1 : 0, 1, 1] : [index === 0 ? 1 : 0, 1, 1, 0]
-  );
-
-  return (
-    <motion.div
-      className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none px-6"
-      style={{ opacity }}
-    >
-      <span className="font-mono text-[11px] tracking-[0.3em] text-primary mb-4">
-        {step.number}
-      </span>
-      <h3 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-foreground text-center leading-none mb-4">
-        {step.title}
-      </h3>
-      <p className="text-muted-foreground text-sm sm:text-base max-w-md text-center leading-relaxed">
-        {step.desc}
-      </p>
-    </motion.div>
-  );
-};
-
 export const ProcessSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
+  });
+
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useMotionValueEvent(scrollYProgress, "change", (v) => {
+    const idx = Math.min(Math.floor(v * steps.length), steps.length - 1);
+    setActiveIndex(idx);
   });
 
   return (
@@ -70,51 +34,31 @@ export const ProcessSection = () => {
           </h2>
         </div>
 
-        {/* Steps */}
-        <div className="relative h-full">
-          {steps.map((step, i) => (
-            <StepSlide
-              key={step.id}
-              step={step}
-              index={i}
-              total={steps.length}
-              scrollYProgress={scrollYProgress}
-            />
-          ))}
+        {/* Active step — no overlap, instant swap */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-6">
+          <span className="font-mono text-[11px] tracking-[0.3em] text-primary mb-4">
+            {steps[activeIndex].number}
+          </span>
+          <h3 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-foreground text-center leading-none mb-4">
+            {steps[activeIndex].title}
+          </h3>
+          <p className="text-muted-foreground text-sm sm:text-base max-w-md text-center leading-relaxed">
+            {steps[activeIndex].desc}
+          </p>
         </div>
 
         {/* Progress dots */}
         <div className="absolute right-6 top-1/2 -translate-y-1/2 flex flex-col gap-3 z-10">
-          {steps.map((step, i) => {
-            const segmentSize = 1 / steps.length;
-            const mid = i * segmentSize + segmentSize * 0.5;
-            return (
-              <ProgressDot key={step.id} scrollYProgress={scrollYProgress} mid={mid} />
-            );
-          })}
+          {steps.map((step, i) => (
+            <div
+              key={step.id}
+              className={`w-2 h-2 rounded-full bg-primary transition-all duration-200 ${
+                i === activeIndex ? "opacity-100 scale-125" : "opacity-25 scale-75"
+              }`}
+            />
+          ))}
         </div>
       </div>
     </div>
-  );
-};
-
-const ProgressDot = ({
-  scrollYProgress,
-  mid,
-}: {
-  scrollYProgress: any;
-  mid: number;
-}) => {
-  const lo = Math.max(0, mid - 0.08);
-  const hi = Math.min(1, mid + 0.08);
-
-  const scale = useTransform(scrollYProgress, [lo, mid, hi], [0.6, 1.2, 0.6]);
-  const dotOpacity = useTransform(scrollYProgress, [lo, mid, hi], [0.25, 1, 0.25]);
-
-  return (
-    <motion.div
-      className="w-2 h-2 rounded-full bg-primary"
-      style={{ scale, opacity: dotOpacity }}
-    />
   );
 };
