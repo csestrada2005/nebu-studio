@@ -1,10 +1,10 @@
 /**
  * FeaturedWork — "Our Work" floating circle gallery
  *
- * 6 projects as floating circles. Click expands circle → rectangle showing full image.
+ * 6 projects as floating circles. Click expands circle from its position → full-screen rectangle.
  */
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { X } from "lucide-react";
@@ -27,14 +27,20 @@ const PROJECTS = [
 
 type Project = (typeof PROJECTS)[number];
 
-// Floating positions for each circle — spread across the section
+interface OriginRect {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
 const POSITIONS = [
-  { top: "8%", left: "15%" },
-  { top: "5%", left: "58%" },
-  { top: "38%", left: "35%" },
-  { top: "35%", left: "72%" },
-  { top: "65%", left: "16%" },
-  { top: "62%", left: "60%" },
+  { top: "8%", left: "12%" },
+  { top: "5%", left: "52%" },
+  { top: "38%", left: "32%" },
+  { top: "35%", left: "68%" },
+  { top: "65%", left: "14%" },
+  { top: "62%", left: "55%" },
 ];
 
 // ── Floating Circle ──────────────────────────────────────────────────────────
@@ -47,10 +53,18 @@ const FloatingCircle = ({
   project: Project;
   position: { top: string; left: string };
   index: number;
-  onOpen: () => void;
+  onOpen: (rect: OriginRect) => void;
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-40px" });
+
+  const handleClick = () => {
+    if (!ref.current) return;
+    const el = ref.current.querySelector(".circle-thumb") as HTMLElement;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    onOpen({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2, width: rect.width, height: rect.height });
+  };
 
   return (
     <motion.div
@@ -58,44 +72,20 @@ const FloatingCircle = ({
       className="absolute cursor-pointer group"
       style={{ top: position.top, left: position.left }}
       initial={{ opacity: 0, scale: 0.7 }}
-      animate={
-        isInView
-          ? { opacity: 1, scale: 1 }
-          : { opacity: 0, scale: 0.7 }
-      }
-      transition={{
-        duration: 0.6,
-        delay: index * 0.1,
-        ease: [0.25, 1, 0.5, 1],
-      }}
-      onClick={onOpen}
+      animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.7 }}
+      transition={{ duration: 0.6, delay: index * 0.1, ease: [0.25, 1, 0.5, 1] }}
+      onClick={handleClick}
     >
-      {/* Floating animation */}
       <motion.div
-        animate={{
-          y: [0, -8, 0],
-        }}
-        transition={{
-          duration: 3 + index * 0.5,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
+        animate={{ y: [0, -8, 0] }}
+        transition={{ duration: 3 + index * 0.5, repeat: Infinity, ease: "easeInOut" }}
         className="flex flex-col items-center"
       >
-        {/* Circle image */}
-        <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-2 border-transparent group-hover:border-primary transition-all duration-300 relative">
-          <img
-            src={project.image}
-            alt={project.title}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-          />
+        <div className="circle-thumb w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-2 border-transparent group-hover:border-primary transition-all duration-300 relative">
+          <img src={project.image} alt={project.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
           <div className="absolute inset-0 rounded-full bg-black/20 group-hover:bg-black/0 transition-colors duration-300" />
         </div>
-
-        {/* Title below */}
-        <motion.span
-          className="mt-3 text-xs sm:text-sm font-display text-foreground/70 group-hover:text-primary transition-colors duration-300 text-center whitespace-nowrap"
-        >
+        <motion.span className="mt-3 text-xs sm:text-sm font-display text-foreground/70 group-hover:text-primary transition-colors duration-300 text-center whitespace-nowrap">
           {project.title}
         </motion.span>
       </motion.div>
@@ -103,25 +93,34 @@ const FloatingCircle = ({
   );
 };
 
-// ── Expanded View (circle → rectangle) ───────────────────────────────────────
+// ── Expanded View ────────────────────────────────────────────────────────────
 const ExpandedView = ({
   project,
+  origin,
   onClose,
 }: {
   project: Project;
+  origin: OriginRect;
   onClose: () => void;
 }) => {
   useEffect(() => {
     document.body.style.overflow = "hidden";
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
     window.addEventListener("keydown", handler);
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", handler);
-    };
+    return () => { document.body.style.overflow = ""; window.removeEventListener("keydown", handler); };
   }, [onClose]);
+
+  // Calculate where the circle center is relative to viewport center
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const originXOffset = origin.x - vw / 2;
+  const originYOffset = origin.y - vh / 2;
+
+  // Target size
+  const targetW = Math.min(vw * 0.9, 1100);
+  const targetH = Math.min(vh * 0.8, 700);
+  const circleSize = origin.width || 160;
+  const initialScale = circleSize / targetW;
 
   return (
     <motion.div
@@ -129,27 +128,46 @@ const ExpandedView = ({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.25 }}
+      transition={{ duration: 0.3 }}
     >
       {/* Backdrop */}
       <motion.div
         className="absolute inset-0 cursor-pointer"
-        style={{
-          background: "hsl(0 0% 4% / 0.92)",
-          backdropFilter: "blur(12px)",
-        }}
+        style={{ background: "hsl(0 0% 4% / 0.92)", backdropFilter: "blur(12px)" }}
         onClick={onClose}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.3 }}
       />
 
-      {/* Image container — scale-based morph */}
+      {/* Image container — expands from bubble position */}
       <motion.div
-        className="relative z-10 w-[90vw] max-w-[1000px] overflow-hidden"
-        style={{ aspectRatio: "16/10" }}
-        initial={{ scale: 0.15, borderRadius: "50%", opacity: 0 }}
-        animate={{ scale: 1, borderRadius: "12px", opacity: 1 }}
-        exit={{ scale: 0.15, borderRadius: "50%", opacity: 0 }}
+        className="relative z-10 overflow-hidden"
+        style={{ width: targetW, height: targetH }}
+        initial={{
+          scale: initialScale,
+          borderRadius: "50%",
+          opacity: 0.9,
+          x: originXOffset,
+          y: originYOffset,
+        }}
+        animate={{
+          scale: 1,
+          borderRadius: 12,
+          opacity: 1,
+          x: 0,
+          y: 0,
+        }}
+        exit={{
+          scale: initialScale,
+          borderRadius: "50%",
+          opacity: 0,
+          x: originXOffset,
+          y: originYOffset,
+        }}
         transition={{
-          duration: 0.5,
+          duration: 0.55,
           ease: [0.16, 1, 0.3, 1],
         }}
       >
@@ -160,17 +178,17 @@ const ExpandedView = ({
           style={{ background: "hsl(0 0% 0% / 0.6)" }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.35 }}
           whileHover={{ scale: 1.1 }}
         >
           <X className="w-4 h-4 text-white" />
         </motion.button>
 
-        {/* Image */}
+        {/* Image — object-contain to show full image */}
         <img
           src={project.image}
           alt={project.title}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-contain bg-black/40"
         />
       </motion.div>
 
@@ -180,7 +198,7 @@ const ExpandedView = ({
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 12 }}
-        transition={{ delay: 0.35, duration: 0.3 }}
+        transition={{ delay: 0.4, duration: 0.3 }}
       >
         {project.title}
       </motion.p>
@@ -193,6 +211,12 @@ export const FeaturedWork = () => {
   const ref = useRef<HTMLElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [activeProject, setActiveProject] = useState<Project | null>(null);
+  const [originRect, setOriginRect] = useState<OriginRect | null>(null);
+
+  const handleOpen = useCallback((project: Project, rect: OriginRect) => {
+    setOriginRect(rect);
+    setActiveProject(project);
+  }, []);
 
   return (
     <>
@@ -203,7 +227,6 @@ export const FeaturedWork = () => {
         style={{ minHeight: "100vh" }}
       >
         <div className="container relative z-10">
-          {/* Header */}
           <motion.div
             className="mb-8"
             initial={{ opacity: 0, y: 20 }}
@@ -216,7 +239,6 @@ export const FeaturedWork = () => {
           </motion.div>
         </div>
 
-        {/* Floating circles area */}
         <div className="relative w-full" style={{ height: "clamp(500px, 70vh, 800px)" }}>
           {PROJECTS.map((project, i) => (
             <FloatingCircle
@@ -224,12 +246,11 @@ export const FeaturedWork = () => {
               project={project}
               position={POSITIONS[i]}
               index={i}
-              onOpen={() => setActiveProject(project)}
+              onOpen={(rect) => handleOpen(project, rect)}
             />
           ))}
         </div>
 
-        {/* CTA */}
         <div className="container relative z-10">
           <motion.div
             className="mt-8"
@@ -239,10 +260,7 @@ export const FeaturedWork = () => {
           >
             <p className="text-sm text-muted-foreground">
               Want yours next?{" "}
-              <a
-                href="#contact"
-                className="font-display text-foreground hover:text-primary transition-colors duration-200 underline underline-offset-4"
-              >
+              <a href="#contact" className="font-display text-foreground hover:text-primary transition-colors duration-200 underline underline-offset-4">
                 Let's talk.
               </a>
             </p>
@@ -250,14 +268,14 @@ export const FeaturedWork = () => {
         </div>
       </section>
 
-      {/* Expanded overlay — portal to avoid ancestor transforms breaking fixed positioning */}
       {createPortal(
         <AnimatePresence>
-          {activeProject && (
+          {activeProject && originRect && (
             <ExpandedView
               key={activeProject.id}
               project={activeProject}
-              onClose={() => setActiveProject(null)}
+              origin={originRect}
+              onClose={() => { setActiveProject(null); setOriginRect(null); }}
             />
           )}
         </AnimatePresence>,
