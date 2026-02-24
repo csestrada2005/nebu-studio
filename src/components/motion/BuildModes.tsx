@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { motion, useScroll, useTransform, useInView } from "framer-motion";
+import { motion, useScroll, useTransform, useInView, useReducedMotion } from "framer-motion";
 
 const modes = [
 { label: "Websites", sub: "Premium brand experiences", num: "01" },
@@ -20,15 +20,16 @@ const ModeRow = ({
 }: {mode: (typeof modes)[number];index: number;total: number;}) => {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const prefersReducedMotion = useReducedMotion();
 
   return (
     <motion.div
       ref={ref}
       className="group relative flex items-center gap-6 sm:gap-10 py-7 sm:py-9 cursor-default select-none"
       style={{ borderBottom: index < total - 1 ? "1px solid hsl(0 0% 100% / 0.07)" : "none" }}
-      initial={{ opacity: 0, x: -30 }}
-      animate={isInView ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 0.55, delay: index * 0.07, ease: [0.25, 1, 0.5, 1] }}
+      initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 20 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.7, delay: index * 0.07, ease: "easeOut" }}
       whileHover="hovered">
 
       {/* Number */}

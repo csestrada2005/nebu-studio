@@ -1,17 +1,18 @@
 /**
- * FeaturedWork — Awwwards-level "Our Work" gallery
+ * FeaturedWork — Premium "Our Work" gallery
  *
- * - Origin-based shared-element expansion (getBoundingClientRect → scale morph)
- * - Magnetic hover effect (spring-based)
+ * - Origin-based expansion animation
+ * - Magnetic hover + grayscale-to-color + arrow indicator
  * - Responsive CSS grid (3×2 desktop, 2×3 mobile)
  * - Full keyboard accessibility + focus trap
  * - Glassmorphism backdrop
+ * - useReducedMotion support
  */
 
 import { useRef, useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { motion, AnimatePresence, useSpring, useInView } from "framer-motion";
-import { X } from "lucide-react";
+import { motion, AnimatePresence, useSpring, useInView, useReducedMotion } from "framer-motion";
+import { X, ArrowRight } from "lucide-react";
 
 import workPapachoa from "@/assets/work-papachoa.png";
 import workBazar from "@/assets/work-bazar.png";
@@ -47,8 +48,8 @@ const OFFSETS = [
   "-translate-x-4 -translate-y-1",
 ];
 
-// ── Magnetic Circle ──────────────────────────────────────────────────────────
-const MagneticCircle = ({
+// ── Project Card ─────────────────────────────────────────────────────────────
+const ProjectCard = ({
   project,
   index,
   onOpen,
@@ -58,21 +59,23 @@ const MagneticCircle = ({
   onOpen: (origin: OriginRect) => void;
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const circleRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, { once: true, margin: "-40px" });
+  const prefersReducedMotion = useReducedMotion();
 
   const springX = useSpring(0, { stiffness: 200, damping: 18 });
   const springY = useSpring(0, { stiffness: 200, damping: 18 });
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (prefersReducedMotion) return;
     const el = containerRef.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
     const dx = e.clientX - (rect.left + rect.width / 2);
     const dy = e.clientY - (rect.top + rect.height / 2);
-    springX.set(dx * 0.25);
-    springY.set(dy * 0.25);
-  }, [springX, springY]);
+    springX.set(dx * 0.15);
+    springY.set(dy * 0.15);
+  }, [springX, springY, prefersReducedMotion]);
 
   const handleMouseLeave = useCallback(() => {
     springX.set(0);
@@ -80,13 +83,13 @@ const MagneticCircle = ({
   }, [springX, springY]);
 
   const handleClick = () => {
-    const el = circleRef.current;
+    const el = cardRef.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
     onOpen({
       x: rect.left + rect.width / 2,
       y: rect.top + rect.height / 2,
-      size: rect.width,
+      size: Math.min(rect.width, rect.height),
     });
   };
 
@@ -94,35 +97,53 @@ const MagneticCircle = ({
     <motion.div
       ref={containerRef}
       className={`flex items-center justify-center ${OFFSETS[index]}`}
-      initial={{ opacity: 0, scale: 0.7 }}
-      animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.7 }}
-      transition={{ duration: 0.6, delay: index * 0.1, ease: [0.25, 1, 0.5, 1] }}
-      style={{ x: springX, y: springY }}
+      initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 30 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: prefersReducedMotion ? 0.3 : 0.7, delay: index * 0.1 }}
+      style={prefersReducedMotion ? {} : { x: springX, y: springY }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
       <motion.button
-        className="flex flex-col items-center cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-full"
+        className="group relative cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-xl w-full"
         aria-label={`View ${project.title} project`}
         onClick={handleClick}
-        whileHover={{ scale: 1.08 }}
-        whileTap={{ scale: 0.96 }}
+        whileHover={prefersReducedMotion ? {} : { scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
         data-project-id={project.id}
       >
-        <div
-          ref={circleRef}
-          className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-2 border-transparent group-hover:border-primary transition-colors duration-300"
-        >
+        <div ref={cardRef} className="relative overflow-hidden rounded-xl aspect-[4/3]">
+          {/* Image — grayscale by default, full color on hover */}
           <img
             src={project.image}
             alt={project.title}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+            className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
             loading="lazy"
           />
+
+          {/* Dark gradient overlay at bottom */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500" />
+
+          {/* Arrow indicator */}
+          <div className="absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500"
+            style={{
+              background: "rgba(255,255,255,0.12)",
+              backdropFilter: "blur(8px)",
+            }}
+          >
+            <ArrowRight className="w-3.5 h-3.5 text-white" />
+          </div>
+
+          {/* Title at bottom */}
+          <div className="absolute bottom-0 left-0 right-0 p-4">
+            <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/50 block mb-1">
+              {String(index + 1).padStart(2, "0")}
+            </span>
+            <h3 className="font-display text-base sm:text-lg text-white group-hover:text-primary transition-colors duration-300">
+              {project.title}
+            </h3>
+          </div>
         </div>
-        <span className="mt-3 text-xs sm:text-sm font-display text-foreground/70 group-hover:text-primary transition-colors duration-300 text-center whitespace-nowrap">
-          {project.title}
-        </span>
       </motion.button>
     </motion.div>
   );
@@ -139,6 +160,7 @@ const ExpandedView = ({
   onClose: () => void;
 }) => {
   const closeRef = useRef<HTMLButtonElement>(null);
+  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -157,7 +179,6 @@ const ExpandedView = ({
     };
   }, [onClose]);
 
-  // Return focus on unmount
   useEffect(() => {
     const originBtn = document.querySelector(`[data-project-id="${project.id}"]`) as HTMLElement;
     return () => { setTimeout(() => originBtn?.focus(), 50); };
@@ -167,11 +188,17 @@ const ExpandedView = ({
   const vh = window.innerHeight;
   const targetW = Math.min(vw * 0.9, 1100);
   const targetH = Math.min(vh * 0.8, 700);
-
-  // Calculate origin offset from viewport center
   const originXOffset = origin.x - vw / 2;
   const originYOffset = origin.y - vh / 2;
   const initialScale = origin.size / targetW;
+
+  const openAnim = prefersReducedMotion
+    ? { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } }
+    : {
+        initial: { scale: initialScale, borderRadius: "50%", opacity: 0.9, x: originXOffset, y: originYOffset },
+        animate: { scale: 1, borderRadius: 12, opacity: 1, x: 0, y: 0 },
+        exit: { scale: initialScale, borderRadius: "50%", opacity: 0, x: originXOffset, y: originYOffset },
+      };
 
   return (
     <motion.div
@@ -202,37 +229,13 @@ const ExpandedView = ({
         />
       </motion.div>
 
-      {/* Image container — morphs from bubble origin */}
+      {/* Image container */}
       <motion.div
         className="relative z-10 overflow-hidden"
         style={{ width: targetW, height: targetH }}
-        initial={{
-          scale: initialScale,
-          borderRadius: "50%",
-          opacity: 0.9,
-          x: originXOffset,
-          y: originYOffset,
-        }}
-        animate={{
-          scale: 1,
-          borderRadius: 12,
-          opacity: 1,
-          x: 0,
-          y: 0,
-        }}
-        exit={{
-          scale: initialScale,
-          borderRadius: "50%",
-          opacity: 0,
-          x: originXOffset,
-          y: originYOffset,
-        }}
-        transition={{
-          duration: 0.55,
-          ease: [0.16, 1, 0.3, 1],
-        }}
+        {...openAnim}
+        transition={{ duration: prefersReducedMotion ? 0.2 : 0.55, ease: [0.16, 1, 0.3, 1] }}
       >
-        {/* Close button */}
         <motion.button
           ref={closeRef}
           onClick={(e) => { e.stopPropagation(); onClose(); }}
@@ -275,6 +278,7 @@ const ExpandedView = ({
 export const FeaturedWork = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+  const prefersReducedMotion = useReducedMotion();
   const [activeProject, setActiveProject] = useState<Project | null>(null);
   const [originRect, setOriginRect] = useState<OriginRect | null>(null);
 
@@ -304,11 +308,10 @@ export const FeaturedWork = () => {
           </motion.div>
         </div>
 
-        {/* Responsive grid: 2-col mobile, 3-col desktop */}
         <div className="container relative z-10">
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 sm:gap-12 md:gap-16 py-8 sm:py-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10 py-8 sm:py-12">
             {PROJECTS.map((project, i) => (
-              <MagneticCircle
+              <ProjectCard
                 key={project.id}
                 project={project}
                 index={i}
