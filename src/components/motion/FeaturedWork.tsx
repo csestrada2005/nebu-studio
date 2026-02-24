@@ -99,6 +99,7 @@ const MagneticCircle = ({
         {!isActive && (
           <motion.div
             layoutId={project.id}
+            initial={false}
             className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-2 border-transparent group-hover:border-primary transition-colors duration-300"
             style={{ borderRadius: "50%" }}
           >
