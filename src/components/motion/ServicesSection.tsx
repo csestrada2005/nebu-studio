@@ -180,7 +180,7 @@ export const ServicesSection = () => {
   const ref = useRef<HTMLElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const prefersReduced = useReducedMotion();
-  const [active, setActive] = useState(1);
+const [active, setActive] = useState(0);
   const tier = tiers[active];
 
   return (
