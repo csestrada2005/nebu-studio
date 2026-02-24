@@ -140,14 +140,21 @@ export const ProcessSection = () => {
   });
 
   const [activeIndex, setActiveIndex] = useState(0);
+  const lastChangeTime = useRef(0);
 
   useMotionValueEvent(scrollYProgress, "change", (v) => {
-    const idx = Math.min(Math.floor(v * steps.length), steps.length - 1);
-    setActiveIndex(idx);
+    const targetIdx = Math.min(Math.floor(v * steps.length), steps.length - 1);
+    const now = Date.now();
+    // Only allow stepping one at a time with a minimum interval
+    if (targetIdx !== activeIndex && now - lastChangeTime.current > 350) {
+      const direction = targetIdx > activeIndex ? 1 : -1;
+      setActiveIndex((prev) => Math.max(0, Math.min(steps.length - 1, prev + direction)));
+      lastChangeTime.current = now;
+    }
   });
 
   return (
-    <div ref={containerRef} style={{ height: `${steps.length * 80}vh` }} id="process">
+    <div ref={containerRef} style={{ height: `${steps.length * 120}vh` }} id="process">
       <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col items-center justify-center">
         {/* Title */}
         <motion.h2
