@@ -1,43 +1,48 @@
 import { useRef, useState, useCallback } from "react";
 import { motion, useInView, useReducedMotion, AnimatePresence } from "framer-motion";
-import { Store, Cog, Rocket } from "lucide-react";
+import { Store, Cog, Rocket, ArrowRight } from "lucide-react";
 
 const tiers = [
   {
     tier: 0,
-    name: "Brand Storefront",
+    name: "Ecommerce Storefronts",
+    anchor: "ecommerce",
     category: "High-End Web",
     icon: Store,
-    features: ["Premium Online Store", "Eye-Catching Animations", "Built to Rank on Google"],
-    bestFor: "D2C Brands needing a premium face.",
+    bestFor: "D2C & retail brands ready to sell more online.",
+    features: [
+      "Conversion-optimized product pages & checkout",
+      "SEO-first architecture that ranks from day one",
+      "Premium animations that build brand trust",
+    ],
     hue: 350,
   },
   {
     tier: 1,
-    name: "Business Engine",
-    category: "Web + Systems",
+    name: "Marketing Websites",
+    anchor: "websites",
+    category: "Web + Growth",
     icon: Cog,
+    bestFor: "Businesses turning traffic into qualified leads.",
     features: [
-      "Everything in Tier 1",
-      "Customer Management Systems",
-      "Automated Messaging (WhatsApp & Email)",
-      "Internal Dashboards & Portals",
+      "Landing pages engineered for lead capture",
+      "CMS & blog with built-in content strategy",
+      "Analytics dashboards to measure every click",
     ],
-    bestFor: "Operation-heavy businesses needing efficiency.",
     hue: 0,
   },
   {
     tier: 2,
-    name: "SaaS Architect",
+    name: "Systems & Web Apps",
+    anchor: "systems",
     category: "Full Product",
     icon: Rocket,
+    bestFor: "Founders & ops teams replacing manual workflows.",
     features: [
-      "Custom Backends",
-      "Personalized AI Solutions & Integrations",
-      "Smart AI Assistants",
-      "Full Product Development",
+      "Custom CRMs, portals & internal tools",
+      "AI integrations & automated messaging",
+      "Scalable backends built for growth",
     ],
-    bestFor: "Founders building the next big platform.",
     hue: 15,
   },
 ];
@@ -184,6 +189,10 @@ const [active, setActive] = useState(0);
 
   return (
     <section ref={ref} className="py-24 sm:py-32 relative overflow-hidden" id="services">
+      {/* Anchor targets for deep-linking */}
+      {tiers.map(t => (
+        <div key={t.anchor} id={t.anchor} className="absolute" style={{ top: 0 }} aria-hidden="true" />
+      ))}
       {/* Ambient lighting that shifts with active tier */}
       <AnimatePresence mode="wait">
         <motion.div
@@ -284,6 +293,15 @@ const [active, setActive] = useState(0);
                 <p className="text-sm text-foreground leading-relaxed">
                   {tier.bestFor}
                 </p>
+
+                {/* CTA */}
+                <a
+                  href="#contact"
+                  className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary/80 transition-colors group/cta"
+                >
+                  Explore
+                  <ArrowRight className="w-4 h-4 group-hover/cta:translate-x-1 transition-transform" />
+                </a>
               </div>
             </motion.div>
           </AnimatePresence>
