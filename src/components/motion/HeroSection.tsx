@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import nebuOwl from "@/assets/nebu-owl.png";
 
 type Phase = 0 | 1 | 2 | 3 | 4;
@@ -227,53 +228,75 @@ export const HeroSection = () => {
         />
         <SumiHeroReveal />
 
-        {/* Value proposition + CTA */}
+        {/* Subhead */}
         <motion.p
-          className="mt-6 sm:mt-8 text-sm sm:text-base text-foreground/70 max-w-md text-center leading-relaxed"
+          className="mt-6 sm:mt-8 text-sm sm:text-base md:text-lg text-foreground/70 max-w-lg text-center leading-relaxed"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.8, duration: 0.6 }}
         >
-          Premium digital experiences that turn visitors into customers.
+          We design and engineer websites &amp; systems for brands that sell — built to convert, rank, and scale.
         </motion.p>
 
+        {/* Micro-bullets */}
+        <motion.ul
+          className="mt-5 sm:mt-6 flex flex-col sm:flex-row items-center gap-2 sm:gap-5 text-xs sm:text-sm text-foreground/55"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 2.0, duration: 0.5 }}
+        >
+          <li className="flex items-center gap-1.5">
+            <span className="w-1 h-1 rounded-full bg-primary" />
+            Higher conversion rates
+          </li>
+          <li className="flex items-center gap-1.5">
+            <span className="w-1 h-1 rounded-full bg-primary" />
+            SEO-first architecture
+          </li>
+          <li className="flex items-center gap-1.5">
+            <span className="w-1 h-1 rounded-full bg-primary" />
+            Ops that run themselves
+          </li>
+        </motion.ul>
+
+        {/* CTAs */}
         <motion.div
-          className="mt-5 sm:mt-6 flex flex-col sm:flex-row items-center gap-3"
+          className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-center gap-3"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 2.1, duration: 0.6 }}
+          transition={{ delay: 2.2, duration: 0.6 }}
         >
           <a
             href="#contact"
             className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-primary text-primary-foreground font-semibold text-sm transition-all duration-300 hover:scale-105 active:scale-95"
             style={{ boxShadow: "0 4px 20px -4px hsl(0 100% 50% / 0.4)" }}
           >
-            Start a Project
-            <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+            Book a Strategy Call
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </a>
           <a
             href="#work"
             className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full border border-border text-foreground text-sm font-semibold hover:border-primary/50 transition-colors duration-300"
           >
-            See Our Work
+            View Work
           </a>
         </motion.div>
 
-        {/* Trust badges */}
+        {/* Trust strip */}
         <motion.div
-          className="mt-8 sm:mt-10 flex items-center gap-6 text-[11px] sm:text-xs font-mono tracking-wider uppercase text-muted-foreground/60"
+          className="mt-8 sm:mt-10 flex flex-wrap justify-center items-center gap-4 sm:gap-6 text-[11px] sm:text-xs font-mono tracking-wider uppercase text-muted-foreground/60"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 2.5, duration: 0.8 }}
+          transition={{ delay: 2.6, duration: 0.8 }}
         >
           <span className="flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-            Available now
+            Accepting projects
           </span>
+          <span>·</span>
+          <span>+30 brands served</span>
           <span className="hidden sm:inline">·</span>
-          <span className="hidden sm:flex items-center gap-1.5">+30 projects delivered</span>
-          <span className="hidden sm:inline">·</span>
-          <span className="hidden sm:flex items-center gap-1.5">24h response</span>
+          <span className="hidden sm:inline">24h response</span>
         </motion.div>
       </div>
 
