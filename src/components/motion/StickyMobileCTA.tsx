@@ -45,7 +45,7 @@ export const StickyMobileCTA = () => {
               className="flex-1 flex items-center justify-center gap-2 h-12 rounded-full bg-primary text-primary-foreground font-semibold text-sm active:scale-95 transition-transform"
               style={{ boxShadow: "0 4px 20px -4px hsl(0 100% 50% / 0.4)" }}
             >
-              Start a Project
+              Book a Strategy Call
               <ArrowRight className="w-4 h-4" />
             </a>
             <a

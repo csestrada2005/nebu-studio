@@ -54,23 +54,54 @@ export const TopMenu = () => {
 
   return (
     <>
-      {/* Hamburger button — fixed top-right in a black circle */}
-      <motion.button
-        onClick={() => setOpen(true)}
-        className="fixed top-4 right-4 sm:top-5 sm:right-6 z-50 w-11 h-11 flex items-center justify-center rounded-full"
-        style={{
-          background: "hsl(0 0% 0%)",
-          boxShadow: "0 2px 12px hsl(0 0% 0% / 0.5)",
-        }}
-        initial={prefersReducedMotion ? {} : { scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.4, ease: [0.25, 1, 0.5, 1] }}
-        whileHover={{ scale: 1.08 }}
-        whileTap={{ scale: 0.95 }}
-        aria-label="Open menu"
+      {/* Header bar — fixed top with CTA */}
+      <motion.header
+        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 sm:px-6"
+        style={{ height: 56 }}
+        initial={prefersReducedMotion ? {} : { y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
       >
-        <Menu className="w-5 h-5 text-white" />
-      </motion.button>
+        {/* Logo */}
+        <motion.span
+          className="font-display text-xs sm:text-sm tracking-[0.15em] text-foreground/80"
+          style={{ opacity: scrolled ? 1 : 0, transition: "opacity 0.3s" }}
+        >
+          NEBU
+        </motion.span>
+
+        <div className="flex items-center gap-2">
+          {/* Header CTA — visible after scroll */}
+          <a
+            href="#contact"
+            className="hidden sm:inline-flex items-center gap-1.5 px-5 py-2 rounded-full bg-primary text-primary-foreground text-xs font-semibold transition-all duration-300 hover:scale-105 active:scale-95"
+            style={{
+              boxShadow: "0 2px 12px hsl(0 100% 50% / 0.3)",
+              opacity: scrolled ? 1 : 0,
+              pointerEvents: scrolled ? "auto" : "none",
+              transition: "opacity 0.3s",
+            }}
+          >
+            Book a Call
+            <ArrowRight className="w-3.5 h-3.5" />
+          </a>
+
+          {/* Hamburger */}
+          <motion.button
+            onClick={() => setOpen(true)}
+            className="w-11 h-11 flex items-center justify-center rounded-full"
+            style={{
+              background: "hsl(0 0% 0%)",
+              boxShadow: "0 2px 12px hsl(0 0% 0% / 0.5)",
+            }}
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.95 }}
+            aria-label="Open menu"
+          >
+            <Menu className="w-5 h-5 text-white" />
+          </motion.button>
+        </div>
+      </motion.header>
 
       {/* Fullscreen overlay */}
       <AnimatePresence>
@@ -147,7 +178,7 @@ export const TopMenu = () => {
                 onClick={() => scrollTo("contact")}
                 className="btn-primary w-full py-4 text-center text-sm"
               >
-                Start a Project
+                Book a Strategy Call
                 <ArrowRight className="w-4 h-4" />
               </button>
             </motion.div>
