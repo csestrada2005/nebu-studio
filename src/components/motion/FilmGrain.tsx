@@ -6,6 +6,11 @@ export const FilmGrain = () => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+
+    // Skip on mobile for performance
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+    if (isMobile) return;
+
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 

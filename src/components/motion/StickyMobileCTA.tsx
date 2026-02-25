@@ -44,7 +44,7 @@ export const StickyMobileCTA = () => {
       {visible && (
         <motion.div
           {...animProps}
-          className="fixed bottom-0 left-0 right-0 z-40 sm:hidden"
+          className="fixed bottom-0 left-0 right-0 z-[9998] sm:hidden"
           style={{
             paddingBottom: "max(env(safe-area-inset-bottom, 0px), 8px)",
             background: "linear-gradient(to top, hsl(var(--background)) 80%, hsl(var(--background) / 0))",
