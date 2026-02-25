@@ -80,8 +80,8 @@ export const StandardsSection = () => {
       <div className="container relative z-10">
         {/* Header — TEXT-ONLY Black Sand Reveal */}
         <div className="mb-16 sm:mb-20 max-w-2xl">
-          <p className="text-[10px] font-mono tracking-[0.3em] uppercase text-primary mb-4">
-          </p>
+           <p className="text-xs sm:text-[10px] font-mono tracking-[0.3em] uppercase text-primary mb-4">
+           </p>
           <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-5 text-foreground">
             MINIMUM GUARANTEED OUTPUT.
           </h2>
@@ -112,7 +112,7 @@ export const StandardsSection = () => {
             transition={{ duration: 0.7, delay: i * 0.07, ease: "easeOut" }}>
 
               {/* Number */}
-              <span className="block font-mono text-[10px] tracking-[0.25em] text-primary/40 mb-4 group-hover:text-primary/70 transition-colors">
+              <span className="block font-mono text-xs sm:text-[10px] tracking-[0.25em] text-primary/40 mb-4 group-hover:text-primary/70 transition-colors">
                 {String(i + 1).padStart(2, "0")}
               </span>
 

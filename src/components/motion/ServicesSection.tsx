@@ -249,7 +249,7 @@ const [active, setActive] = useState(0);
             >
               <div className="flex items-center gap-3 mb-2">
                 <span
-                  className="text-[10px] font-mono tracking-[0.25em] uppercase"
+                  className="text-xs sm:text-[10px] font-mono tracking-[0.25em] uppercase"
                   style={{ color: `hsl(${tier.hue} 100% 55% / 0.7)` }}
                 >
                   {tier.category}
@@ -287,7 +287,7 @@ const [active, setActive] = useState(0);
                 className="pt-4"
                 style={{ borderTop: "1px solid hsl(var(--border))" }}
               >
-                <p className="text-[10px] font-mono tracking-[0.12em] uppercase text-muted-foreground mb-1">
+                <p className="text-xs sm:text-[10px] font-mono tracking-[0.12em] uppercase text-muted-foreground mb-1">
                   Best for
                 </p>
                 <p className="text-sm text-foreground leading-relaxed">
