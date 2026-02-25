@@ -24,15 +24,15 @@ export const SectionLabelToast = () => {
     const onScroll = () => {
       if (cooldown.current) return;
 
-      const scrollMid = window.scrollY + window.innerHeight * 0.45;
+      const viewportMid = window.scrollY + window.innerHeight * 0.45;
 
       for (const sec of TRACKED_SECTIONS) {
         const el = document.getElementById(sec.id);
         if (!el) continue;
-        const top = el.offsetTop;
-        const bottom = top + el.offsetHeight;
+        const rect = el.getBoundingClientRect();
+        const top = rect.top + window.scrollY;
 
-        if (scrollMid >= top && scrollMid <= top + 250 && lastId.current !== sec.id) {
+        if (viewportMid >= top && viewportMid <= top + 250 && lastId.current !== sec.id) {
           lastId.current = sec.id;
           cooldown.current = true;
           setLabel(sec.label);

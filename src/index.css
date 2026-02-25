@@ -345,3 +345,13 @@
     background: hsl(var(--card));
   }
 }
+
+/* Prevent hover effects firing on touch devices */
+@media (hover: none) {
+  .hover\:scale-105:hover,
+  .hover\:scale-\[1\.03\]:hover,
+  .group:hover .group-hover\:translate-x-1,
+  .group:hover .group-hover\:translate-x-0\.5 {
+    transform: none !important;
+  }
+}

@@ -234,9 +234,9 @@ export const HeroSection = () => {
       className="relative h-[100dvh] flex items-center justify-center overflow-hidden"
       id="hero"
     >
-      {/* Grid overlay */}
+      {/* Grid overlay — desktop only for perf */}
       <div
-        className="absolute inset-0 opacity-[0.06]"
+        className="absolute inset-0 opacity-[0.06] hidden sm:block"
         style={{
           backgroundImage:
             "linear-gradient(hsl(var(--foreground) / 0.4) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--foreground) / 0.4) 1px, transparent 1px)",
@@ -258,6 +258,8 @@ export const HeroSection = () => {
         <img
           src={nebuOwl}
           alt="Nebu Studio owl logo"
+          width={288}
+          height={288}
           className="w-36 sm:w-48 md:w-60 lg:w-72 mb-6 sm:mb-8"
         />
         <SumiHeroReveal />

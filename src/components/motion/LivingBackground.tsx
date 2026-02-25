@@ -153,18 +153,19 @@ export const LivingBackground = () => {
     };
 
     // Smooth lerp animation loop
-    const MAX_DRIFT = 8; // px — very subtle 1–2% of viewport
+    const MAX_DRIFT = isMobile.current ? 4 : 8; // less drift on mobile
 
     const tick = () => {
-      // Ease toward target (lerp factor = 0.04 = very slow/smooth)
-      currentPos.current.x += (mousePos.current.x - currentPos.current.x) * 0.04;
-      currentPos.current.y += (mousePos.current.y - currentPos.current.y) * 0.04;
+      // Ease toward target
+      const lerp = isMobile.current ? 0.03 : 0.04;
+      currentPos.current.x += (mousePos.current.x - currentPos.current.x) * lerp;
+      currentPos.current.y += (mousePos.current.y - currentPos.current.y) * lerp;
 
       const dx = (currentPos.current.x - 0.5) * MAX_DRIFT * 2;
       const dy = (currentPos.current.y - 0.5) * MAX_DRIFT * 2;
 
       if (parallaxRef.current) {
-        parallaxRef.current.style.transform = `translate(${dx}px, ${dy}px)`;
+        parallaxRef.current.style.transform = `translate3d(${dx}px, ${dy}px, 0)`;
       }
 
       rafId.current = requestAnimationFrame(tick);
