@@ -201,8 +201,8 @@ const [active, setActive] = useState(0);
           className="absolute inset-0 pointer-events-none"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 1.2 }}
+           exit={{ opacity: 0 }}
+           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           aria-hidden="true"
         >
           <AmbientParticles hue={tier.hue} />
@@ -213,10 +213,10 @@ const [active, setActive] = useState(0);
         {/* Header */}
         <motion.div
           className="mb-20 sm:mb-24"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+           initial={{ opacity: 0 }}
+           whileInView={{ opacity: 1 }}
+           viewport={{ once: true }}
+           transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
         >
           <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-4">
             WHAT WE <span className="text-primary">BUILD</span>
@@ -230,9 +230,9 @@ const [active, setActive] = useState(0);
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
           {/* Dial */}
           <motion.div
-            initial={prefersReduced ? { opacity: 0 } : { opacity: 0, scale: 0.8 }}
-            animate={isInView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ duration: 0.8, delay: 0.2 }}
+             initial={prefersReduced ? { opacity: 0 } : { opacity: 0, scale: 0.85 }}
+             animate={isInView ? { opacity: 1, scale: 1 } : {}}
+             transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
             className="flex-shrink-0"
           >
             <DialSelector active={active} onSelect={setActive} />
@@ -242,11 +242,11 @@ const [active, setActive] = useState(0);
           <AnimatePresence mode="wait">
             <motion.div
               key={active}
-              className="flex-1 min-w-0"
-              initial={prefersReduced ? { opacity: 0 } : { opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={prefersReduced ? { opacity: 0 } : { opacity: 0, x: -30 }}
-              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+               className="flex-1 min-w-0"
+               initial={prefersReduced ? { opacity: 0 } : { opacity: 0, x: 20 }}
+               animate={{ opacity: 1, x: 0 }}
+               exit={prefersReduced ? { opacity: 0 } : { opacity: 0, x: -20 }}
+               transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
             >
               <div className="flex items-center gap-3 mb-2">
                 <span
@@ -267,9 +267,9 @@ const [active, setActive] = useState(0);
                    <motion.li
                     key={feature}
                     className="flex items-start gap-3 text-sm text-foreground"
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: fi * 0.08 + 0.15 }}
+                     initial={{ opacity: 0, x: -8 }}
+                     animate={{ opacity: 1, x: 0 }}
+                     transition={{ delay: fi * 0.07 + 0.12, ease: [0.16, 1, 0.3, 1] }}
                   >
                     <div
                       className="w-1.5 h-1.5 rounded-full flex-shrink-0 mt-1.5"

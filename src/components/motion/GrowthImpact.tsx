@@ -295,11 +295,11 @@ export const GrowthImpact = () => {
           <TensionReveal label="Hold to reveal the data">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-10">
               {metrics.map((m, i) => (
-                <motion.div
-                  key={m.label}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                 <motion.div
+                   key={m.label}
+                   initial={{ opacity: 0, y: 18 }}
+                   animate={{ opacity: 1, y: 0 }}
+                   transition={{ duration: 0.55, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
                   className="relative"
                 >
                   <p className="font-display text-3xl sm:text-4xl md:text-5xl text-primary mb-2">
@@ -310,9 +310,9 @@ export const GrowthImpact = () => {
                   <motion.div
                     className="absolute -bottom-4 left-0 h-px"
                     style={{ background: "linear-gradient(90deg, hsl(0 100% 50% / 0.3), transparent)" }}
-                    initial={{ width: 0 }}
-                    animate={{ width: "80%" }}
-                    transition={{ duration: 0.8, delay: 0.5 + i * 0.1 }}
+                     initial={{ width: 0 }}
+                     animate={{ width: "80%" }}
+                     transition={{ duration: 0.6, delay: 0.4 + i * 0.08, ease: [0.16, 1, 0.3, 1] }}
                   />
                 </motion.div>
               ))}
@@ -321,26 +321,26 @@ export const GrowthImpact = () => {
         </div>
 
         <div className="grid md:grid-cols-2 gap-12 lg:gap-16">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.4 }}
+           <motion.div
+             initial={{ opacity: 0, y: 18 }}
+             animate={isInView ? { opacity: 1, y: 0 } : {}}
+             transition={{ duration: 0.55, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
           >
             <ScrollLineChart />
           </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.5 }}
+           <motion.div
+             initial={{ opacity: 0, y: 18 }}
+             animate={isInView ? { opacity: 1, y: 0 } : {}}
+             transition={{ duration: 0.55, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
           >
             <ScrollBarChart />
           </motion.div>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, delay: 0.6 }}
+         <motion.div
+           initial={{ opacity: 0, y: 20 }}
+           animate={isInView ? { opacity: 1, y: 0 } : {}}
+           transition={{ duration: 0.6, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
           className="mt-24 sm:mt-32"
         >
           <div className="mb-10">

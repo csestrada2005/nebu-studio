@@ -63,9 +63,9 @@ const AccordionItem = ({ q, a, index }: { q: string; a: string; index: number })
           </span>
           <span className="text-sm sm:text-base font-medium text-foreground/90">{q}</span>
         </span>
-        <motion.div
-          animate={{ rotate: open ? 180 : 0 }}
-          transition={{ duration: 0.25 }}
+         <motion.div
+           animate={{ rotate: open ? 180 : 0 }}
+           transition={{ duration: 0.2, ease: "easeOut" }}
           className="flex-shrink-0"
         >
           <ChevronDown className="w-4 h-4 text-muted-foreground/50" />
@@ -74,11 +74,11 @@ const AccordionItem = ({ q, a, index }: { q: string; a: string; index: number })
 
       <AnimatePresence initial={false}>
         {open && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+           <motion.div
+             initial={{ height: 0, opacity: 0 }}
+             animate={{ height: "auto", opacity: 1 }}
+             exit={{ height: 0, opacity: 0 }}
+             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             className="overflow-hidden"
           >
             <p className="pb-5 pl-8 pr-4 text-sm text-muted-foreground leading-relaxed">
@@ -101,9 +101,9 @@ export const FAQSection = () => {
         {/* Header */}
         <motion.div
           className="mb-12"
-          initial={{ opacity: 0, y: 16 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
+           initial={{ opacity: 0, y: 14 }}
+           animate={isInView ? { opacity: 1, y: 0 } : {}}
+           transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
         >
           <p className="text-xs sm:text-[10px] font-mono tracking-[0.3em] uppercase text-primary mb-4">
             Common questions
@@ -118,9 +118,9 @@ export const FAQSection = () => {
 
         {/* FAQ Accordion */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.5, delay: 0.15 }}
+           initial={{ opacity: 0 }}
+           animate={isInView ? { opacity: 1 } : {}}
+           transition={{ duration: 0.55, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
         >
           {FAQS.map((faq, i) => (
             <AccordionItem key={i} q={faq.q} a={faq.a} index={i} />
@@ -131,9 +131,9 @@ export const FAQSection = () => {
         <motion.div
           className="mt-16 sm:mt-20 p-6 sm:p-8 rounded-xl border border-white/[0.06]"
           style={{ background: "hsl(var(--background) / 0.5)" }}
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 0.3 }}
+           initial={{ opacity: 0, y: 18 }}
+           animate={isInView ? { opacity: 1, y: 0 } : {}}
+           transition={{ duration: 0.55, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
         >
           <h3 className="font-display text-xl sm:text-2xl mb-2">
             What you <span className="text-primary">own.</span>
@@ -147,9 +147,9 @@ export const FAQSection = () => {
               <motion.li
                 key={i}
                 className="flex items-center gap-3 text-sm text-foreground/80"
-                initial={{ opacity: 0, x: -10 }}
-                animate={isInView ? { opacity: 1, x: 0 } : {}}
-                transition={{ duration: 0.35, delay: 0.35 + i * 0.06 }}
+                 initial={{ opacity: 0, x: -8 }}
+                 animate={isInView ? { opacity: 1, x: 0 } : {}}
+                 transition={{ duration: 0.35, delay: 0.3 + i * 0.07, ease: [0.16, 1, 0.3, 1] }}
               >
                 <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 bg-primary/10">
                   <Check className="w-3 h-3 text-primary" />

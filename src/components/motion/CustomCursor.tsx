@@ -9,8 +9,8 @@ export const CustomCursor = ({ containerRef }: CustomCursorProps) => {
   const [visible, setVisible] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
 
-  const glowX = useSpring(0, { stiffness: 120, damping: 22, mass: 0.8 });
-  const glowY = useSpring(0, { stiffness: 120, damping: 22, mass: 0.8 });
+   const glowX = useSpring(0, { stiffness: 100, damping: 20, mass: 1 });
+   const glowY = useSpring(0, { stiffness: 100, damping: 20, mass: 1 });
 
   useEffect(() => {
     // Detect touch devices — return null behavior

@@ -85,12 +85,12 @@ export const StandardsSection = () => {
           <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-5 text-foreground">
             MINIMUM GUARANTEED OUTPUT.
           </h2>
-          <motion.p
-            className="text-foreground/80 text-sm leading-relaxed max-w-md"
-            initial={{ opacity: 0, y: 16 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.7 }}>
-            The baseline features.
+           <motion.p
+             className="text-foreground/80 text-sm leading-relaxed max-w-md"
+             initial={{ opacity: 0, y: 14 }}
+             animate={isInView ? { opacity: 1, y: 0 } : {}}
+             transition={{ duration: 0.55, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}>
+             The baseline features.
           </motion.p>
         </div>
 
@@ -107,9 +107,9 @@ export const StandardsSection = () => {
               borderRight: "1px solid hsl(0 0% 100% / 0.07)",
               borderBottom: "1px solid hsl(0 0% 100% / 0.07)"
             }}
-            initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: i * 0.07, ease: "easeOut" }}>
+             initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 18 }}
+             animate={isInView ? { opacity: 1, y: 0 } : {}}
+             transition={{ duration: 0.55, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}>
 
               {/* Number */}
               <span className="block font-mono text-xs sm:text-[10px] tracking-[0.25em] text-primary/40 mb-4 group-hover:text-primary/70 transition-colors">
@@ -127,10 +127,10 @@ export const StandardsSection = () => {
               {/* Bottom accent line */}
               <motion.div
               className="absolute bottom-0 left-0 h-px bg-primary"
-              initial={{ scaleX: 0 }}
-              whileHover={{ scaleX: 1 }}
-              style={{ transformOrigin: "left", width: "100%" }}
-              transition={{ duration: 0.35 }} />
+               initial={{ scaleX: 0 }}
+               whileHover={{ scaleX: 1 }}
+               style={{ transformOrigin: "left", width: "100%" }}
+               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }} />
 
             </motion.div>
           )}

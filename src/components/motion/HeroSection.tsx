@@ -228,22 +228,22 @@ export const HeroSection = () => {
         />
         <SumiHeroReveal />
 
-        {/* Subhead */}
-        <motion.p
-          className="mt-8 text-sm sm:text-base md:text-lg text-foreground/70 max-w-xl text-center leading-relaxed"
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.8, duration: 0.6 }}
-        >
-          We design and engineer websites &amp; systems for brands that sell — built to convert, rank, and scale.
-        </motion.p>
+         {/* Subhead */}
+         <motion.p
+           className="mt-8 text-sm sm:text-base md:text-lg text-foreground/70 max-w-xl text-center leading-relaxed"
+           initial={{ opacity: 0, y: 14 }}
+           animate={{ opacity: 1, y: 0 }}
+           transition={{ delay: 1.8, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+         >
+           We design and engineer websites &amp; systems for brands that sell — built to convert, rank, and scale.
+         </motion.p>
 
-        {/* Micro-bullets */}
-        <motion.ul
-          className="mt-6 flex flex-col sm:flex-row items-center gap-3 sm:gap-6 text-sm sm:text-sm text-foreground/55"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 2.0, duration: 0.5 }}
+         {/* Micro-bullets */}
+         <motion.ul
+           className="mt-6 flex flex-col sm:flex-row items-center gap-3 sm:gap-6 text-sm sm:text-sm text-foreground/55"
+           initial={{ opacity: 0, y: 10 }}
+           animate={{ opacity: 1, y: 0 }}
+           transition={{ delay: 2.0, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
         >
           <li className="flex items-center gap-1.5">
             <span className="w-1 h-1 rounded-full bg-primary" />
@@ -261,10 +261,10 @@ export const HeroSection = () => {
 
         {/* CTAs */}
         <motion.div
-          className="mt-8 flex flex-col sm:flex-row items-center gap-3"
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 2.2, duration: 0.6 }}
+           className="mt-8 flex flex-col sm:flex-row items-center gap-3"
+           initial={{ opacity: 0, y: 14 }}
+           animate={{ opacity: 1, y: 0 }}
+           transition={{ delay: 2.2, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
         >
            <a
              href="#contact"
@@ -285,9 +285,9 @@ export const HeroSection = () => {
         {/* Trust strip */}
         <motion.div
           className="mt-12 flex flex-wrap justify-center items-center gap-4 sm:gap-6 text-xs sm:text-xs font-mono tracking-wider uppercase text-muted-foreground/60"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2.6, duration: 0.8 }}
+           initial={{ opacity: 0 }}
+           animate={{ opacity: 1 }}
+           transition={{ delay: 2.6, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         >
           <span className="flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />

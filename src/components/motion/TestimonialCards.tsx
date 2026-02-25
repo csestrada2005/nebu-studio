@@ -1,4 +1,4 @@
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, useReducedMotion } from "framer-motion";
 import { useRef } from "react";
 
 const TESTIMONIALS = [
@@ -22,32 +22,33 @@ const TESTIMONIALS = [
   },
 ];
 
-export const TestimonialCards = () => {
-  const ref = useRef<HTMLElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-60px" });
+ export const TestimonialCards = () => {
+   const ref = useRef<HTMLElement>(null);
+   const isInView = useInView(ref, { once: true, margin: "-60px" });
+   const prefersReduced = useReducedMotion();
 
-  return (
-    <section ref={ref} className="py-24 sm:py-32 overflow-hidden">
-      <div className="container max-w-5xl">
-        <motion.p
-          className="text-xs sm:text-[10px] font-mono tracking-[0.3em] uppercase text-primary mb-6"
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.4 }}
-        >
-          What clients say
-        </motion.p>
+   return (
+     <section ref={ref} className="py-24 sm:py-32 overflow-hidden">
+       <div className="container max-w-5xl">
+         <motion.p
+           className="text-xs sm:text-[10px] font-mono tracking-[0.3em] uppercase text-primary mb-6"
+           initial={{ opacity: 0 }}
+           animate={isInView ? { opacity: 1 } : {}}
+           transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+         >
+           What clients say
+         </motion.p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
-          {TESTIMONIALS.map((t, i) => (
-            <motion.blockquote
-              key={i}
-              className="relative p-5 sm:p-6 rounded-xl border border-white/[0.06]"
-              style={{ background: "hsl(var(--background) / 0.5)" }}
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-            >
+         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+           {TESTIMONIALS.map((t, i) => (
+             <motion.blockquote
+               key={i}
+               className="relative p-5 sm:p-6 rounded-xl border border-white/[0.06]"
+               style={{ background: "hsl(var(--background) / 0.5)" }}
+               initial={prefersReduced ? { opacity: 0 } : { opacity: 0, y: 18 }}
+               animate={isInView ? { opacity: 1, y: 0 } : {}}
+               transition={{ duration: 0.55, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+             >
               {/* Quote mark */}
               <span className="absolute top-3 right-4 text-3xl leading-none text-primary/15 font-display select-none" aria-hidden="true">
                 "

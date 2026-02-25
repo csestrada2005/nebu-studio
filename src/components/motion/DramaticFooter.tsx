@@ -303,8 +303,8 @@ export const DramaticFooter = () => {
             left: `${10 + (i * 15) % 80}%`,
             top: `${5 + (i * 14) % 60}%`,
           }}
-          animate={{ y: [0, -6, 0], opacity: [0.2, 0.5, 0.2] }}
-          transition={{ duration: 4 + i * 0.6, repeat: Infinity, delay: i * 0.7, ease: "easeInOut" }}
+           animate={{ y: [0, -4, 0], opacity: [0.15, 0.35, 0.15] }}
+           transition={{ duration: 6 + i * 0.8, repeat: Infinity, delay: i * 0.9, ease: "easeInOut" }}
           aria-hidden="true"
         >
           +
@@ -318,10 +318,10 @@ export const DramaticFooter = () => {
         {/* Footer bottom bar */}
         <div className="border-t pt-10" style={{ borderColor: "hsl(var(--foreground) / 0.08)" }}>
           <div className="flex flex-col sm:flex-row justify-between items-center gap-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.8 }}
+             <motion.div
+               initial={{ opacity: 0, y: 14 }}
+               animate={isInView ? { opacity: 1, y: 0 } : {}}
+               transition={{ delay: 0.5, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
             >
               <h2 className="font-display text-4xl sm:text-5xl mb-2 text-foreground">NEBU STUDIO</h2>
               <p className="text-muted-foreground text-xs tracking-wider">Web Design • E-commerce • Systems</p>

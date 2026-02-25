@@ -159,9 +159,9 @@ export const ChoosePathContact = () => {
                   : "border border-white/8 text-muted-foreground hover:border-white/20 hover:text-foreground"
               }`}
               style={{ borderRadius: 10 }}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.06, duration: 0.4 }}
+               initial={{ opacity: 0, x: -14 }}
+               animate={{ opacity: 1, x: 0 }}
+               transition={{ delay: i * 0.07, duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
             >
               <motion.div
                 className="absolute inset-0 pointer-events-none"
@@ -171,8 +171,8 @@ export const ChoosePathContact = () => {
               <div className="relative flex items-center justify-between">
                 <span className="font-display text-base sm:text-lg">{path.label}</span>
                 <motion.div
-                  animate={{ opacity: selected === path.id ? 1 : 0, x: selected === path.id ? 0 : -8 }}
-                  transition={{ duration: 0.25 }}
+                   animate={{ opacity: selected === path.id ? 1 : 0, x: selected === path.id ? 0 : -6 }}
+                   transition={{ duration: 0.2, ease: "easeOut" }}
                 >
                   <ArrowRight className="w-4 h-4 text-primary" />
                 </motion.div>
