@@ -154,7 +154,7 @@ export const ProcessSection = () => {
   });
 
   return (
-    <div ref={containerRef} style={{ height: `${steps.length * 250}vh` }} id="process">
+    <div ref={containerRef} style={{ height: `${steps.length * 80}vh` }} id="process">
       <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col items-center justify-center">
         {/* Title */}
         <motion.h2
