@@ -1,5 +1,5 @@
 import { useRef, lazy, Suspense } from "react";
-import { LaserWipeTransition } from "@/components/motion/LaserWipeTransition";
+
 
 // ── Critical above-fold (eager load) ────────────────────────────────────────
 import { HeroSection } from "@/components/motion/HeroSection";
@@ -72,8 +72,8 @@ const Index = () => {
           </SectionReveal>
         </Suspense>
 
-        {/* Full-screen laser wipe: Design Lab → How We Work */}
-        <LaserWipeTransition />
+
+
 
         <Suspense fallback={<SectionSkeleton />}>
           <SectionReveal>
