@@ -11,12 +11,12 @@ export const CornerCrosses = () => {
   return (
     <div className="fixed inset-0 z-[45] pointer-events-none hidden md:block" aria-hidden="true">
       {positions.map((pos, i) => (
-        <motion.div
-          key={i}
-          className={`absolute ${pos} w-4 h-4`}
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 0.6, scale: 1 }}
-          transition={{ duration: 0.6, delay: 1 + i * 0.15 }}
+         <motion.div
+           key={i}
+           className={`absolute ${pos} w-4 h-4`}
+           initial={{ opacity: 0, scale: 0.8 }}
+           animate={{ opacity: 0.5, scale: 1 }}
+           transition={{ duration: 0.55, delay: 1.2 + i * 0.12, ease: [0.16, 1, 0.3, 1] }}
         >
           <svg viewBox="0 0 16 16" className="w-full h-full text-foreground">
             <line x1="8" y1="2" x2="8" y2="14" stroke="currentColor" strokeWidth="0.8" />

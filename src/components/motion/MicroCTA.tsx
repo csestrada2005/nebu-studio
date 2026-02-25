@@ -24,9 +24,9 @@ export const MicroCTA = ({ variant = "both", className = "" }: MicroCTAProps) =>
     <motion.div
       ref={ref}
       className={`flex flex-col sm:flex-row items-center gap-3 sm:gap-4 ${className}`}
-      initial={{ opacity: 0, y: 12 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5, delay: 0.1 }}
+       initial={{ opacity: 0, y: 14 }}
+       animate={isInView ? { opacity: 1, y: 0 } : {}}
+       transition={{ duration: 0.55, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
     >
       <a
         href="#contact"

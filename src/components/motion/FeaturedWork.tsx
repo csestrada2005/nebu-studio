@@ -94,8 +94,8 @@ const ProjectCard = ({
   const isInView = useInView(containerRef, { once: true, margin: "-40px" });
   const prefersReducedMotion = useReducedMotion();
 
-  const springX = useSpring(0, { stiffness: 200, damping: 18 });
-  const springY = useSpring(0, { stiffness: 200, damping: 18 });
+   const springX = useSpring(0, { stiffness: 160, damping: 22 });
+   const springY = useSpring(0, { stiffness: 160, damping: 22 });
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     if (prefersReducedMotion) return;
@@ -128,9 +128,9 @@ const ProjectCard = ({
     <motion.div
       ref={containerRef}
       className={`flex items-center justify-center ${OFFSETS[index]}`}
-      initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 30 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: prefersReducedMotion ? 0.3 : 0.7, delay: index * 0.1 }}
+       initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 18 }}
+       animate={isInView ? { opacity: 1, y: 0 } : {}}
+       transition={{ duration: prefersReducedMotion ? 0.25 : 0.55, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
       style={prefersReducedMotion ? {} : { x: springX, y: springY }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
@@ -148,7 +148,7 @@ const ProjectCard = ({
           <img
             src={project.image}
             alt={project.title}
-            className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
+            className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500 ease-out"
             loading="lazy"
           />
 
@@ -156,7 +156,7 @@ const ProjectCard = ({
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500" />
 
           {/* Arrow indicator */}
-          <div className="absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500"
+          <div className="absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
             style={{
               background: "rgba(255,255,255,0.12)",
             }}
@@ -354,9 +354,9 @@ export const FeaturedWork = () => {
         <div className="container relative z-10">
           <motion.div
             className="mb-12 sm:mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6 }}
+             initial={{ opacity: 0, y: 14 }}
+             animate={isInView ? { opacity: 1, y: 0 } : {}}
+             transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
           >
             <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-foreground">
               Our <span className="text-primary">Work.</span>
