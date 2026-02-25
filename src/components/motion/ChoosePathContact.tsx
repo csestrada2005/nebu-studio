@@ -137,7 +137,7 @@ export const ChoosePathContact = () => {
       <div className="container relative z-10 max-w-3xl">
         {/* Header */}
         <div className="mb-14">
-          <p className="text-[10px] font-mono tracking-[0.3em] uppercase text-primary mb-4">Contact</p>
+          <p className="text-xs sm:text-[10px] font-mono tracking-[0.3em] uppercase text-primary mb-4">Contact</p>
           <h2 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl mb-4 leading-[0.95]">
             CHOOSE YOUR PATH.
           </h2>
@@ -259,7 +259,7 @@ export const ChoosePathContact = () => {
                         <AlertCircle className="w-3 h-3" /> {errors.message}
                       </p>
                     ) : <span />}
-                    <span className="text-[10px] text-muted-foreground/40 tabular-nums">
+                    <span className="text-xs sm:text-[10px] text-muted-foreground/40 tabular-nums">
                       {form.message.length}/{LIMITS.message}
                     </span>
                   </div>

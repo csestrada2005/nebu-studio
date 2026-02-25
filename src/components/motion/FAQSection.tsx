@@ -58,7 +58,7 @@ const AccordionItem = ({ q, a, index }: { q: string; a: string; index: number })
         aria-expanded={open}
       >
         <span className="flex items-center gap-3 pr-4">
-          <span className="text-[10px] font-mono text-muted-foreground/40 tabular-nums">
+          <span className="text-xs sm:text-[10px] font-mono text-muted-foreground/40 tabular-nums">
             {String(index + 1).padStart(2, "0")}
           </span>
           <span className="text-sm sm:text-base font-medium text-foreground/90">{q}</span>
@@ -105,7 +105,7 @@ export const FAQSection = () => {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
         >
-          <p className="text-[10px] font-mono tracking-[0.3em] uppercase text-primary mb-4">
+          <p className="text-xs sm:text-[10px] font-mono tracking-[0.3em] uppercase text-primary mb-4">
             Common questions
           </p>
           <h2 className="font-display text-3xl sm:text-4xl md:text-5xl mb-3">

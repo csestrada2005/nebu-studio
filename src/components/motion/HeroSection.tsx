@@ -230,7 +230,7 @@ export const HeroSection = () => {
 
         {/* Subhead */}
         <motion.p
-          className="mt-6 sm:mt-8 text-sm sm:text-base md:text-lg text-foreground/70 max-w-lg text-center leading-relaxed"
+          className="mt-8 text-sm sm:text-base md:text-lg text-foreground/70 max-w-xl text-center leading-relaxed"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.8, duration: 0.6 }}
@@ -240,7 +240,7 @@ export const HeroSection = () => {
 
         {/* Micro-bullets */}
         <motion.ul
-          className="mt-5 sm:mt-6 flex flex-col sm:flex-row items-center gap-2 sm:gap-5 text-xs sm:text-sm text-foreground/55"
+          className="mt-6 flex flex-col sm:flex-row items-center gap-3 sm:gap-6 text-sm sm:text-sm text-foreground/55"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 2.0, duration: 0.5 }}
@@ -284,7 +284,7 @@ export const HeroSection = () => {
 
         {/* Trust strip */}
         <motion.div
-          className="mt-8 sm:mt-10 flex flex-wrap justify-center items-center gap-4 sm:gap-6 text-[11px] sm:text-xs font-mono tracking-wider uppercase text-muted-foreground/60"
+          className="mt-12 flex flex-wrap justify-center items-center gap-4 sm:gap-6 text-xs sm:text-xs font-mono tracking-wider uppercase text-muted-foreground/60"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 2.6, duration: 0.8 }}

@@ -27,10 +27,10 @@ export const TestimonialCards = () => {
   const isInView = useInView(ref, { once: true, margin: "-60px" });
 
   return (
-    <section ref={ref} className="py-16 sm:py-24 overflow-hidden">
+    <section ref={ref} className="py-24 sm:py-32 overflow-hidden">
       <div className="container max-w-5xl">
         <motion.p
-          className="text-[10px] font-mono tracking-[0.3em] uppercase text-primary mb-6"
+          className="text-xs sm:text-[10px] font-mono tracking-[0.3em] uppercase text-primary mb-6"
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ duration: 0.4 }}
@@ -64,7 +64,7 @@ export const TestimonialCards = () => {
                 </div>
                 <div>
                   <p className="text-xs font-semibold text-foreground/70">{t.name}</p>
-                  <p className="text-[10px] text-muted-foreground/50">
+                  <p className="text-xs sm:text-[10px] text-muted-foreground/50">
                     {t.role}, {t.company}
                   </p>
                 </div>

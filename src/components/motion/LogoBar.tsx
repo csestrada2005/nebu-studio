@@ -14,7 +14,7 @@ export const LogoBar = () => {
     <div ref={ref} className="py-10 sm:py-14 overflow-hidden">
       <div className="container">
         <motion.p
-          className="text-center text-[10px] sm:text-xs font-mono tracking-[0.25em] uppercase text-muted-foreground/50 mb-6 sm:mb-8"
+          className="text-center text-xs sm:text-xs font-mono tracking-[0.25em] uppercase text-muted-foreground/50 mb-8"
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ duration: 0.5 }}

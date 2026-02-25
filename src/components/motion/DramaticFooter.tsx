@@ -339,7 +339,7 @@ export const DramaticFooter = () => {
               ))}
             </nav>
           </div>
-          <p className="text-center text-muted-foreground/60 text-[10px] mt-10 tracking-wider">
+          <p className="text-center text-muted-foreground/60 text-xs mt-10 tracking-wider">
             © {new Date().getFullYear()} NEBU STUDIO. ALL RIGHTS RESERVED.
           </p>
         </div>

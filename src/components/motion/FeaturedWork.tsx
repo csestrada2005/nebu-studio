@@ -167,10 +167,10 @@ const ProjectCard = ({
           <div className="absolute bottom-0 left-0 right-0 p-4">
             {/* Tag + index */}
             <div className="flex items-center gap-2 mb-1.5">
-              <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/50">
-                {String(index + 1).padStart(2, "0")}
-              </span>
-              <span className="text-[9px] font-mono tracking-wider uppercase px-1.5 py-0.5 rounded-full bg-white/10 text-white/60">
+               <span className="font-mono text-xs sm:text-[10px] tracking-[0.2em] uppercase text-white/50">
+                 {String(index + 1).padStart(2, "0")}
+               </span>
+               <span className="text-xs sm:text-[9px] font-mono tracking-wider uppercase px-1.5 py-0.5 rounded-full bg-white/10 text-white/60">
                 {project.tag}
               </span>
             </div>

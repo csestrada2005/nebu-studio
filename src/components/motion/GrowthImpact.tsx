@@ -164,7 +164,7 @@ const ScrollLineChart = () => {
 
   return (
     <div ref={containerRef} className="relative">
-      <p className="text-[10px] tracking-widest uppercase text-muted-foreground mb-3">
+       <p className="text-xs sm:text-[10px] tracking-widest uppercase text-muted-foreground mb-3">
         Conversion Rate Over Time (%)
       </p>
       <svg viewBox={`0 0 ${width} ${height}`} className="w-full max-w-md">
@@ -226,7 +226,7 @@ const ScrollBarChart = () => {
 
   return (
     <div ref={containerRef} className="relative">
-      <p className="text-[10px] tracking-widest uppercase text-muted-foreground mb-3">
+      <p className="text-xs sm:text-[10px] tracking-widest uppercase text-muted-foreground mb-3">
         Lead-to-Customer Rate (%)
       </p>
       <svg viewBox={`0 0 ${width} ${height}`} className="w-full max-w-md">
@@ -305,7 +305,7 @@ export const GrowthImpact = () => {
                     <CountUp end={m.value} suffix={m.suffix} prefix={m.prefix} />
                   </p>
                   <p className="text-foreground text-sm font-medium mb-1">{m.label}</p>
-                  <p className="text-foreground/70 text-[10px] tracking-wider">{m.sub}</p>
+                  <p className="text-xs sm:text-[10px] tracking-wider">{m.sub}</p>
                   <motion.div
                     className="absolute -bottom-4 left-0 h-px"
                     style={{ background: "linear-gradient(90deg, hsl(0 100% 50% / 0.3), transparent)" }}

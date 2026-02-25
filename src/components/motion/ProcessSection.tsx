@@ -180,7 +180,7 @@ export const ProcessSection = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
           >
-            <span className="font-mono text-[11px] tracking-[0.3em] text-primary mb-3 block">
+            <span className="font-mono text-xs sm:text-[11px] tracking-[0.3em] text-primary mb-3 block">
               {steps[activeIndex].number}
             </span>
             <h3 className="font-display text-3xl sm:text-4xl md:text-5xl text-foreground leading-none mb-4 opacity-100">
