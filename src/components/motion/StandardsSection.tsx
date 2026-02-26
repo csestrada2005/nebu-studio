@@ -86,7 +86,7 @@ export const StandardsSection = () => {
 
         {/* Grid */}
         <div
-          className="grid sm:grid-cols-2 lg:grid-cols-3 gap-px"
+          className="grid sm:grid-cols-2 gap-px"
           style={{ border: "1px solid hsl(0 0% 100% / 0.07)" }}>
 
           {standards.map((item, i) =>
