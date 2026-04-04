@@ -11,15 +11,15 @@ export default {
       screens: {
         sm: "100%",
         md: "100%",
-        lg: "1100px",
-        xl: "1200px",
-        "2xl": "1200px",
+        lg: "1000px",
+        xl: "1100px",
+        "2xl": "1100px",
       },
     },
     extend: {
       fontFamily: {
-        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-        display: ['Archivo Black', 'sans-serif'],
+        sans: ["DM Sans", "sans-serif"],
+        display: ["DM Serif Display", "serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -46,7 +46,6 @@ export default {
         accent: {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
-          green: "hsl(var(--accent-green))",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",
