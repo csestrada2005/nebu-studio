@@ -422,7 +422,7 @@ function Hero() {
 function TrustBar() {
   const items = ["Puebla, México", "Especialistas en el sector legal", "Respuesta en 24 horas", "Sin compromiso inicial"];
   return (
-    <div className="relative z-10 bg-secondary">
+    <div className="relative z-10" style={{ background: "rgba(13,13,13,0.7)" }}>
       <div className="max-w-[1200px] mx-auto px-5 py-4 flex flex-wrap justify-center gap-x-12 gap-y-2">
         {items.map((item, i) => (
           <span key={i} className="text-xs text-muted-foreground uppercase tracking-[0.1em]">{item}</span>
@@ -543,7 +543,7 @@ function AboutSection() {
   ];
 
   return (
-    <section className="py-24 sm:py-32 bg-secondary relative z-10">
+    <section className="py-24 sm:py-32 relative z-10" style={{ background: "rgba(13,13,13,0.75)" }}>
       <div className="max-w-[1200px] mx-auto px-5">
         <div className="grid md:grid-cols-[40%_60%] gap-12 lg:gap-16 items-start">
           <div data-reveal="left">
@@ -702,7 +702,7 @@ function TestimonialCard({ t, i }: { t: typeof TESTIMONIALS[0]; i: number }) {
 
 function TestimonialsSection() {
   return (
-    <section className="py-24 sm:py-32 relative z-10" style={{ background: "#0A0A0A" }}>
+    <section className="py-24 sm:py-32 relative z-10" style={{ background: "rgba(10,10,10,0.8)" }}>
       <div className="absolute left-1/2 top-0 -translate-x-1/2 w-[600px] h-[400px] pointer-events-none z-0"
         style={{ background: "radial-gradient(ellipse, rgba(230,57,70,0.06) 0%, transparent 60%)" }} />
       <div className="max-w-[1200px] mx-auto px-5 relative z-10">
@@ -879,7 +879,7 @@ function FaqSection() {
    ═══════════════════════════════════════════════ */
 function CtaSection() {
   return (
-    <section id="contacto" className="py-24 sm:py-32 bg-card relative z-10">
+    <section id="contacto" className="py-24 sm:py-32 relative z-10" style={{ background: "rgba(13,13,13,0.6)" }}>
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] pointer-events-none z-0"
         style={{ background: "radial-gradient(ellipse, rgba(230,57,70,0.10) 0%, transparent 60%)" }} />
       <div className="max-w-[1200px] mx-auto px-5 text-center relative z-10">
@@ -1162,7 +1162,7 @@ const Index = () => {
   useCountUp();
 
   return (
-    <div className="min-h-screen bg-background text-foreground relative">
+    <div className="min-h-screen text-foreground relative" style={{ position: "relative", zIndex: 1 }}>
       <ScrollProgress />
       <Nav />
       <Hero />
