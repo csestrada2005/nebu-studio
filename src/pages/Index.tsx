@@ -325,7 +325,7 @@ function AboutSection() {
     <section className="py-24 sm:py-32 bg-secondary relative z-10">
       <div className="max-w-[1200px] mx-auto px-5">
         <div className="grid md:grid-cols-[40%_60%] gap-12 lg:gap-16 items-start">
-          <div data-reveal="up">
+          <div data-reveal="left">
             <div className="glass-card overflow-hidden p-0" style={{ borderRadius: "4px" }}>
               <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=600&q=80"
                 alt="Josep Cuatrecasas — CEO & Fundador" className="w-full h-[480px] object-cover" loading="lazy" />
