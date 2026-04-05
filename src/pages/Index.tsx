@@ -702,7 +702,7 @@ function TestimonialCard({ t, i }: { t: typeof TESTIMONIALS[0]; i: number }) {
 
 function TestimonialsSection() {
   return (
-    <section className="py-24 sm:py-32 relative z-10" style={{ background: "#0A0A0A" }}>
+    <section className="py-24 sm:py-32 relative z-10" style={{ background: "rgba(10,10,10,0.8)" }}>
       <div className="absolute left-1/2 top-0 -translate-x-1/2 w-[600px] h-[400px] pointer-events-none z-0"
         style={{ background: "radial-gradient(ellipse, rgba(230,57,70,0.06) 0%, transparent 60%)" }} />
       <div className="max-w-[1200px] mx-auto px-5 relative z-10">
