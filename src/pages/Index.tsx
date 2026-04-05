@@ -499,7 +499,7 @@ function ProcessSection() {
         <div className="md:hidden mt-12 relative pl-8">
           <div className="absolute top-0 bottom-0 left-[14px] w-px border-l border-dashed border-border" />
           {STEPS.map((step, i) => (
-            <div key={i} data-reveal="up" style={{ transitionDelay: `${i * 100}ms` }} className="relative pb-10 last:pb-0">
+            <div key={i} data-reveal="left" data-delay={String(i + 1)} className="relative pb-10 last:pb-0">
               <div className="absolute left-[-22px] top-0 w-7 h-7 rounded-full bg-primary text-primary-foreground text-xs font-semibold flex items-center justify-center"
                 style={{ boxShadow: "0 0 16px rgba(230,57,70,0.4)" }}>
                 {step.num}
