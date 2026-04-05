@@ -245,6 +245,106 @@
   .safe-bottom {
     padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
   }
+
+  /* ─── Hero char explosion ─── */
+  .hero-char-enter {
+    opacity: 0;
+    transform: translateY(80px) rotate(15deg);
+    animation: heroCharDrop 0.6s cubic-bezier(.34,1.56,.64,1) forwards;
+  }
+  @keyframes heroCharDrop {
+    to { opacity: 1; transform: translateY(0) rotate(0); }
+  }
+
+  /* ─── Hero word clip reveal ─── */
+  .hero-word-reveal {
+    display: inline-block;
+    clip-path: inset(0 100% 0 0);
+    animation: heroWordClip 0.7s cubic-bezier(0.77,0,0.175,1) forwards;
+  }
+  @keyframes heroWordClip {
+    to { clip-path: inset(0 0% 0 0); }
+  }
+
+  /* ─── Hero fade in (generic) ─── */
+  .hero-fade-in {
+    opacity: 0;
+    transform: translateY(12px);
+    animation: heroFadeGeneric 0.6s ease-out forwards;
+  }
+  @keyframes heroFadeGeneric {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── Hero CTA spring ─── */
+  .hero-cta-spring {
+    opacity: 0;
+    transform: scale(0);
+    animation: heroCtaSpring 0.8s cubic-bezier(.34,1.8,.64,1) forwards;
+  }
+  @keyframes heroCtaSpring {
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  /* ─── Shatter particles ─── */
+  .shatter-particle {
+    animation: shatterOut 0.6s ease-out forwards;
+  }
+  @keyframes shatterOut {
+    0% { opacity: 1; transform: translate(0,0) rotate(0); }
+    100% { opacity: 0; transform: translate(var(--tx), var(--ty)) rotate(var(--rot)); }
+  }
+
+  /* ─── Scroll bounce arrow ─── */
+  .scroll-bounce-arrow {
+    animation: scrollBounce 1.5s ease-in-out infinite;
+  }
+  @keyframes scrollBounce {
+    0%, 100% { transform: translateY(0); opacity: 0.6; }
+    50% { transform: translateY(10px); opacity: 1; }
+  }
+
+  /* ─── Typewriter cursor ─── */
+  .typewriter-cursor {
+    animation: blink 0.7s infinite;
+    color: hsl(var(--primary));
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  /* ─── Chat message enter ─── */
+  .chat-msg-enter {
+    animation: chatMsgSlide 0.4s ease forwards;
+  }
+  @keyframes chatMsgSlide {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  /* ─── WhatsApp pulse brutal ─── */
+  @keyframes waPulseBrutal {
+    0%, 100% { box-shadow: 0 4px 24px rgba(37,211,102,0.4), 0 0 0 0 rgba(37,211,102,0.6); }
+    50% { box-shadow: 0 4px 24px rgba(37,211,102,0.4), 0 0 0 20px rgba(37,211,102,0); }
+  }
+
+  /* ─── Service card rim light sweep on hover ─── */
+  .service-card-rim::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 13px;
+    background: linear-gradient(0deg, transparent, rgba(230,57,70,0.4), transparent);
+    opacity: 0;
+    transition: opacity 0.4s ease, background 0.4s ease;
+    pointer-events: none;
+    z-index: -1;
+  }
+  .service-card-rim:hover::before {
+    opacity: 1;
+    background: linear-gradient(180deg, transparent, rgba(230,57,70,0.4), transparent);
+  }
 }
 
 /* Scrollbar */
@@ -259,8 +359,14 @@
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
-  [data-reveal] {
+  [data-reveal],
+  .hero-char-enter,
+  .hero-word-reveal,
+  .hero-fade-in,
+  .hero-cta-spring {
     opacity: 1 !important;
     transform: none !important;
+    clip-path: none !important;
+    animation: none !important;
   }
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { Menu, X, ChevronDown, Send } from "lucide-react";
 import { useScrollRevealV2, useCountUp } from "@/hooks/useScrollRevealV2";
 
@@ -8,21 +8,57 @@ function scrollToSection(id: string) {
   if (el) el.scrollIntoView({ behavior: "smooth" });
 }
 
-/* ─── Section separator ─── */
+/* ─── Reduced motion check ─── */
+function useReducedMotion() {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    setReduced(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }, []);
+  return reduced;
+}
+
+/* ─── IntersectionObserver trigger hook ─── */
+function useInViewOnce(opts: IntersectionObserverInit = {}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) { setVisible(true); io.disconnect(); }
+    }, { threshold: 0.15, ...opts });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return { ref, visible };
+}
+
+/* ═══════════════════════════════════════════════
+   ANIMATED SECTION SEPARATOR
+   ═══════════════════════════════════════════════ */
 function SectionSep() {
+  const { ref, visible } = useInViewOnce();
   return (
-    <div className="relative h-px w-full max-w-[1200px] mx-auto" data-reveal="fade">
-      <div className="absolute inset-0" style={{
-        background: "linear-gradient(90deg, transparent, rgba(230,57,70,0.25) 50%, transparent)",
-      }} />
+    <div ref={ref} className="relative h-px w-full max-w-[1200px] mx-auto overflow-hidden">
+      <div
+        className="absolute inset-0 transition-all ease-out"
+        style={{
+          background: "linear-gradient(90deg, transparent, rgba(230,57,70,0.35) 50%, transparent)",
+          boxShadow: visible ? "0 0 10px rgba(230,57,70,0.3)" : "none",
+          width: visible ? "100%" : "0%",
+          transitionDuration: "1.2s",
+          margin: "0 auto",
+        }}
+      />
     </div>
   );
 }
 
-/* ─── Scroll Progress Bar ─── */
+/* ═══════════════════════════════════════════════
+   SCROLL PROGRESS BAR — 3px with glow
+   ═══════════════════════════════════════════════ */
 function ScrollProgress() {
   const [pct, setPct] = useState(0);
-
   useEffect(() => {
     let raf: number;
     const onScroll = () => {
@@ -36,14 +72,22 @@ function ScrollProgress() {
   }, []);
 
   return (
-    <div className="fixed top-0 left-0 z-[9999] h-[2px] w-full pointer-events-none">
-      <div className="h-full bg-primary transition-[width] duration-100" style={{ width: `${pct}%` }} />
+    <div className="fixed top-0 left-0 z-[9999] h-[3px] w-full pointer-events-none">
+      <div
+        className="h-full bg-primary"
+        style={{
+          width: `${pct}%`,
+          borderRadius: "0 2px 2px 0",
+          boxShadow: "0 0 12px rgba(230,57,70,0.8), 0 0 24px rgba(230,57,70,0.4)",
+          transition: "width 80ms linear",
+        }}
+      />
     </div>
   );
 }
 
 /* ═══════════════════════════════════════════════
-   NAV — Glass navbar
+   NAV — Reveal from top + link flip stagger
    ═══════════════════════════════════════════════ */
 const NAV_LINKS = [
   { label: "Servicios", id: "servicios" },
@@ -55,6 +99,12 @@ const NAV_LINKS = [
 function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [navReady, setNavReady] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setNavReady(true), 200);
+    return () => clearTimeout(t);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 80);
@@ -84,6 +134,9 @@ function Nav() {
           boxShadow: scrolled
             ? "inset 0 -1px 0 rgba(230,57,70,0.1), 0 4px 40px rgba(0,0,0,0.5)"
             : "inset 0 -1px 0 rgba(255,255,255,0.04), 0 4px 24px rgba(0,0,0,0.3)",
+          transform: navReady ? "translateY(0)" : "translateY(-100%)",
+          opacity: navReady ? 1 : 0,
+          transition: "transform 0.7s cubic-bezier(0.4,0,0.2,1), opacity 0.7s ease, background 0.4s ease, border-bottom 0.4s ease, box-shadow 0.4s ease",
         }}
       >
         <div className="max-w-[1200px] mx-auto px-5 flex items-center justify-between h-16">
@@ -93,21 +146,30 @@ function Nav() {
           </button>
 
           <nav className="hidden md:flex items-center gap-8">
-            {NAV_LINKS.filter(l => l.id !== "contacto").map((link) => (
+            {NAV_LINKS.filter(l => l.id !== "contacto").map((link, i) => (
               <button
                 key={link.id}
                 onClick={() => handleNav(link.id)}
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors relative group py-1"
+                style={{
+                  opacity: navReady ? 1 : 0,
+                  transform: navReady ? "translateY(0)" : "translateY(-20px)",
+                  transition: `opacity 0.4s ease ${500 + i * 80}ms, transform 0.4s ease ${500 + i * 80}ms, color 0.3s`,
+                }}
               >
                 {link.label}
                 <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-primary group-hover:w-full transition-all duration-300"
-                  style={{ boxShadow: "0 0 8px rgba(230,57,70,0.6)" }}
-                />
+                  style={{ boxShadow: "0 0 8px rgba(230,57,70,0.6)" }} />
               </button>
             ))}
             <button
               onClick={() => handleNav("contacto")}
               className="cta-outline text-sm px-5 py-2 text-primary rounded-none"
+              style={{
+                opacity: navReady ? 1 : 0,
+                transform: navReady ? "translateY(0)" : "translateY(-20px)",
+                transition: `opacity 0.4s ease ${500 + 3 * 80}ms, transform 0.4s ease ${500 + 3 * 80}ms`,
+              }}
             >
               Agendar consulta
             </button>
@@ -143,9 +205,138 @@ function Nav() {
 }
 
 /* ═══════════════════════════════════════════════
-   HERO — With grid pattern + ambient orb
+   HERO — Text explosion + scramble tagline + spring CTA
    ═══════════════════════════════════════════════ */
+
+/* Split text into animated chars */
+function CharSplash({ text, className, delayBase = 0 }: { text: string; className?: string; delayBase?: number }) {
+  const reduced = useReducedMotion();
+  return (
+    <span className={className} aria-label={text}>
+      {text.split("").map((char, i) => (
+        <span
+          key={i}
+          className="inline-block hero-char-enter"
+          style={{
+            animationDelay: reduced ? "0ms" : `${delayBase + i * 60}ms`,
+            display: char === " " ? "inline" : "inline-block",
+          }}
+        >
+          {char === " " ? "\u00A0" : char}
+        </span>
+      ))}
+    </span>
+  );
+}
+
+/* Word-by-word clip-path reveal */
+function WordReveal({ text, className, delayBase = 800 }: { text: string; className?: string; delayBase?: number }) {
+  const reduced = useReducedMotion();
+  const words = text.split(" ");
+  return (
+    <span className={className}>
+      {words.map((word, i) => (
+        <span key={i} className="inline-block overflow-hidden mr-[0.3em]">
+          <span
+            className="inline-block hero-word-reveal"
+            style={{
+              animationDelay: reduced ? "0ms" : `${delayBase + i * 120}ms`,
+            }}
+          >
+            {word}
+          </span>
+        </span>
+      ))}
+    </span>
+  );
+}
+
+/* Scramble text effect */
+function ScrambleText({ target, className }: { target: string; className?: string }) {
+  const [display, setDisplay] = useState("");
+  const reduced = useReducedMotion();
+  const chars = "!@#$%^&*()_+-=[]{}|;:,.<>?";
+
+  useEffect(() => {
+    if (reduced) { setDisplay(target); return; }
+    const startDelay = setTimeout(() => {
+      let resolved = 0;
+      const interval = setInterval(() => {
+        setDisplay(
+          target.split("").map((c, i) => {
+            if (i < resolved) return c;
+            return chars[Math.floor(Math.random() * chars.length)];
+          }).join("")
+        );
+        resolved++;
+        if (resolved > target.length) clearInterval(interval);
+      }, 1500 / target.length);
+      return () => clearInterval(interval);
+    }, 1600);
+    return () => clearTimeout(startDelay);
+  }, [target, reduced]);
+
+  return <span className={className}>{display || "\u00A0"}</span>;
+}
+
+/* Shatter particles on CTA click */
+function ShatterParticles({ active }: { active: boolean }) {
+  if (!active) return null;
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-visible">
+      {Array.from({ length: 8 }).map((_, i) => {
+        const angle = (i / 8) * Math.PI * 2;
+        const dist = 40 + Math.random() * 30;
+        return (
+          <div
+            key={i}
+            className="absolute w-2 h-2 bg-primary rounded-sm shatter-particle"
+            style={{
+              left: "50%",
+              top: "50%",
+              "--tx": `${Math.cos(angle) * dist}px`,
+              "--ty": `${Math.sin(angle) * dist}px`,
+              "--rot": `${Math.random() * 360}deg`,
+            } as React.CSSProperties}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+/* Scroll indicator bounce arrow */
+function ScrollIndicator() {
+  const [visible, setVisible] = useState(true);
+  useEffect(() => {
+    const onScroll = () => setVisible(window.scrollY < 100);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return (
+    <div
+      className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 transition-opacity duration-300"
+      style={{ opacity: visible ? 1 : 0 }}
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+        className="w-6 h-6 text-primary scroll-bounce-arrow">
+        <path d="M7 13l5 5 5-5M7 6l5 5 5-5" />
+      </svg>
+    </div>
+  );
+}
+
 function Hero() {
+  const [shatter, setShatter] = useState(false);
+
+  const handleCtaClick = () => {
+    if (!shatter) {
+      setShatter(true);
+      setTimeout(() => setShatter(false), 700);
+    }
+  };
+
   return (
     <section id="hero" className="relative min-h-screen flex items-center pt-16">
       {/* Background image */}
@@ -154,7 +345,7 @@ function Hero() {
         <div className="absolute inset-0" style={{ background: "linear-gradient(to right, rgba(13,13,13,0.92) 50%, rgba(13,13,13,0.6) 100%)" }} />
       </div>
 
-      {/* Subtle grid pattern */}
+      {/* Grid pattern */}
       <div className="absolute inset-0 z-[1] pointer-events-none opacity-60"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23E63946' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
@@ -167,45 +358,62 @@ function Hero() {
       />
 
       <div className="max-w-[1200px] mx-auto px-5 relative z-10 w-full">
-        <div className="grid md:grid-cols-[55%_45%] gap-8 md:gap-12 items-center">
-          <div>
-            <p className="text-primary text-xs tracking-[0.2em] uppercase font-semibold mb-8"
-              style={{ animation: "heroFade 0.6s ease-out 0.2s forwards", opacity: 0, transform: "translateY(12px)" }}>
-              Despachos de abogados
-            </p>
-            <h1 className="font-display text-4xl sm:text-5xl md:text-[56px] lg:text-[64px] text-foreground max-w-xl leading-[1.1] mb-6"
-              style={{ animation: "heroFade 0.7s ease-out 0.3s forwards", opacity: 0, transform: "translateY(24px)" }}>
-              Presencia digital que genera confianza.
-              <br />
-              <span className="text-primary">Sistemas que escalan</span> el despacho.
-            </h1>
-            <div className="h-[2px] bg-primary line-expand mb-8" style={{ animationDelay: "0.8s" }} />
-            <p className="text-muted-foreground text-base sm:text-lg max-w-lg mb-10"
-              style={{ opacity: 0, animation: "heroFade 0.8s ease-out 0.6s forwards" }}>
-              Construimos el sistema operativo digital de tu despacho.
-              Desde tu sitio web hasta la automatización de procesos internos.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4" style={{ opacity: 0, animation: "heroFade 0.6s ease-out 1s forwards" }}>
-              <a href="mailto:j.cuatrecasas@nebustudio.com"
-                className="cta-shine inline-block bg-primary text-primary-foreground px-8 py-4 text-sm uppercase tracking-[0.1em] font-semibold text-center rounded-sm">
+        <div className="max-w-2xl">
+          <p className="text-primary text-xs tracking-[0.2em] uppercase font-semibold mb-8 hero-fade-in" style={{ animationDelay: "0.1s" }}>
+            Despachos de abogados
+          </p>
+
+          <h1 className="font-display text-4xl sm:text-5xl md:text-[56px] lg:text-[64px] text-foreground leading-[1.1] mb-2">
+            <CharSplash text="Presencia digital" className="block" delayBase={200} />
+            <CharSplash text="que genera" className="block" delayBase={200 + 17 * 60} />
+            <CharSplash text="confianza." className="block" delayBase={200 + 27 * 60} />
+          </h1>
+
+          <h2 className="font-display text-2xl sm:text-3xl md:text-4xl text-foreground leading-[1.2] mt-4 mb-2">
+            <WordReveal text="Sistemas que escalan" className="text-primary" delayBase={200 + 37 * 60} />
+            <WordReveal text="el despacho." delayBase={200 + 37 * 60 + 3 * 120} />
+          </h2>
+
+          {/* Red divider */}
+          <div className="h-[2px] bg-primary line-expand my-6" style={{ animationDelay: "2.8s" }} />
+
+          {/* Scramble tagline */}
+          <p className="font-mono text-sm mb-8" style={{ color: "#E63946" }}>
+            <ScrambleText target="El sistema operativo de tu despacho." />
+          </p>
+
+          {/* Subtitle */}
+          <p className="text-muted-foreground text-base sm:text-lg max-w-lg mb-10 hero-fade-in" style={{ animationDelay: "2s" }}>
+            Desde tu sitio web hasta la automatización de procesos internos.
+          </p>
+
+          {/* CTAs */}
+          <div className="flex flex-col sm:flex-row gap-4 relative">
+            <div className="relative hero-cta-spring" style={{ animationDelay: "1.4s" }}>
+              <a
+                href="mailto:j.cuatrecasas@nebustudio.com"
+                onClick={handleCtaClick}
+                className="cta-shine inline-block bg-primary text-primary-foreground px-8 py-4 text-sm uppercase tracking-[0.1em] font-semibold text-center rounded-sm relative overflow-visible transition-all duration-200 hover:scale-[1.04] active:scale-[0.97]"
+                style={{ boxShadow: "0 4px 20px rgba(230,57,70,0.4)" }}
+              >
                 Agenda tu diagnóstico gratuito
               </a>
-              <a href="https://wa.me/522213497090?text=Hola%2C%20me%20interesa%20conocer%20el%20sistema%20para%20mi%20despacho"
+              <ShatterParticles active={shatter} />
+            </div>
+            <div className="hero-cta-spring" style={{ animationDelay: "1.6s" }}>
+              <a
+                href="https://wa.me/522213497090?text=Hola%2C%20me%20interesa%20conocer%20el%20sistema%20para%20mi%20despacho"
                 target="_blank" rel="noopener noreferrer"
-                className="cta-outline inline-block text-foreground px-8 py-4 text-sm uppercase tracking-[0.1em] font-semibold text-center">
+                className="cta-outline inline-block text-foreground px-8 py-4 text-sm uppercase tracking-[0.1em] font-semibold text-center hover:scale-[1.04] active:scale-[0.97] transition-transform"
+              >
                 Escríbenos por WhatsApp
               </a>
             </div>
           </div>
-
         </div>
       </div>
 
-      <style>{`
-        @keyframes heroFade {
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
+      <ScrollIndicator />
     </section>
   );
 }
@@ -267,7 +475,7 @@ function WhySection() {
 }
 
 /* ═══════════════════════════════════════════════
-   SERVICES — Glass cards with rim lights
+   SERVICES — Diagonal slide in + rim light sweep
    ═══════════════════════════════════════════════ */
 const SERVICES = [
   { num: "01", name: "Branding", desc: "Identidad visual que proyecta autoridad desde el primer contacto.",
@@ -282,29 +490,42 @@ const SERVICES = [
     icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-7 h-7"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" /></svg> },
 ];
 
+function ServiceCard({ s, i }: { s: typeof SERVICES[0]; i: number }) {
+  const { ref, visible } = useInViewOnce({ threshold: 0.15 });
+  const isEven = i % 2 === 0;
+  const reduced = useReducedMotion();
+
+  return (
+    <div
+      ref={ref}
+      className="glass-card glass-card-featured p-7 relative overflow-hidden group service-card-rim"
+      style={{
+        borderTop: "1px solid rgba(230,57,70,0.3)",
+        opacity: visible || reduced ? 1 : 0,
+        transform: visible || reduced ? "none" : `translate(${isEven ? "-80px" : "80px"}, 30px)`,
+        transition: `all 0.75s cubic-bezier(0.4,0,0.2,1) ${i * 120}ms`,
+      }}
+    >
+      <span className="absolute top-4 right-5 font-display text-[64px] leading-none font-bold"
+        style={{ color: "rgba(230,57,70,0.12)" }}>
+        {s.num}
+      </span>
+      <div className="text-primary mb-5">{s.icon}</div>
+      <h3 className="font-display text-lg text-foreground mb-2">{s.name}</h3>
+      <p className="text-muted-foreground text-sm leading-relaxed">{s.desc}</p>
+    </div>
+  );
+}
+
 function ServicesSection() {
   return (
     <section id="servicios" className="py-24 sm:py-32 relative z-10">
-      {/* Ambient orb */}
       <div className="absolute right-[-150px] top-1/3 w-[500px] h-[500px] pointer-events-none z-0"
         style={{ background: "radial-gradient(circle, rgba(230,57,70,0.06) 0%, transparent 70%)" }} />
-
       <div className="max-w-[1200px] mx-auto px-5 relative z-10">
         <SectionTitle title="Lo que construimos" />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-16">
-          {SERVICES.map((s, i) => (
-            <div key={i} data-reveal="blur" data-delay={String(i + 1)}
-              className="glass-card glass-card-featured p-7 relative overflow-hidden group"
-              style={{ borderTop: "1px solid rgba(230,57,70,0.3)" }}>
-              <span className="absolute top-4 right-5 font-display text-[64px] leading-none font-bold"
-                style={{ color: "rgba(230,57,70,0.12)" }}>
-                {s.num}
-              </span>
-              <div className="text-primary mb-5">{s.icon}</div>
-              <h3 className="font-display text-lg text-foreground mb-2">{s.name}</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">{s.desc}</p>
-            </div>
-          ))}
+          {SERVICES.map((s, i) => <ServiceCard key={i} s={s} i={i} />)}
         </div>
       </div>
     </section>
@@ -355,7 +576,7 @@ function AboutSection() {
 }
 
 /* ═══════════════════════════════════════════════
-   METRICS — Glass cards with animated counters
+   METRICS — 3D Flip In cards + CountUp
    ═══════════════════════════════════════════════ */
 const METRICS = [
   { value: "70%", label: "De despachos en Puebla sin web profesional" },
@@ -364,22 +585,43 @@ const METRICS = [
   { value: "100%", label: "De proyectos con actualizaciones semanales" },
 ];
 
+function MetricCard({ m, i }: { m: typeof METRICS[0]; i: number }) {
+  const { ref, visible } = useInViewOnce({ threshold: 0.3 });
+  const reduced = useReducedMotion();
+
+  return (
+    <div
+      ref={ref}
+      className="glass-card text-center py-8 px-4"
+      style={{
+        borderTop: "1px solid rgba(230,57,70,0.3)",
+        perspective: "800px",
+      }}
+    >
+      <div style={{
+        opacity: visible || reduced ? 1 : 0,
+        transform: visible || reduced ? "rotateX(0)" : "rotateX(90deg)",
+        transformOrigin: "top center",
+        transition: `all 0.7s cubic-bezier(0.4,0,0.2,1) ${i * 150}ms`,
+      }}>
+        <span className="font-display text-4xl sm:text-[56px] text-primary font-bold leading-none"
+          style={{ textShadow: "0 0 30px rgba(230,57,70,0.4)" }}
+          data-count-target={m.value}
+          data-count-suffix={m.value.includes("x") ? "x" : m.value.includes("h") ? "h" : ""}>
+          0
+        </span>
+        <p className="text-muted-foreground text-[13px] mt-3 max-w-[160px] mx-auto leading-snug">{m.label}</p>
+      </div>
+    </div>
+  );
+}
+
 function MetricsSection() {
   return (
     <section className="py-16 sm:py-20 relative z-10">
       <div className="max-w-[1200px] mx-auto px-5">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {METRICS.map((m, i) => (
-            <div key={i} data-reveal="scale" data-delay={String(i + 1)} className="glass-card text-center py-8 px-4" style={{ borderTop: "1px solid rgba(230,57,70,0.3)" }}>
-              <span className="font-display text-4xl sm:text-[56px] text-primary font-bold leading-none"
-                style={{ textShadow: "0 0 30px rgba(230,57,70,0.4)" }}
-                data-count-target={m.value}
-                data-count-suffix={m.value.includes("x") ? "x" : m.value.includes("h") ? "h" : ""}>
-                0
-              </span>
-              <p className="text-muted-foreground text-[13px] mt-3 max-w-[160px] mx-auto leading-snug">{m.label}</p>
-            </div>
-          ))}
+          {METRICS.map((m, i) => <MetricCard key={i} m={m} i={i} />)}
         </div>
         <p data-reveal="up" className="text-center text-muted-foreground/60 text-sm italic mt-8">
           Estos números son el resultado de un sistema, no de suerte.
@@ -390,7 +632,7 @@ function MetricsSection() {
 }
 
 /* ═══════════════════════════════════════════════
-   TESTIMONIALS — Glass review cards
+   TESTIMONIALS — Elastic spring + star fill
    ═══════════════════════════════════════════════ */
 const TESTIMONIALS = [
   {
@@ -407,11 +649,16 @@ const TESTIMONIALS = [
   },
 ];
 
-function Stars() {
+function AnimatedStars({ visible }: { visible: boolean }) {
   return (
     <div className="flex gap-1 mb-4">
       {[...Array(5)].map((_, i) => (
-        <svg key={i} viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-primary">
+        <svg key={i} viewBox="0 0 20 20" className="w-3.5 h-3.5 transition-colors duration-200"
+          style={{
+            color: visible ? "#E63946" : "transparent",
+            transitionDelay: visible ? `${i * 100}ms` : "0ms",
+          }}
+          fill="currentColor">
           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
         </svg>
       ))}
@@ -419,40 +666,52 @@ function Stars() {
   );
 }
 
+function TestimonialCard({ t, i }: { t: typeof TESTIMONIALS[0]; i: number }) {
+  const { ref, visible } = useInViewOnce({ threshold: 0.15 });
+  const reduced = useReducedMotion();
+
+  return (
+    <div
+      ref={ref}
+      className="glass-card p-7"
+      style={{
+        borderLeft: "2px solid hsl(355 78% 56%)",
+        borderRadius: "12px",
+        opacity: visible || reduced ? 1 : 0,
+        transform: visible || reduced ? "scale(1) translateY(0)" : "scale(0.7) translateY(40px)",
+        transition: `all 0.8s cubic-bezier(.34,1.56,.64,1) ${i * 200}ms`,
+      }}
+    >
+      <AnimatedStars visible={visible || reduced} />
+      <p className="text-[15px] leading-[1.7] italic mb-5" style={{ color: "#C0C0C0" }}>
+        "{t.quote}"
+      </p>
+      <div className="border-t border-border/30 pt-4 flex items-center gap-3">
+        <div className="w-10 h-10 rounded-full flex items-center justify-center text-primary font-display text-sm font-semibold"
+          style={{ background: "rgba(230,57,70,0.15)", border: "1px solid rgba(230,57,70,0.3)" }}>
+          {t.initials}
+        </div>
+        <div>
+          <p className="text-foreground text-sm font-medium">{t.name}</p>
+          <p className="text-muted-foreground text-xs">{t.role}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function TestimonialsSection() {
   return (
     <section className="py-24 sm:py-32 relative z-10" style={{ background: "#0A0A0A" }}>
-      {/* Ambient orb */}
       <div className="absolute left-1/2 top-0 -translate-x-1/2 w-[600px] h-[400px] pointer-events-none z-0"
         style={{ background: "radial-gradient(ellipse, rgba(230,57,70,0.06) 0%, transparent 60%)" }} />
-
       <div className="max-w-[1200px] mx-auto px-5 relative z-10">
         <SectionTitle title="Lo que dicen los despachos" />
         <p data-reveal="up" className="text-muted-foreground text-base mt-4 mb-16">
           Abogados que ya digitalizaron su operación con NEBU
         </p>
-
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {TESTIMONIALS.map((t, i) => (
-            <div key={i} data-reveal="up" data-delay={String(i + 1)}
-              className="glass-card p-7"
-              style={{ borderLeft: "2px solid hsl(355 78% 56%)", borderRadius: "12px" }}>
-              <Stars />
-              <p className="text-[15px] leading-[1.7] italic mb-5" style={{ color: "#C0C0C0" }}>
-                "{t.quote}"
-              </p>
-              <div className="border-t border-border/30 pt-4 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full flex items-center justify-center text-primary font-display text-sm font-semibold"
-                  style={{ background: "rgba(230,57,70,0.15)", border: "1px solid rgba(230,57,70,0.3)" }}>
-                  {t.initials}
-                </div>
-                <div>
-                  <p className="text-foreground text-sm font-medium">{t.name}</p>
-                  <p className="text-muted-foreground text-xs">{t.role}</p>
-                </div>
-              </div>
-            </div>
-          ))}
+          {TESTIMONIALS.map((t, i) => <TestimonialCard key={i} t={t} i={i} />)}
         </div>
       </div>
     </section>
@@ -460,7 +719,7 @@ function TestimonialsSection() {
 }
 
 /* ═══════════════════════════════════════════════
-   PROCESS
+   PROCESS — Typewriter titles + connecting lines
    ═══════════════════════════════════════════════ */
 const STEPS = [
   { num: "01", name: "Diagnóstico", desc: "Reunión de 20 min sin compromiso. Solo escuchamos." },
@@ -469,7 +728,65 @@ const STEPS = [
   { num: "04", name: "Activación", desc: "Capacitación, soporte y retainer mensual opcional." },
 ];
 
+function TypewriterText({ text, active }: { text: string; active: boolean }) {
+  const [display, setDisplay] = useState("");
+  const [showCursor, setShowCursor] = useState(false);
+  const reduced = useReducedMotion();
+
+  useEffect(() => {
+    if (!active) return;
+    if (reduced) { setDisplay(text); return; }
+    setShowCursor(true);
+    let i = 0;
+    const interval = setInterval(() => {
+      i++;
+      setDisplay(text.slice(0, i));
+      if (i >= text.length) {
+        clearInterval(interval);
+        setTimeout(() => setShowCursor(false), 500);
+      }
+    }, 60);
+    return () => clearInterval(interval);
+  }, [active, text, reduced]);
+
+  return (
+    <span>
+      {display}
+      {showCursor && <span className="typewriter-cursor">|</span>}
+    </span>
+  );
+}
+
+function ProcessStep({ step, i }: { step: typeof STEPS[0]; i: number }) {
+  const { ref, visible } = useInViewOnce({ threshold: 0.3 });
+  return (
+    <div ref={ref} className="text-center relative">
+      <div className="w-9 h-9 rounded-full bg-primary text-primary-foreground text-sm font-semibold flex items-center justify-center mx-auto relative z-10"
+        style={{
+          boxShadow: "0 0 20px rgba(230,57,70,0.4)",
+          opacity: visible ? 1 : 0,
+          transform: visible ? "scale(1)" : "scale(0)",
+          transition: `all 0.5s cubic-bezier(.34,1.56,.64,1) ${i * 200}ms`,
+        }}>
+        {step.num}
+      </div>
+      <h3 className="font-display text-lg text-foreground mt-5">
+        <TypewriterText text={step.name} active={visible} />
+      </h3>
+      <p className="text-muted-foreground text-xs mt-2 max-w-[200px] mx-auto leading-relaxed"
+        style={{
+          opacity: visible ? 1 : 0,
+          transition: `opacity 0.5s ease ${i * 200 + 400}ms`,
+        }}>
+        {step.desc}
+      </p>
+    </div>
+  );
+}
+
 function ProcessSection() {
+  const { ref: lineRef, visible: lineVisible } = useInViewOnce({ threshold: 0.3 });
+
   return (
     <section id="proceso" className="py-24 sm:py-32 relative z-10"
       style={{
@@ -481,18 +798,19 @@ function ProcessSection() {
         <SectionTitle title="El proceso" />
 
         {/* Desktop */}
-        <div className="hidden md:grid grid-cols-4 gap-0 mt-16 relative">
-          <div className="absolute top-[18px] left-[12.5%] right-[12.5%] border-t border-dashed border-border" />
-          {STEPS.map((step, i) => (
-            <div key={i} data-reveal="up" data-delay={String(i + 1)} className="text-center relative">
-              <div className="w-9 h-9 rounded-full bg-primary text-primary-foreground text-sm font-semibold flex items-center justify-center mx-auto relative z-10"
-                style={{ boxShadow: "0 0 20px rgba(230,57,70,0.4)" }}>
-                {step.num}
-              </div>
-              <h3 className="font-display text-lg text-foreground mt-5">{step.name}</h3>
-              <p className="text-muted-foreground text-xs mt-2 max-w-[200px] mx-auto leading-relaxed">{step.desc}</p>
-            </div>
-          ))}
+        <div ref={lineRef} className="hidden md:grid grid-cols-4 gap-0 mt-16 relative">
+          {/* Animated connecting line */}
+          <div className="absolute top-[18px] left-[12.5%] right-[12.5%] h-[2px] overflow-hidden">
+            <div
+              className="h-full bg-primary"
+              style={{
+                width: lineVisible ? "100%" : "0%",
+                transition: "width 0.8s ease",
+                boxShadow: "0 0 8px rgba(230,57,70,0.4)",
+              }}
+            />
+          </div>
+          {STEPS.map((step, i) => <ProcessStep key={i} step={step} i={i} />)}
         </div>
 
         {/* Mobile */}
@@ -521,8 +839,8 @@ const FAQS = [
   { q: "¿Cuánto tiempo tarda en verse el sitio web terminado?", a: "Entre 3 y 5 semanas dependiendo del paquete. Trabajamos con actualizaciones semanales para que puedas ver el avance desde la primera semana." },
   { q: "¿Necesito saber de tecnología para usar el sistema?", a: "No. Nos encargamos de todo el aspecto técnico. Tú recibes capacitación en el uso del portal y el CRM. Nuestro soporte está disponible de forma continua." },
   { q: "¿Qué pasa si ya tengo un sitio web?", a: "Lo analizamos sin costo. En la mayoría de los casos, el sitio existente tiene problemas de SEO, velocidad o conversión. Podemos migrarlo o construir uno nuevo según lo que convenga." },
- { q: "¿Trabajan solo con despachos?", a: "No. Aunque tenemos experiencia profunda en el sector legal, también desarrollamos proyectos de e-commerce, landing pages, software a medida, plataformas SaaS y más. Nos adaptamos a lo que tu negocio necesite." },
- { q: "¿Cuál es la inversión mínima para comenzar?", a: "Los proyectos inician desde $25,000 MXN con política de pago 50% anticipo y 50% contra entrega." },
+  { q: "¿Trabajan solo con despachos?", a: "No. Aunque tenemos experiencia profunda en el sector legal, también desarrollamos proyectos de e-commerce, landing pages, software a medida, plataformas SaaS y más. Nos adaptamos a lo que tu negocio necesite." },
+  { q: "¿Cuál es la inversión mínima para comenzar?", a: "Los proyectos inician desde $25,000 MXN con política de pago 50% anticipo y 50% contra entrega." },
 ];
 
 function FaqSection() {
@@ -562,10 +880,8 @@ function FaqSection() {
 function CtaSection() {
   return (
     <section id="contacto" className="py-24 sm:py-32 bg-card relative z-10">
-      {/* Ambient orb */}
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] pointer-events-none z-0"
         style={{ background: "radial-gradient(ellipse, rgba(230,57,70,0.10) 0%, transparent 60%)" }} />
-
       <div className="max-w-[1200px] mx-auto px-5 text-center relative z-10">
         <h2 data-reveal="up" className="font-display text-3xl sm:text-4xl md:text-5xl text-foreground max-w-2xl mx-auto">
           ¿Tu despacho debería ser más visible?
@@ -593,7 +909,7 @@ function CtaSection() {
 }
 
 /* ═══════════════════════════════════════════════
-   WHATSAPP CHATBOT
+   WHATSAPP CHATBOT — Morph open + message slide
    ═══════════════════════════════════════════════ */
 const CHAT_FLOW = [
   { id: "welcome", bot: "¡Hola! Soy el asistente de NEBU Studio. ¿Tu despacho está en Puebla?", type: "buttons" as const, options: ["Sí, en Puebla", "En otro estado"] },
@@ -611,6 +927,7 @@ function WhatsAppChatbot() {
   const [messages, setMessages] = useState<ChatMsg[]>([{ from: "bot", text: CHAT_FLOW[0].bot! }]);
   const [inputVal, setInputVal] = useState("");
   const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [contentVisible, setContentVisible] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = useCallback(() => {
@@ -618,6 +935,15 @@ function WhatsAppChatbot() {
   }, []);
 
   useEffect(() => { scrollToBottom(); }, [messages, scrollToBottom]);
+
+  useEffect(() => {
+    if (isOpen) {
+      const t = setTimeout(() => setContentVisible(true), 400);
+      return () => clearTimeout(t);
+    } else {
+      setContentVisible(false);
+    }
+  }, [isOpen]);
 
   const advance = (answer: string) => {
     const currentFlow = CHAT_FLOW[step];
@@ -656,59 +982,73 @@ function WhatsAppChatbot() {
     <>
       {/* Floating button */}
       <button
-        onClick={() => setIsOpen(!isOpen)}
-        className={`fixed bottom-7 right-7 z-[9999] w-[60px] h-[60px] rounded-full flex items-center justify-center transition-all duration-300 ${isOpen ? "scale-0 opacity-0" : "scale-100 opacity-100"}`}
-        style={{ background: "#25D366", boxShadow: "0 4px 24px rgba(37,211,102,0.4)", animation: "waPulse 2.5s ease-in-out infinite" }}
+        onClick={() => setIsOpen(true)}
+        className={`fixed bottom-7 right-7 z-[9999] w-[60px] h-[60px] rounded-full flex items-center justify-center transition-all duration-300 ${isOpen ? "scale-0 opacity-0 pointer-events-none" : "scale-100 opacity-100"}`}
+        style={{ background: "#25D366", animation: isOpen ? "none" : "waPulseBrutal 2s ease-in-out infinite" }}
         aria-label="Abrir chat">
         <svg viewBox="0 0 24 24" fill="white" className="w-7 h-7">
           <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
         </svg>
       </button>
 
-      {/* Chat window */}
-      {isOpen && (
-        <div className="fixed z-[9999] bottom-[100px] right-7 sm:right-7 sm:w-[340px] w-[calc(100vw-32px)] max-h-[520px] sm:max-h-[520px] max-h-[60vh] flex flex-col overflow-hidden"
-          style={{
-            background: "rgba(13,13,13,0.95)",
-            backdropFilter: "blur(40px) saturate(180%)",
-            WebkitBackdropFilter: "blur(40px) saturate(180%)",
-            border: "1px solid rgba(255,255,255,0.10)",
-            borderRadius: "16px",
-            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08), 0 24px 64px rgba(0,0,0,0.6), 0 0 20px rgba(230,57,70,0.4), 0 0 60px rgba(230,57,70,0.15)",
-          }}>
-
-          {/* Header */}
-          <div className="flex items-center gap-3 px-[18px] py-[14px]" style={{ background: "#E63946" }}>
-            <div className="w-9 h-9 rounded-full flex items-center justify-center text-white font-display text-sm font-bold"
-              style={{ background: "rgba(255,255,255,0.2)" }}>N</div>
-            <div className="flex-1">
-              <p className="text-white text-sm font-semibold">NEBU Studio</p>
-              <p className="text-white/80 text-[11px]">● En línea</p>
-            </div>
-            <button onClick={() => setIsOpen(false)} className="w-8 h-8 flex items-center justify-center text-white/80 hover:text-white">
-              <X className="w-4 h-4" />
-            </button>
+      {/* Chat window — morphs from button position */}
+      <div
+        className="fixed z-[9999] flex flex-col overflow-hidden"
+        style={{
+          bottom: isOpen ? "100px" : "28px",
+          right: isOpen ? "28px" : "28px",
+          width: isOpen ? "min(340px, calc(100vw - 32px))" : "60px",
+          height: isOpen ? "min(520px, 60vh)" : "60px",
+          borderRadius: isOpen ? "16px" : "50%",
+          background: isOpen ? "rgba(13,13,13,0.95)" : "#25D366",
+          backdropFilter: isOpen ? "blur(40px) saturate(180%)" : "none",
+          WebkitBackdropFilter: isOpen ? "blur(40px) saturate(180%)" : "none",
+          border: isOpen ? "1px solid rgba(255,255,255,0.10)" : "none",
+          boxShadow: isOpen
+            ? "inset 0 1px 0 rgba(255,255,255,0.08), 0 24px 64px rgba(0,0,0,0.6), 0 0 20px rgba(230,57,70,0.4), 0 0 60px rgba(230,57,70,0.15)"
+            : "0 4px 24px rgba(37,211,102,0.4)",
+          transition: "all 0.5s cubic-bezier(0.4,0,0.2,1)",
+          pointerEvents: isOpen ? "auto" : "none",
+          opacity: isOpen ? 1 : 0,
+        }}
+      >
+        {/* Header */}
+        <div className="flex items-center gap-3 px-[18px] py-[14px] shrink-0" style={{ background: "#E63946", opacity: contentVisible ? 1 : 0, transition: "opacity 0.3s ease" }}>
+          <div className="w-9 h-9 rounded-full flex items-center justify-center text-white font-display text-sm font-bold"
+            style={{ background: "rgba(255,255,255,0.2)" }}>N</div>
+          <div className="flex-1">
+            <p className="text-white text-sm font-semibold">NEBU Studio</p>
+            <p className="text-white/80 text-[11px]">● En línea</p>
           </div>
+          <button onClick={() => setIsOpen(false)} className="w-8 h-8 flex items-center justify-center text-white/80 hover:text-white">
+            <X className="w-4 h-4" />
+          </button>
+        </div>
 
-          {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-2.5" style={{ minHeight: "200px" }}>
-            {messages.map((msg, i) => (
-              <div key={i} className={`max-w-[85%] px-3.5 py-2.5 text-[13px] leading-[1.6] ${
+        {/* Messages */}
+        <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-2.5"
+          style={{ minHeight: "200px", opacity: contentVisible ? 1 : 0, transition: "opacity 0.3s ease 0.1s" }}>
+          {messages.map((msg, i) => (
+            <div key={i}
+              className={`max-w-[85%] px-3.5 py-2.5 text-[13px] leading-[1.6] chat-msg-enter ${
                 msg.from === "bot"
                   ? "self-start rounded-[4px_12px_12px_12px]"
                   : "self-end rounded-[12px_4px_12px_12px]"
               }`}
-                style={msg.from === "bot"
+              style={{
+                ...(msg.from === "bot"
                   ? { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)", color: "#D0D0D0" }
-                  : { background: "#E63946", color: "#fff" }
-                }>
-                {msg.text}
-              </div>
-            ))}
-            <div ref={messagesEndRef} />
-          </div>
+                  : { background: "#E63946", color: "#fff" }),
+                animationDelay: `${i * 100}ms`,
+              }}>
+              {msg.text}
+            </div>
+          ))}
+          <div ref={messagesEndRef} />
+        </div>
 
-          {/* Options / Input / Final */}
+        {/* Options / Input / Final */}
+        <div style={{ opacity: contentVisible ? 1 : 0, transition: "opacity 0.3s ease 0.2s" }}>
           {currentFlow?.type === "buttons" && (
             <div className="flex flex-wrap gap-2 px-4 pb-3">
               {currentFlow.options.map((opt) => (
@@ -762,7 +1102,7 @@ function WhatsAppChatbot() {
             </div>
           )}
         </div>
-      )}
+      </div>
     </>
   );
 }
