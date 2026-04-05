@@ -359,8 +359,14 @@
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
-  [data-reveal] {
+  [data-reveal],
+  .hero-char-enter,
+  .hero-word-reveal,
+  .hero-fade-in,
+  .hero-cta-spring {
     opacity: 1 !important;
     transform: none !important;
+    clip-path: none !important;
+    animation: none !important;
   }
 }
