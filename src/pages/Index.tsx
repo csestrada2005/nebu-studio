@@ -484,7 +484,7 @@ function ProcessSection() {
         <div className="hidden md:grid grid-cols-4 gap-0 mt-16 relative">
           <div className="absolute top-[18px] left-[12.5%] right-[12.5%] border-t border-dashed border-border" />
           {STEPS.map((step, i) => (
-            <div key={i} data-reveal="up" style={{ transitionDelay: `${i * 150}ms` }} className="text-center relative">
+            <div key={i} data-reveal="up" data-delay={String(i + 1)} className="text-center relative">
               <div className="w-9 h-9 rounded-full bg-primary text-primary-foreground text-sm font-semibold flex items-center justify-center mx-auto relative z-10"
                 style={{ boxShadow: "0 0 20px rgba(230,57,70,0.4)" }}>
                 {step.num}
