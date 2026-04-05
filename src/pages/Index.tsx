@@ -434,9 +434,9 @@ function TestimonialsSection() {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {TESTIMONIALS.map((t, i) => (
-            <div key={i} data-reveal="up"
+            <div key={i} data-reveal="up" data-delay={String(i + 1)}
               className="glass-card p-7"
-              style={{ transitionDelay: `${i * 120}ms`, borderLeft: "2px solid hsl(355 78% 56%)", borderRadius: "12px" }}>
+              style={{ borderLeft: "2px solid hsl(355 78% 56%)", borderRadius: "12px" }}>
               <Stars />
               <p className="text-[15px] leading-[1.7] italic mb-5" style={{ color: "#C0C0C0" }}>
                 "{t.quote}"
