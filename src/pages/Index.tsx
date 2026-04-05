@@ -1162,7 +1162,7 @@ const Index = () => {
   useCountUp();
 
   return (
-    <div className="min-h-screen bg-background text-foreground relative">
+    <div className="min-h-screen text-foreground relative" style={{ position: "relative", zIndex: 1 }}>
       <ScrollProgress />
       <Nav />
       <Hero />
