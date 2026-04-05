@@ -11,7 +11,7 @@ function scrollToSection(id: string) {
 /* ─── Section separator ─── */
 function SectionSep() {
   return (
-    <div className="relative h-px w-full max-w-[1200px] mx-auto">
+    <div className="relative h-px w-full max-w-[1200px] mx-auto" data-reveal="fade">
       <div className="absolute inset-0" style={{
         background: "linear-gradient(90deg, transparent, rgba(230,57,70,0.25) 50%, transparent)",
       }} />
