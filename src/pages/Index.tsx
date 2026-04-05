@@ -536,7 +536,7 @@ function FaqSection() {
           {FAQS.map((faq, i) => {
             const isOpen = openIdx === i;
             return (
-              <div key={i} data-reveal="up" style={{ transitionDelay: `${i * 80}ms` }}>
+              <div key={i} data-reveal="up" data-delay={String(i + 1)}>
                 <button onClick={() => setOpenIdx(isOpen ? null : i)}
                   className="w-full flex items-center justify-between py-5 text-left group">
                   <span className="text-foreground text-base pr-4">{faq.q}</span>
