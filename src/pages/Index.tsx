@@ -177,7 +177,7 @@ function Hero() {
           >
             Agenda una consulta
           </a>
-          <p className="text-muted-foreground text-sm mt-3">Sin costo. 20 minutos.</p>
+          
         </div>
       </div>
     </section>
