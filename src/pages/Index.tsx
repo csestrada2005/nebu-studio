@@ -11,7 +11,7 @@ function scrollToSection(id: string) {
 /* ─── Section separator ─── */
 function SectionSep() {
   return (
-    <div className="relative h-px w-full max-w-[1200px] mx-auto">
+    <div className="relative h-px w-full max-w-[1200px] mx-auto" data-reveal="fade">
       <div className="absolute inset-0" style={{
         background: "linear-gradient(90deg, transparent, rgba(230,57,70,0.25) 50%, transparent)",
       }} />
@@ -241,7 +241,7 @@ function WhySection() {
         <div className="grid md:grid-cols-2 gap-12 lg:gap-16 mt-16">
           <div className="space-y-10">
             {PAIN_POINTS.map((p, i) => (
-              <div key={i} data-reveal="up" style={{ transitionDelay: `${i * 150}ms` }}>
+              <div key={i} data-reveal="left" data-delay={String(i + 1)}>
                 <span className="font-display text-4xl sm:text-5xl text-primary"
                   style={{ textShadow: "0 0 30px rgba(230,57,70,0.4)" }}
                   data-count-target={p.stat} data-count-suffix={p.stat.includes("+") ? "+" : p.stat.includes("x") ? "x" : ""}>
@@ -252,7 +252,7 @@ function WhySection() {
               </div>
             ))}
           </div>
-          <div data-reveal="up" style={{ transitionDelay: "300ms" }} className="flex items-start">
+          <div data-reveal="right" data-delay="2" className="flex items-start">
             <div className="relative w-full overflow-hidden glass-card p-0" style={{ borderRadius: "4px" }}>
               <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&q=80"
                 alt="Abogado trabajando" className="w-full h-[400px] object-cover" loading="lazy" />
@@ -293,9 +293,9 @@ function ServicesSection() {
         <SectionTitle title="Lo que construimos" />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-16">
           {SERVICES.map((s, i) => (
-            <div key={i} data-reveal="up"
+            <div key={i} data-reveal="blur" data-delay={String(i + 1)}
               className="glass-card glass-card-featured p-7 relative overflow-hidden group"
-              style={{ transitionDelay: `${i * 100}ms`, borderTop: "1px solid rgba(230,57,70,0.3)" }}>
+              style={{ borderTop: "1px solid rgba(230,57,70,0.3)" }}>
               <span className="absolute top-4 right-5 font-display text-[64px] leading-none font-bold"
                 style={{ color: "rgba(230,57,70,0.12)" }}>
                 {s.num}
@@ -325,14 +325,14 @@ function AboutSection() {
     <section className="py-24 sm:py-32 bg-secondary relative z-10">
       <div className="max-w-[1200px] mx-auto px-5">
         <div className="grid md:grid-cols-[40%_60%] gap-12 lg:gap-16 items-start">
-          <div data-reveal="up">
+          <div data-reveal="left">
             <div className="glass-card overflow-hidden p-0" style={{ borderRadius: "4px" }}>
               <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=600&q=80"
                 alt="Josep Cuatrecasas — CEO & Fundador" className="w-full h-[480px] object-cover" loading="lazy" />
             </div>
             <p className="text-muted-foreground text-xs mt-3 tracking-wide">Josep Cuatrecasas — CEO & Fundador</p>
           </div>
-          <div data-reveal="up" style={{ transitionDelay: "150ms" }}>
+          <div data-reveal="right" data-delay="2">
             <h2 className="font-display text-3xl sm:text-4xl text-foreground leading-tight mb-6">
               Especialistas en despachos.<br />No en todo.
             </h2>
@@ -368,9 +368,9 @@ function MetricsSection() {
   return (
     <section className="py-16 sm:py-20 relative z-10">
       <div className="max-w-[1200px] mx-auto px-5">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4" data-reveal="up">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {METRICS.map((m, i) => (
-            <div key={i} className="glass-card text-center py-8 px-4" style={{ borderTop: "1px solid rgba(230,57,70,0.3)" }}>
+            <div key={i} data-reveal="scale" data-delay={String(i + 1)} className="glass-card text-center py-8 px-4" style={{ borderTop: "1px solid rgba(230,57,70,0.3)" }}>
               <span className="font-display text-4xl sm:text-[56px] text-primary font-bold leading-none"
                 style={{ textShadow: "0 0 30px rgba(230,57,70,0.4)" }}
                 data-count-target={m.value}
@@ -434,9 +434,9 @@ function TestimonialsSection() {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {TESTIMONIALS.map((t, i) => (
-            <div key={i} data-reveal="up"
+            <div key={i} data-reveal="up" data-delay={String(i + 1)}
               className="glass-card p-7"
-              style={{ transitionDelay: `${i * 120}ms`, borderLeft: "2px solid hsl(355 78% 56%)", borderRadius: "12px" }}>
+              style={{ borderLeft: "2px solid hsl(355 78% 56%)", borderRadius: "12px" }}>
               <Stars />
               <p className="text-[15px] leading-[1.7] italic mb-5" style={{ color: "#C0C0C0" }}>
                 "{t.quote}"
@@ -484,7 +484,7 @@ function ProcessSection() {
         <div className="hidden md:grid grid-cols-4 gap-0 mt-16 relative">
           <div className="absolute top-[18px] left-[12.5%] right-[12.5%] border-t border-dashed border-border" />
           {STEPS.map((step, i) => (
-            <div key={i} data-reveal="up" style={{ transitionDelay: `${i * 150}ms` }} className="text-center relative">
+            <div key={i} data-reveal="up" data-delay={String(i + 1)} className="text-center relative">
               <div className="w-9 h-9 rounded-full bg-primary text-primary-foreground text-sm font-semibold flex items-center justify-center mx-auto relative z-10"
                 style={{ boxShadow: "0 0 20px rgba(230,57,70,0.4)" }}>
                 {step.num}
@@ -499,7 +499,7 @@ function ProcessSection() {
         <div className="md:hidden mt-12 relative pl-8">
           <div className="absolute top-0 bottom-0 left-[14px] w-px border-l border-dashed border-border" />
           {STEPS.map((step, i) => (
-            <div key={i} data-reveal="up" style={{ transitionDelay: `${i * 100}ms` }} className="relative pb-10 last:pb-0">
+            <div key={i} data-reveal="left" data-delay={String(i + 1)} className="relative pb-10 last:pb-0">
               <div className="absolute left-[-22px] top-0 w-7 h-7 rounded-full bg-primary text-primary-foreground text-xs font-semibold flex items-center justify-center"
                 style={{ boxShadow: "0 0 16px rgba(230,57,70,0.4)" }}>
                 {step.num}
@@ -536,7 +536,7 @@ function FaqSection() {
           {FAQS.map((faq, i) => {
             const isOpen = openIdx === i;
             return (
-              <div key={i} data-reveal="up" style={{ transitionDelay: `${i * 80}ms` }}>
+              <div key={i} data-reveal="up" data-delay={String(i + 1)}>
                 <button onClick={() => setOpenIdx(isOpen ? null : i)}
                   className="w-full flex items-center justify-between py-5 text-left group">
                   <span className="text-foreground text-base pr-4">{faq.q}</span>
