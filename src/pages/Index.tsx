@@ -985,7 +985,7 @@ const Index = () => {
       <SectionSep />
       <CtaSection />
       <Footer />
-      <WhatsAppChatbot />
+      
     </div>
   );
 };
