@@ -368,9 +368,9 @@ function MetricsSection() {
   return (
     <section className="py-16 sm:py-20 relative z-10">
       <div className="max-w-[1200px] mx-auto px-5">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4" data-reveal="up">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {METRICS.map((m, i) => (
-            <div key={i} className="glass-card text-center py-8 px-4" style={{ borderTop: "1px solid rgba(230,57,70,0.3)" }}>
+            <div key={i} data-reveal="scale" data-delay={String(i + 1)} className="glass-card text-center py-8 px-4" style={{ borderTop: "1px solid rgba(230,57,70,0.3)" }}>
               <span className="font-display text-4xl sm:text-[56px] text-primary font-bold leading-none"
                 style={{ textShadow: "0 0 30px rgba(230,57,70,0.4)" }}
                 data-count-target={m.value}
