@@ -241,7 +241,7 @@ function WhySection() {
         <div className="grid md:grid-cols-2 gap-12 lg:gap-16 mt-16">
           <div className="space-y-10">
             {PAIN_POINTS.map((p, i) => (
-              <div key={i} data-reveal="up" style={{ transitionDelay: `${i * 150}ms` }}>
+              <div key={i} data-reveal="left" data-delay={String(i + 1)}>
                 <span className="font-display text-4xl sm:text-5xl text-primary"
                   style={{ textShadow: "0 0 30px rgba(230,57,70,0.4)" }}
                   data-count-target={p.stat} data-count-suffix={p.stat.includes("+") ? "+" : p.stat.includes("x") ? "x" : ""}>
