@@ -543,7 +543,7 @@ function AboutSection() {
   ];
 
   return (
-    <section className="py-24 sm:py-32 bg-secondary relative z-10">
+    <section className="py-24 sm:py-32 relative z-10" style={{ background: "rgba(13,13,13,0.75)" }}>
       <div className="max-w-[1200px] mx-auto px-5">
         <div className="grid md:grid-cols-[40%_60%] gap-12 lg:gap-16 items-start">
           <div data-reveal="left">
