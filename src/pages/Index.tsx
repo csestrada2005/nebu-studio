@@ -198,12 +198,6 @@ function Hero() {
             </div>
           </div>
 
-          <div className="hidden md:block">
-            <div className="glass-card overflow-hidden p-0" style={{ borderRadius: "8px" }}>
-              <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?w=800&q=80"
-                alt="Profesionales en reunión" className="w-full h-[480px] object-cover" loading="eager" />
-            </div>
-          </div>
         </div>
       </div>
 
@@ -527,8 +521,8 @@ const FAQS = [
   { q: "¿Cuánto tiempo tarda en verse el sitio web terminado?", a: "Entre 3 y 5 semanas dependiendo del paquete. Trabajamos con actualizaciones semanales para que puedas ver el avance desde la primera semana." },
   { q: "¿Necesito saber de tecnología para usar el sistema?", a: "No. Nos encargamos de todo el aspecto técnico. Tú recibes capacitación en el uso del portal y el CRM. Nuestro soporte está disponible de forma continua." },
   { q: "¿Qué pasa si ya tengo un sitio web?", a: "Lo analizamos sin costo. En la mayoría de los casos, el sitio existente tiene problemas de SEO, velocidad o conversión. Podemos migrarlo o construir uno nuevo según lo que convenga." },
-  { q: "¿Trabajan solo con despachos en Puebla?", a: "Nos especializamos en Puebla y el estado, aunque también atendemos despachos en otras ciudades de México cuando el proyecto lo requiere." },
-  { q: "¿Cuál es la inversión mínima para comenzar?", a: "El sistema completo para despacho mediano inicia desde $45,000 MXN con política de pago 50% anticipo y 50% contra entrega. Existe también un paquete de arranque desde $18,000 MXN para despachos más pequeños." },
+ { q: "¿Trabajan solo con despachos?", a: "No. Aunque tenemos experiencia profunda en el sector legal, también desarrollamos proyectos de e-commerce, landing pages, software a medida, plataformas SaaS y más. Nos adaptamos a lo que tu negocio necesite." },
+ { q: "¿Cuál es la inversión mínima para comenzar?", a: "Los proyectos inician desde $25,000 MXN con política de pago 50% anticipo y 50% contra entrega." },
 ];
 
 function FaqSection() {
