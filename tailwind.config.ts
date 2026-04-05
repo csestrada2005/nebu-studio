@@ -18,8 +18,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["DM Sans", "sans-serif"],
-        display: ["DM Serif Display", "serif"],
+        sans: ["Inter", "sans-serif"],
+        display: ["Outfit", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
