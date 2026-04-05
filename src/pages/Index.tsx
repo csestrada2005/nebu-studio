@@ -879,7 +879,7 @@ function FaqSection() {
    ═══════════════════════════════════════════════ */
 function CtaSection() {
   return (
-    <section id="contacto" className="py-24 sm:py-32 bg-card relative z-10">
+    <section id="contacto" className="py-24 sm:py-32 relative z-10" style={{ background: "rgba(13,13,13,0.6)" }}>
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] pointer-events-none z-0"
         style={{ background: "radial-gradient(ellipse, rgba(230,57,70,0.10) 0%, transparent 60%)" }} />
       <div className="max-w-[1200px] mx-auto px-5 text-center relative z-10">
