@@ -332,7 +332,7 @@ function AboutSection() {
             </div>
             <p className="text-muted-foreground text-xs mt-3 tracking-wide">Josep Cuatrecasas — CEO & Fundador</p>
           </div>
-          <div data-reveal="up" style={{ transitionDelay: "150ms" }}>
+          <div data-reveal="right" data-delay="2">
             <h2 className="font-display text-3xl sm:text-4xl text-foreground leading-tight mb-6">
               Especialistas en despachos.<br />No en todo.
             </h2>
