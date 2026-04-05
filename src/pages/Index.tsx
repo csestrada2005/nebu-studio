@@ -198,12 +198,6 @@ function Hero() {
             </div>
           </div>
 
-          <div className="hidden md:block">
-            <div className="glass-card overflow-hidden p-0" style={{ borderRadius: "8px" }}>
-              <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?w=800&q=80"
-                alt="Profesionales en reunión" className="w-full h-[480px] object-cover" loading="eager" />
-            </div>
-          </div>
         </div>
       </div>
 
