@@ -347,6 +347,16 @@
   }
 }
 
+/* ─── Hex background orb floats ─── */
+@keyframes floatOrb1 {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-24px) scale(1.06); }
+}
+@keyframes floatOrb2 {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(20px); }
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
