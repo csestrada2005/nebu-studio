@@ -293,9 +293,9 @@ function ServicesSection() {
         <SectionTitle title="Lo que construimos" />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-16">
           {SERVICES.map((s, i) => (
-            <div key={i} data-reveal="up"
+            <div key={i} data-reveal="blur" data-delay={String(i + 1)}
               className="glass-card glass-card-featured p-7 relative overflow-hidden group"
-              style={{ transitionDelay: `${i * 100}ms`, borderTop: "1px solid rgba(230,57,70,0.3)" }}>
+              style={{ borderTop: "1px solid rgba(230,57,70,0.3)" }}>
               <span className="absolute top-4 right-5 font-display text-[64px] leading-none font-bold"
                 style={{ color: "rgba(230,57,70,0.12)" }}>
                 {s.num}
