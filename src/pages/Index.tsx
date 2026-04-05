@@ -422,7 +422,7 @@ function Hero() {
 function TrustBar() {
   const items = ["Puebla, México", "Especialistas en el sector legal", "Respuesta en 24 horas", "Sin compromiso inicial"];
   return (
-    <div className="relative z-10 bg-secondary">
+    <div className="relative z-10" style={{ background: "rgba(13,13,13,0.7)" }}>
       <div className="max-w-[1200px] mx-auto px-5 py-4 flex flex-wrap justify-center gap-x-12 gap-y-2">
         {items.map((item, i) => (
           <span key={i} className="text-xs text-muted-foreground uppercase tracking-[0.1em]">{item}</span>
