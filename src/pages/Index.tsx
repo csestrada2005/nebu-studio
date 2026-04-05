@@ -252,7 +252,7 @@ function WhySection() {
               </div>
             ))}
           </div>
-          <div data-reveal="up" style={{ transitionDelay: "300ms" }} className="flex items-start">
+          <div data-reveal="right" data-delay="2" className="flex items-start">
             <div className="relative w-full overflow-hidden glass-card p-0" style={{ borderRadius: "4px" }}>
               <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&q=80"
                 alt="Abogado trabajando" className="w-full h-[400px] object-cover" loading="lazy" />
