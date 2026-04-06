@@ -1,12 +1,12 @@
 import { useEffect, useRef, useCallback } from "react";
 
-const HEX_SIZE = 28;
-const HEX_GAP = 2;
-const HOVER_RADIUS = 140;
-const HEX_COLOR_BASE = "rgba(255,255,255,0.03)";
-const HEX_COLOR_HOVER = "rgba(194,42,41,0.35)";
-const HEX_STROKE_BASE = "rgba(255,255,255,0.045)";
-const HEX_STROKE_HOVER = "rgba(194,42,41,0.55)";
+const HEX_SIZE = 12;
+const HEX_GAP = 1;
+const HOVER_RADIUS = 180;
+const HEX_COLOR_BASE = "rgba(255,255,255,0.025)";
+const HEX_COLOR_HOVER = "rgba(194,42,41,0.45)";
+const HEX_STROKE_BASE = "rgba(255,255,255,0.06)";
+const HEX_STROKE_HOVER = "rgba(194,42,41,0.7)";
 
 interface HexCell {
   cx: number;
@@ -115,14 +115,14 @@ export default function HexBackground() {
 
       // Phantom 1 — Lissajous path
       const p = phantomRef.current;
-      const speed = 0.0004;
-      p.x = w * 0.5 + Math.sin(time * speed) * w * 0.35;
-      p.y = h * 0.5 + Math.cos(time * speed * 0.7) * h * 0.35;
+      const speed = 0.001;
+      p.x = w * 0.5 + Math.sin(time * speed) * w * 0.4;
+      p.y = h * 0.5 + Math.cos(time * speed * 0.7) * h * 0.4;
 
       // Phantom 2 — offset Lissajous path
       const p2 = phantom2Ref.current;
-      p2.x = w * 0.5 + Math.cos(time * speed * 0.6 + 2.2) * w * 0.3;
-      p2.y = h * 0.5 + Math.sin(time * speed * 0.9 + 1.1) * h * 0.3;
+      p2.x = w * 0.5 + Math.cos(time * speed * 0.8 + 2.2) * w * 0.38;
+      p2.y = h * 0.5 + Math.sin(time * speed * 1.1 + 1.1) * h * 0.35;
 
       // Build list of active cursors
       const cursors: { x: number; y: number }[] = [p, p2];
@@ -134,7 +134,7 @@ export default function HexBackground() {
       ctx.fillRect(0, 0, w, h);
 
       const cells = cellsRef.current;
-      const dampSpeed = 0.12;
+      const dampSpeed = 0.22;
 
       for (let i = 0; i < cells.length; i++) {
         const c = cells[i];
