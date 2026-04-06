@@ -454,7 +454,7 @@ function TrustBar() {
     <div className="relative z-10" style={{ background: "rgba(13,13,13,0.7)" }}>
       <div className="max-w-[1200px] mx-auto px-5 py-4 flex flex-wrap justify-center gap-x-12 gap-y-2">
         {items.map((item, i) => (
-          <span key={i} className="text-xs text-muted-foreground uppercase tracking-[0.1em]">{item}</span>
+          <span key={i} className="text-xs text-muted-foreground/80 uppercase tracking-[0.15em]" style={{ textShadow: "0 0 20px rgba(255,255,255,0.12)" }}>{item}</span>
         ))}
       </div>
     </div>
