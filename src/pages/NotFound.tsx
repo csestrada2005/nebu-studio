@@ -1,5 +1,4 @@
 import { useLocation, Link } from "react-router-dom";
-import { useEffect } from "react";
 import { LanguageProvider, useLanguage } from "@/contexts/LanguageContext";
 import { Header } from "@/components/premium/Header";
 import { Footer } from "@/components/premium/Footer";
