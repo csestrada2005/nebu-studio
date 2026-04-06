@@ -418,13 +418,13 @@ function Hero() {
 
 
         {/* CTAs */}
-        <div className="flex flex-col sm:flex-row items-center gap-5 relative">
+        <div className="flex flex-col sm:flex-row items-center gap-4 relative">
           <div className="relative hero-cta-spring" style={{ animationDelay: "1.4s" }}>
             <a
               href="mailto:j.cuatrecasas@nebustudio.com"
               onClick={handleCtaClick}
-              className="cta-shine inline-flex items-center gap-3 bg-primary text-primary-foreground px-10 py-4 text-sm uppercase tracking-[0.12em] font-semibold rounded-full relative overflow-visible transition-all duration-200 hover:scale-[1.04] active:scale-[0.97]"
-              style={{ boxShadow: "0 4px 24px rgba(230,57,70,0.35)" }}
+              className="cta-shine inline-flex items-center gap-2 px-6 py-2.5 text-xs uppercase tracking-[0.12em] font-semibold rounded-md relative overflow-visible transition-all duration-200 hover:scale-[1.03] active:scale-[0.97] text-foreground border border-white/15"
+              style={{ background: "rgba(255,255,255,0.07)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1), 0 4px 20px rgba(0,0,0,0.3)" }}
             >
               Agenda tu diagnóstico gratuito
             </a>
@@ -434,7 +434,8 @@ function Hero() {
             <a
               href="https://wa.me/522213497090?text=Hola%2C%20me%20interesa%20conocer%20el%20sistema%20para%20mi%20despacho"
               target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 px-10 py-4 text-sm uppercase tracking-[0.12em] font-semibold rounded-full border border-[hsl(var(--border))] text-foreground hover:border-primary/50 hover:scale-[1.04] active:scale-[0.97] transition-all duration-200"
+              className="inline-flex items-center gap-2 px-6 py-2.5 text-xs uppercase tracking-[0.12em] font-semibold rounded-md text-foreground/80 border border-white/10 hover:border-white/20 hover:scale-[1.03] active:scale-[0.97] transition-all duration-200"
+              style={{ background: "rgba(255,255,255,0.04)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}
             >
               Escríbenos por WhatsApp
             </a>
