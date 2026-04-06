@@ -1,5 +1,5 @@
 import { useRef, useState, useCallback } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useInView, useReducedMotion } from "framer-motion";
 
 interface GlassTiltCardProps {
   children: React.ReactNode;
