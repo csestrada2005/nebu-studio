@@ -176,45 +176,45 @@ export default function HexBackground() {
         style={{ display: "block" }}
       />
 
-      {/* Orb 1 — Hero right */}
-      <div
-        className="absolute pointer-events-none"
-        style={{
-          width: 420,
-          height: 420,
-          right: "8%",
-          top: "15%",
-          borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(230,57,70,0.16) 0%, rgba(230,57,70,0.04) 45%, transparent 70%)",
-          animation: "floatOrb1 7s ease-in-out infinite",
-        }}
-      />
-
-      {/* Orb 2 — Services left */}
-      <div
-        className="absolute pointer-events-none"
-        style={{
-          width: 350,
-          height: 350,
-          left: "-5%",
-          top: "55%",
-          borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(230,57,70,0.10) 0%, transparent 70%)",
-          animation: "floatOrb2 9s ease-in-out infinite",
-        }}
-      />
-
-      {/* Orb 3 — Footer center */}
+      {/* Orb 1 — top-left red */}
       <div
         className="absolute pointer-events-none"
         style={{
           width: 600,
-          height: 280,
-          bottom: 0,
-          left: "50%",
-          transform: "translateX(-50%)",
+          height: 600,
+          left: "-10%",
+          top: "5%",
           borderRadius: "50%",
-          background: "radial-gradient(ellipse, rgba(230,57,70,0.08) 0%, transparent 65%)",
+          background: "rgba(230,57,70,0.08)",
+          filter: "blur(120px)",
+        }}
+      />
+
+      {/* Orb 2 — center-right white */}
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          width: 500,
+          height: 500,
+          right: "-5%",
+          top: "40%",
+          borderRadius: "50%",
+          background: "rgba(255,255,255,0.04)",
+          filter: "blur(100px)",
+        }}
+      />
+
+      {/* Orb 3 — bottom-left red */}
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          width: 400,
+          height: 400,
+          left: "5%",
+          bottom: "5%",
+          borderRadius: "50%",
+          background: "rgba(230,57,70,0.05)",
+          filter: "blur(150px)",
         }}
       />
     </div>
