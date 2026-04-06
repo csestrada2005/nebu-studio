@@ -1,12 +1,12 @@
 import { useEffect, useRef, useCallback } from "react";
 
-const HEX_SIZE = 28;
-const HEX_GAP = 2;
-const HOVER_RADIUS = 140;
-const HEX_COLOR_BASE = "rgba(255,255,255,0.03)";
-const HEX_COLOR_HOVER = "rgba(194,42,41,0.35)";
-const HEX_STROKE_BASE = "rgba(255,255,255,0.045)";
-const HEX_STROKE_HOVER = "rgba(194,42,41,0.55)";
+const HEX_SIZE = 12;
+const HEX_GAP = 1;
+const HOVER_RADIUS = 180;
+const HEX_COLOR_BASE = "rgba(255,255,255,0.025)";
+const HEX_COLOR_HOVER = "rgba(194,42,41,0.45)";
+const HEX_STROKE_BASE = "rgba(255,255,255,0.06)";
+const HEX_STROKE_HOVER = "rgba(194,42,41,0.7)";
 
 interface HexCell {
   cx: number;
