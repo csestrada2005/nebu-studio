@@ -400,11 +400,11 @@ function Hero() {
 
       <div className="relative z-10 w-full max-w-[1100px] mx-auto px-5 flex flex-col items-center text-center">
 
-        <h1 className="font-display text-5xl sm:text-6xl md:text-[72px] lg:text-[88px] xl:text-[96px] text-foreground leading-[1.05] tracking-[-0.03em] mb-8">
-          <span className="block mb-1">
+        <h1 className="font-display text-5xl sm:text-6xl md:text-[72px] lg:text-[88px] xl:text-[96px] text-foreground leading-[1.3] tracking-[0.02em] mb-8">
+          <span className="block mb-3 sm:mb-4">
             <ScrambleText target="Presencia digital" startDelay={200} />
           </span>
-          <span className="block mb-1">
+          <span className="block mb-3 sm:mb-4">
             <ScrambleText target="que genera" startDelay={900} />
           </span>
           <span className="block text-primary">
