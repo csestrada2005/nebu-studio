@@ -4,25 +4,25 @@
 
 @layer base {
   :root {
-    --background: 0 0% 5%;
-    --foreground: 0 0% 96%;
-    --card: 0 0% 7%;
-    --card-foreground: 0 0% 96%;
-    --popover: 0 0% 7%;
-    --popover-foreground: 0 0% 96%;
-    --primary: 355 78% 56%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 10%;
-    --secondary-foreground: 0 0% 96%;
-    --muted: 0 0% 12%;
-    --muted-foreground: 0 0% 53%;
-    --accent: 355 78% 56%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 355 78% 56%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 12%;
-    --input: 0 0% 12%;
-    --ring: 355 78% 56%;
+    --background: 0 0% 20%;
+    --foreground: 48 8% 88%;
+    --card: 0 0% 23%;
+    --card-foreground: 48 8% 88%;
+    --popover: 0 0% 23%;
+    --popover-foreground: 48 8% 88%;
+    --primary: 0 65% 46%;
+    --primary-foreground: 48 8% 88%;
+    --secondary: 0 0% 25%;
+    --secondary-foreground: 48 8% 88%;
+    --muted: 0 0% 27%;
+    --muted-foreground: 48 4% 60%;
+    --accent: 0 65% 46%;
+    --accent-foreground: 48 8% 88%;
+    --destructive: 0 65% 46%;
+    --destructive-foreground: 48 8% 88%;
+    --border: 0 0% 27%;
+    --input: 0 0% 27%;
+    --ring: 0 65% 46%;
     --radius: 0rem;
 
     /* Glass system */
@@ -35,14 +35,14 @@
     --glass-blur-heavy: blur(40px) saturate(180%);
 
     /* Rim lights */
-    --rim-red: rgba(230, 57, 70, 0.5);
-    --rim-red-soft: rgba(230, 57, 70, 0.2);
-    --rim-white: rgba(255, 255, 255, 0.12);
-    --rim-white-soft: rgba(255, 255, 255, 0.06);
+    --rim-red: rgba(194, 42, 41, 0.5);
+    --rim-red-soft: rgba(194, 42, 41, 0.2);
+    --rim-white: rgba(226, 225, 221, 0.12);
+    --rim-white-soft: rgba(226, 225, 221, 0.06);
 
     /* Glow */
-    --glow-red: 0 0 40px rgba(230, 57, 70, 0.15), 0 0 80px rgba(230, 57, 70, 0.05);
-    --glow-red-strong: 0 0 20px rgba(230, 57, 70, 0.4), 0 0 60px rgba(230, 57, 70, 0.15);
+    --glow-red: 0 0 40px rgba(194, 42, 41, 0.15), 0 0 80px rgba(194, 42, 41, 0.05);
+    --glow-red-strong: 0 0 20px rgba(194, 42, 41, 0.4), 0 0 60px rgba(194, 42, 41, 0.15);
 
     /* Transitions */
     --transition-smooth: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
