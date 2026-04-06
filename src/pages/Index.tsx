@@ -514,12 +514,10 @@ function WhySection() {
             ))}
           </div>
           <div data-reveal="right" data-delay="2" className="flex items-start">
-            <div className="relative w-full overflow-hidden glass-card p-0" style={{ borderRadius: "4px" }}>
+            <GlassTiltCard className="w-full">
               <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&q=80"
                 alt="Abogado trabajando" className="w-full h-[400px] object-cover" loading="lazy" />
-              <div className="absolute inset-0 bg-background/40" />
-              <div className="absolute inset-y-0 left-0 w-[3px] bg-primary" />
-            </div>
+            </GlassTiltCard>
           </div>
         </div>
       </div>
