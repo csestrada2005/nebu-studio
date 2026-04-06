@@ -47,8 +47,8 @@ function SectionSep() {
       <div
         className="absolute inset-0 transition-all ease-out"
         style={{
-          background: "linear-gradient(90deg, transparent, rgba(230,57,70,0.35) 50%, transparent)",
-          boxShadow: visible ? "0 0 10px rgba(230,57,70,0.3)" : "none",
+          background: "linear-gradient(90deg, transparent, rgba(194,42,41,0.35) 50%, transparent)",
+          boxShadow: visible ? "0 0 10px rgba(194,42,41,0.3)" : "none",
           width: visible ? "100%" : "0%",
           transitionDuration: "1.2s",
           margin: "0 auto",
@@ -82,7 +82,7 @@ function ScrollProgress() {
         style={{
           width: `${pct}%`,
           borderRadius: "0 2px 2px 0",
-          boxShadow: "0 0 12px rgba(230,57,70,0.8), 0 0 24px rgba(230,57,70,0.4)",
+          boxShadow: "0 0 12px rgba(194,42,41,0.8), 0 0 24px rgba(194,42,41,0.4)",
           transition: "width 80ms linear",
         }}
       />
@@ -134,9 +134,9 @@ function Nav() {
           background: scrolled ? "rgba(13,13,13,0.92)" : "rgba(13,13,13,0.7)",
           backdropFilter: "blur(40px) saturate(180%)",
           WebkitBackdropFilter: "blur(40px) saturate(180%)",
-          borderBottom: scrolled ? "1px solid rgba(230,57,70,0.2)" : "1px solid rgba(255,255,255,0.10)",
+          borderBottom: scrolled ? "1px solid rgba(194,42,41,0.2)" : "1px solid rgba(255,255,255,0.10)",
           boxShadow: scrolled
-            ? "inset 0 -1px 0 rgba(230,57,70,0.1), 0 4px 40px rgba(0,0,0,0.5)"
+            ? "inset 0 -1px 0 rgba(194,42,41,0.1), 0 4px 40px rgba(0,0,0,0.5)"
             : "inset 0 -1px 0 rgba(255,255,255,0.04), 0 4px 24px rgba(0,0,0,0.3)",
           transform: navReady ? "translateY(0)" : "translateY(-100%)",
           opacity: navReady ? 1 : 0,
@@ -163,7 +163,7 @@ function Nav() {
               >
                 {link.label}
                 <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-primary group-hover:w-full transition-all duration-300"
-                  style={{ boxShadow: "0 0 8px rgba(230,57,70,0.6)" }} />
+                  style={{ boxShadow: "0 0 8px rgba(194,42,41,0.6)" }} />
               </button>
             ))}
             <button
@@ -367,8 +367,8 @@ function Hero() {
 
         const pulse = Math.sin(time * 0.001 + c.phase) * 0.02;
         const grad = ctx.createRadialGradient(c.x, c.y, 0, c.x, c.y, c.r);
-        grad.addColorStop(0, `rgba(230, 57, 70, ${c.alpha + pulse})`);
-        grad.addColorStop(0.5, `rgba(230, 57, 70, ${(c.alpha + pulse) * 0.4})`);
+        grad.addColorStop(0, `rgba(194, 42, 41, ${c.alpha + pulse})`);
+        grad.addColorStop(0.5, `rgba(194, 42, 41, ${(c.alpha + pulse) * 0.4})`);
         grad.addColorStop(1, "transparent");
         ctx.beginPath();
         ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
@@ -455,7 +455,7 @@ function TrustBar() {
   return (
     <div className="relative z-10">
       {/* Top divider line */}
-      <div className="h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.08) 20%, rgba(230,57,70,0.25) 50%, rgba(255,255,255,0.08) 80%, transparent)" }} />
+      <div className="h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.08) 20%, rgba(194,42,41,0.25) 50%, rgba(255,255,255,0.08) 80%, transparent)" }} />
       <div
         className="backdrop-blur-md"
         style={{ background: "rgba(255,255,255,0.02)", borderBottom: "1px solid rgba(255,255,255,0.04)" }}
@@ -464,7 +464,7 @@ function TrustBar() {
           {items.map((item, i) => (
             <React.Fragment key={i}>
               {i > 0 && (
-                <span className="hidden sm:block w-px h-3 mx-8" style={{ background: "linear-gradient(180deg, transparent, rgba(230,57,70,0.35), transparent)" }} />
+                <span className="hidden sm:block w-px h-3 mx-8" style={{ background: "linear-gradient(180deg, transparent, rgba(194,42,41,0.35), transparent)" }} />
               )}
               <motion.span
                 className="text-[11px] text-muted-foreground/70 uppercase tracking-[0.2em] font-light px-2"
@@ -481,7 +481,7 @@ function TrustBar() {
         </div>
       </div>
       {/* Bottom divider line */}
-      <div className="h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.08) 20%, rgba(230,57,70,0.25) 50%, rgba(255,255,255,0.08) 80%, transparent)" }} />
+      <div className="h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.08) 20%, rgba(194,42,41,0.25) 50%, rgba(255,255,255,0.08) 80%, transparent)" }} />
     </div>
   );
 }
@@ -505,7 +505,7 @@ function WhySection() {
             {PAIN_POINTS.map((p, i) => (
               <div key={i} data-reveal="left" data-delay={String(i + 1)}>
                 <span className="font-display text-4xl sm:text-5xl text-primary"
-                  style={{ textShadow: "0 0 30px rgba(230,57,70,0.4)" }}
+                  style={{ textShadow: "0 0 30px rgba(194,42,41,0.4)" }}
                   data-count-target={p.stat} data-count-suffix={p.stat.includes("+") ? "+" : p.stat.includes("x") ? "x" : ""}>
                   0
                 </span>
@@ -552,14 +552,14 @@ function ServiceCard({ s, i }: { s: typeof SERVICES[0]; i: number }) {
       ref={ref}
       className="glass-card glass-card-featured p-7 relative overflow-hidden group service-card-rim"
       style={{
-        borderTop: "1px solid rgba(230,57,70,0.3)",
+        borderTop: "1px solid rgba(194,42,41,0.3)",
         opacity: visible || reduced ? 1 : 0,
         transform: visible || reduced ? "none" : `translate(${isEven ? "-80px" : "80px"}, 30px)`,
         transition: `all 0.75s cubic-bezier(0.4,0,0.2,1) ${i * 120}ms`,
       }}
     >
       <span className="absolute top-4 right-5 font-display text-[64px] leading-none font-bold"
-        style={{ color: "rgba(230,57,70,0.12)" }}>
+        style={{ color: "rgba(194,42,41,0.12)" }}>
         {s.num}
       </span>
       <div className="text-primary mb-5">{s.icon}</div>
@@ -573,7 +573,7 @@ function ServicesSection() {
   return (
     <section id="servicios" className="py-24 sm:py-32 relative z-10">
       <div className="absolute right-[-150px] top-1/3 w-[500px] h-[500px] pointer-events-none z-0"
-        style={{ background: "radial-gradient(circle, rgba(230,57,70,0.06) 0%, transparent 70%)" }} />
+        style={{ background: "radial-gradient(circle, rgba(194,42,41,0.06) 0%, transparent 70%)" }} />
       <div className="max-w-[1200px] mx-auto px-5 relative z-10">
         <SectionTitle title="Lo que construimos" />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-16">
@@ -646,7 +646,7 @@ function MetricCard({ m, i }: { m: typeof METRICS[0]; i: number }) {
       ref={ref}
       className="glass-card text-center py-8 px-4"
       style={{
-        borderTop: "1px solid rgba(230,57,70,0.3)",
+        borderTop: "1px solid rgba(194,42,41,0.3)",
         perspective: "800px",
       }}
     >
@@ -657,7 +657,7 @@ function MetricCard({ m, i }: { m: typeof METRICS[0]; i: number }) {
         transition: `all 0.7s cubic-bezier(0.4,0,0.2,1) ${i * 150}ms`,
       }}>
         <span className="font-display text-4xl sm:text-[56px] text-primary font-bold leading-none"
-          style={{ textShadow: "0 0 30px rgba(230,57,70,0.4)" }}
+          style={{ textShadow: "0 0 30px rgba(194,42,41,0.4)" }}
           data-count-target={m.value}
           data-count-suffix={m.value.includes("x") ? "x" : m.value.includes("h") ? "h" : ""}>
           0
@@ -707,7 +707,7 @@ function AnimatedStars({ visible }: { visible: boolean }) {
       {[...Array(5)].map((_, i) => (
         <svg key={i} viewBox="0 0 20 20" className="w-3.5 h-3.5 transition-colors duration-200"
           style={{
-            color: visible ? "#E63946" : "transparent",
+            color: visible ? "#C22A29" : "transparent",
             transitionDelay: visible ? `${i * 100}ms` : "0ms",
           }}
           fill="currentColor">
@@ -740,7 +740,7 @@ function TestimonialCard({ t, i }: { t: typeof TESTIMONIALS[0]; i: number }) {
       </p>
       <div className="border-t border-border/30 pt-4 flex items-center gap-3">
         <div className="w-10 h-10 rounded-full flex items-center justify-center text-primary font-display text-sm font-semibold"
-          style={{ background: "rgba(230,57,70,0.15)", border: "1px solid rgba(230,57,70,0.3)" }}>
+          style={{ background: "rgba(194,42,41,0.15)", border: "1px solid rgba(194,42,41,0.3)" }}>
           {t.initials}
         </div>
         <div>
@@ -756,7 +756,7 @@ function TestimonialsSection() {
   return (
     <section className="py-24 sm:py-32 relative z-10" style={{ background: "rgba(10,10,10,0.8)" }}>
       <div className="absolute left-1/2 top-0 -translate-x-1/2 w-[600px] h-[400px] pointer-events-none z-0"
-        style={{ background: "radial-gradient(ellipse, rgba(230,57,70,0.06) 0%, transparent 60%)" }} />
+        style={{ background: "radial-gradient(ellipse, rgba(194,42,41,0.06) 0%, transparent 60%)" }} />
       <div className="max-w-[1200px] mx-auto px-5 relative z-10">
         <SectionTitle title="Lo que dicen los despachos" />
         <p data-reveal="up" className="text-muted-foreground text-base mt-4 mb-16">
@@ -815,7 +815,7 @@ function ProcessStep({ step, i }: { step: typeof STEPS[0]; i: number }) {
     <div ref={ref} className="text-center relative">
       <div className="w-9 h-9 rounded-full bg-primary text-primary-foreground text-sm font-semibold flex items-center justify-center mx-auto relative z-10"
         style={{
-          boxShadow: "0 0 20px rgba(230,57,70,0.4)",
+          boxShadow: "0 0 20px rgba(194,42,41,0.4)",
           opacity: visible ? 1 : 0,
           transform: visible ? "scale(1)" : "scale(0)",
           transition: `all 0.5s cubic-bezier(.34,1.56,.64,1) ${i * 200}ms`,
@@ -858,7 +858,7 @@ function ProcessSection() {
               style={{
                 width: lineVisible ? "100%" : "0%",
                 transition: "width 0.8s ease",
-                boxShadow: "0 0 8px rgba(230,57,70,0.4)",
+                boxShadow: "0 0 8px rgba(194,42,41,0.4)",
               }}
             />
           </div>
@@ -871,7 +871,7 @@ function ProcessSection() {
           {STEPS.map((step, i) => (
             <div key={i} data-reveal="left" data-delay={String(i + 1)} className="relative pb-10 last:pb-0">
               <div className="absolute left-[-22px] top-0 w-7 h-7 rounded-full bg-primary text-primary-foreground text-xs font-semibold flex items-center justify-center"
-                style={{ boxShadow: "0 0 16px rgba(230,57,70,0.4)" }}>
+                style={{ boxShadow: "0 0 16px rgba(194,42,41,0.4)" }}>
                 {step.num}
               </div>
               <h3 className="font-display text-lg text-foreground">{step.name}</h3>
@@ -933,7 +933,7 @@ function CtaSection() {
   return (
     <section id="contacto" className="py-24 sm:py-32 relative z-10" style={{ background: "rgba(13,13,13,0.6)" }}>
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] pointer-events-none z-0"
-        style={{ background: "radial-gradient(ellipse, rgba(230,57,70,0.10) 0%, transparent 60%)" }} />
+        style={{ background: "radial-gradient(ellipse, rgba(194,42,41,0.10) 0%, transparent 60%)" }} />
       <div className="max-w-[1200px] mx-auto px-5 text-center relative z-10">
         <h2 data-reveal="up" className="font-display text-3xl sm:text-4xl md:text-5xl text-foreground max-w-2xl mx-auto">
           ¿Tu despacho debería ser más visible?

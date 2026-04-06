@@ -4,9 +4,9 @@ const HEX_SIZE = 28;
 const HEX_GAP = 2;
 const HOVER_RADIUS = 140;
 const HEX_COLOR_BASE = "rgba(255,255,255,0.03)";
-const HEX_COLOR_HOVER = "rgba(230,57,70,0.35)";
+const HEX_COLOR_HOVER = "rgba(194,42,41,0.35)";
 const HEX_STROKE_BASE = "rgba(255,255,255,0.045)";
-const HEX_STROKE_HOVER = "rgba(230,57,70,0.55)";
+const HEX_STROKE_HOVER = "rgba(194,42,41,0.55)";
 
 interface HexCell {
   cx: number;
@@ -101,7 +101,7 @@ export default function HexBackground() {
       const mx = mouseRef.current.x;
       const my = mouseRef.current.y;
 
-      ctx.fillStyle = "#0D0D0D";
+      ctx.fillStyle = "#333333";
       ctx.fillRect(0, 0, w, h);
 
       const cells = cellsRef.current;
@@ -131,7 +131,7 @@ export default function HexBackground() {
         // Fill
         if (a > 0.01) {
           hexPath(ctx, c.cx, c.cy, r);
-          ctx.fillStyle = `rgba(230,57,70,${(0.03 + a * 0.32).toFixed(3)})`;
+          ctx.fillStyle = `rgba(194,42,41,${(0.03 + a * 0.32).toFixed(3)})`;
           ctx.fill();
         }
 
@@ -185,7 +185,7 @@ export default function HexBackground() {
           right: "8%",
           top: "15%",
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(230,57,70,0.16) 0%, rgba(230,57,70,0.04) 45%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(194,42,41,0.16) 0%, rgba(194,42,41,0.04) 45%, transparent 70%)",
           animation: "floatOrb1 7s ease-in-out infinite",
         }}
       />
@@ -199,7 +199,7 @@ export default function HexBackground() {
           left: "-5%",
           top: "55%",
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(230,57,70,0.10) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(194,42,41,0.10) 0%, transparent 70%)",
           animation: "floatOrb2 9s ease-in-out infinite",
         }}
       />
@@ -214,7 +214,7 @@ export default function HexBackground() {
           left: "50%",
           transform: "translateX(-50%)",
           borderRadius: "50%",
-          background: "radial-gradient(ellipse, rgba(230,57,70,0.08) 0%, transparent 65%)",
+          background: "radial-gradient(ellipse, rgba(194,42,41,0.08) 0%, transparent 65%)",
         }}
       />
     </div>
