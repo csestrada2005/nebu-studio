@@ -52,10 +52,11 @@ export const GlassTiltCard = ({
       }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      animate={{
-        rotateX: tilt.rotateX,
-        rotateY: tilt.rotateY,
-      }}
+      initial={prefersReduced ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.96 }}
+      animate={isInView
+        ? { opacity: 1, y: 0, scale: 1, rotateX: tilt.rotateX, rotateY: tilt.rotateY }
+        : prefersReduced ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.96 }
+      }
       transition={{ type: "spring", stiffness: 200, damping: 24 }}
     >
       {/* Glass border */}
