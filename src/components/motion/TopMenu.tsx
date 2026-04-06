@@ -15,6 +15,7 @@ export const TopMenu = () => {
   const lenis = useLenis();
   const { open: openServiceModal } = useServiceChooser();
   const { t, language, toggleLanguage } = useLanguage();
+  const navigate = useNavigate();
 
   const menuLinks = [
     { label: t("nav.home"), id: "hero" },
