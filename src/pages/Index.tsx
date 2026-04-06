@@ -305,27 +305,7 @@ function ShatterParticles({ active }: { active: boolean }) {
   );
 }
 
-/* Scroll indicator bounce arrow */
-function ScrollIndicator() {
-  const [visible, setVisible] = useState(true);
-  useEffect(() => {
-    const onScroll = () => setVisible(window.scrollY < 100);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  return (
-    <div
-      className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 transition-opacity duration-300"
-      style={{ opacity: visible ? 1 : 0 }}
-    >
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-        className="w-6 h-6 text-primary scroll-bounce-arrow">
-        <path d="M7 13l5 5 5-5M7 6l5 5 5-5" />
-      </svg>
-    </div>
-  );
-}
+/* Scroll indicator removed */
 
 function Hero() {
   const [shatter, setShatter] = useState(false);
