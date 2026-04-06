@@ -174,6 +174,11 @@ export default function DragonHexBackground() {
 
       for (let row = -2; row < hRows; row++) {
         const offsetX = row % 2 === 0 ? 0 : hexW * 0.5;
+        // Mouse in layer 2 coords
+        const m2xCanvas = mx * w * 0.5 - l2dx;
+        const m2yCanvas = my * h * 0.5 - l2dy;
+        const HEX_LIGHT_RADIUS = 150 * dpr;
+
         for (let col = -2; col < hCols; col++) {
           const hx = col * hexW + offsetX;
           const hy = row * hexH * 0.75;
@@ -184,6 +189,13 @@ export default function DragonHexBackground() {
           const dist = Math.sqrt(dx * dx + dy * dy);
           const wave = Math.sin(dist * 0.035 - t * 1.4) * 0.5 + 0.5;
 
+          // cursor proximity
+          const cdx = hx - m2xCanvas;
+          const cdy = hy - m2yCanvas;
+          const cDist = Math.sqrt(cdx * cdx + cdy * cdy);
+          const cursorProx = cDist < HEX_LIGHT_RADIUS ? 1 - cDist / HEX_LIGHT_RADIUS : 0;
+          const cursorLight = cursorProx * cursorProx;
+
           // deterministic noise
           const hash = Math.abs(pseudoRand(col, row));
           const breathMult = 1 + breathValue * 0.5;
@@ -193,28 +205,28 @@ export default function DragonHexBackground() {
           let lw: number;
 
           if (hash < 0.035) {
-            // RED active
+            // RED active — boosted by cursor
             const pulse = Math.sin(t * 2.1 + col + row) * 0.5 + 0.5;
-            const fa = (0.05 + wave * 0.08 + pulse * 0.02) * breathMult;
-            const sa = (0.16 + wave * 0.26 + pulse * 0.05) * breathMult;
-            fillColor = `rgba(230,57,70,${Math.min(fa, 0.15).toFixed(4)})`;
-            strokeColor = `rgba(230,57,70,${Math.min(sa, 0.45).toFixed(4)})`;
-            lw = 0.35 * dpr;
+            const fa = (0.05 + wave * 0.08 + pulse * 0.02) * breathMult + cursorLight * 0.25;
+            const sa = (0.16 + wave * 0.26 + pulse * 0.05) * breathMult + cursorLight * 0.5;
+            fillColor = `rgba(230,57,70,${Math.min(fa, 0.4).toFixed(4)})`;
+            strokeColor = `rgba(230,57,70,${Math.min(sa, 0.7).toFixed(4)})`;
+            lw = (0.35 + cursorLight * 0.4) * dpr;
           } else if (hash < 0.07) {
-            // BLUE-WHITE pulse
+            // BLUE-WHITE pulse — boosted by cursor
             const pulse = Math.sin(t * 1.6 + col * 0.5 + row * 0.7) * 0.5 + 0.5;
-            const fa = (0.008 + pulse * 0.012) * breathMult;
-            const sa = (0.02 + pulse * 0.025) * breathMult;
-            fillColor = `rgba(200,218,255,${Math.min(fa, 0.04).toFixed(4)})`;
-            strokeColor = `rgba(180,208,255,${Math.min(sa, 0.06).toFixed(4)})`;
-            lw = 0.22 * dpr;
+            const fa = (0.008 + pulse * 0.012) * breathMult + cursorLight * 0.08;
+            const sa = (0.02 + pulse * 0.025) * breathMult + cursorLight * 0.15;
+            fillColor = `rgba(200,218,255,${Math.min(fa, 0.12).toFixed(4)})`;
+            strokeColor = `rgba(180,208,255,${Math.min(sa, 0.2).toFixed(4)})`;
+            lw = (0.22 + cursorLight * 0.3) * dpr;
           } else {
-            // Default
-            const fa = (0.003 + wave * 0.01) * breathMult;
-            const sa = (0.016 + wave * 0.028) * breathMult;
-            fillColor = `rgba(255,255,255,${Math.min(fa, 0.018).toFixed(4)})`;
-            strokeColor = `rgba(255,255,255,${Math.min(sa, 0.05).toFixed(4)})`;
-            lw = 0.22 * dpr;
+            // Default — cursor adds white glow
+            const fa = (0.003 + wave * 0.01) * breathMult + cursorLight * 0.04;
+            const sa = (0.016 + wave * 0.028) * breathMult + cursorLight * 0.12;
+            fillColor = `rgba(255,255,255,${Math.min(fa, 0.06).toFixed(4)})`;
+            strokeColor = `rgba(255,255,255,${Math.min(sa, 0.15).toFixed(4)})`;
+            lw = (0.22 + cursorLight * 0.2) * dpr;
           }
 
           // draw flat-top hex
