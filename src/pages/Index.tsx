@@ -421,22 +421,22 @@ function Hero() {
 
 
         {/* CTAs */}
-        <div className="flex flex-col sm:flex-row items-center gap-4 relative">
-          <div className="relative hero-cta-spring" style={{ animationDelay: "1.4s" }}>
+        <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 relative w-full sm:w-auto px-4 sm:px-0">
+          <div className="relative hero-cta-spring w-full sm:w-auto" style={{ animationDelay: "1.4s" }}>
             <button
               onClick={() => { handleCtaClick(); window.dispatchEvent(new Event("open-diagnostic")); }}
-              className="cta-shine inline-flex items-center gap-2 px-6 py-2.5 text-xs uppercase tracking-[0.12em] font-semibold rounded-md relative overflow-visible transition-all duration-200 hover:scale-[1.03] active:scale-[0.97] text-foreground border border-white/15"
+              className="cta-shine w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 sm:py-2.5 text-xs uppercase tracking-[0.12em] font-semibold rounded-md relative overflow-visible transition-all duration-200 hover:scale-[1.03] active:scale-[0.97] text-foreground border border-white/15"
               style={{ background: "rgba(255,255,255,0.07)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1), 0 4px 20px rgba(0,0,0,0.3)" }}
             >
               Agenda tu diagnóstico gratuito
             </button>
             <ShatterParticles active={shatter} />
           </div>
-          <div className="hero-cta-spring" style={{ animationDelay: "1.6s" }}>
+          <div className="hero-cta-spring w-full sm:w-auto" style={{ animationDelay: "1.6s" }}>
             <a
               href="https://wa.me/5212213497090?text=Hola%2C%20me%20interesa%20conocer%20el%20sistema%20para%20mi%20despacho"
               target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-2.5 text-xs uppercase tracking-[0.12em] font-semibold rounded-md text-foreground/80 border border-white/10 hover:border-white/20 hover:scale-[1.03] active:scale-[0.97] transition-all duration-200"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 sm:py-2.5 text-xs uppercase tracking-[0.12em] font-semibold rounded-md text-foreground/80 border border-white/10 hover:border-white/20 hover:scale-[1.03] active:scale-[0.97] transition-all duration-200"
               style={{ background: "rgba(255,255,255,0.04)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}
             >
               Escríbenos por WhatsApp
