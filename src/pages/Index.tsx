@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { useScrollRevealV2, useCountUp } from "@/hooks/useScrollRevealV2";
+import heroBg from "@/assets/hero-bg.jpg";
 
 /* ─── Smooth scroll ─── */
 function scrollToSection(id: string) {
@@ -305,27 +306,7 @@ function ShatterParticles({ active }: { active: boolean }) {
   );
 }
 
-/* Scroll indicator bounce arrow */
-function ScrollIndicator() {
-  const [visible, setVisible] = useState(true);
-  useEffect(() => {
-    const onScroll = () => setVisible(window.scrollY < 100);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  return (
-    <div
-      className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 transition-opacity duration-300"
-      style={{ opacity: visible ? 1 : 0 }}
-    >
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-        className="w-6 h-6 text-primary scroll-bounce-arrow">
-        <path d="M7 13l5 5 5-5M7 6l5 5 5-5" />
-      </svg>
-    </div>
-  );
-}
+/* Scroll indicator removed */
 
 function Hero() {
   const [shatter, setShatter] = useState(false);
@@ -341,8 +322,8 @@ function Hero() {
     <section id="hero" className="relative min-h-screen flex items-center pt-16">
       {/* Background image */}
       <div className="absolute inset-0 z-0">
-        <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1920&q=80" alt="" className="w-full h-full object-cover" loading="eager" />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(to right, rgba(13,13,13,0.92) 50%, rgba(13,13,13,0.6) 100%)" }} />
+        <img src={heroBg} alt="" className="w-full h-full object-cover" loading="eager" width={1920} height={1080} />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to right, rgba(13,13,13,0.88) 45%, rgba(13,13,13,0.55) 100%)" }} />
       </div>
 
       {/* Grid pattern */}
@@ -358,16 +339,13 @@ function Hero() {
       />
 
       <div className="max-w-[1200px] mx-auto px-5 relative z-10 w-full">
-        <div className="max-w-2xl">
-          <p className="text-primary text-xs tracking-[0.2em] uppercase font-semibold mb-8 hero-fade-in" style={{ animationDelay: "0.1s" }}>
-            Despachos de abogados
-          </p>
+        <div className="max-w-3xl">
 
-          <h1 className="font-display text-4xl sm:text-5xl md:text-[56px] lg:text-[64px] text-foreground leading-[1.1] mb-2">
-            <span className="block">
+          <h1 className="font-display text-5xl sm:text-6xl md:text-[68px] lg:text-[80px] text-foreground leading-[1.08] tracking-[-0.02em] mb-6">
+            <span className="block mb-2">
               <ScrambleText target="Presencia digital" startDelay={200} />
             </span>
-            <span className="block">
+            <span className="block mb-2">
               <ScrambleText target="que genera" startDelay={900} />
             </span>
             <span className="block">
@@ -376,26 +354,26 @@ function Hero() {
           </h1>
 
           {/* Red divider */}
-          <div className="h-[2px] bg-primary line-expand my-6" style={{ animationDelay: "2.8s" }} />
+          <div className="h-[3px] w-16 bg-primary line-expand my-8" style={{ animationDelay: "2.8s" }} />
 
           {/* Scramble tagline */}
-          <p className="font-mono text-sm mb-8" style={{ color: "#E63946" }}>
+          <p className="font-mono text-sm sm:text-base mb-6" style={{ color: "#E63946" }}>
             <ScrambleText target="El sistema operativo de tu despacho." />
           </p>
 
           {/* Subtitle */}
-          <p className="text-muted-foreground text-base sm:text-lg max-w-lg mb-10 hero-fade-in" style={{ animationDelay: "2s" }}>
+          <p className="text-muted-foreground text-base sm:text-lg max-w-lg mb-12 hero-fade-in leading-relaxed" style={{ animationDelay: "2s" }}>
             Desde tu sitio web hasta la automatización de procesos internos.
           </p>
 
           {/* CTAs */}
-          <div className="flex flex-col sm:flex-row gap-4 relative">
+          <div className="flex flex-col sm:flex-row items-start gap-5 relative">
             <div className="relative hero-cta-spring" style={{ animationDelay: "1.4s" }}>
               <a
                 href="mailto:j.cuatrecasas@nebustudio.com"
                 onClick={handleCtaClick}
-                className="cta-shine inline-block bg-primary text-primary-foreground px-8 py-4 text-sm uppercase tracking-[0.1em] font-semibold text-center rounded-sm relative overflow-visible transition-all duration-200 hover:scale-[1.04] active:scale-[0.97]"
-                style={{ boxShadow: "0 4px 20px rgba(230,57,70,0.4)" }}
+                className="cta-shine inline-flex items-center gap-3 bg-primary text-primary-foreground px-10 py-4 text-sm uppercase tracking-[0.12em] font-semibold rounded-full relative overflow-visible transition-all duration-200 hover:scale-[1.04] active:scale-[0.97]"
+                style={{ boxShadow: "0 4px 24px rgba(230,57,70,0.35)" }}
               >
                 Agenda tu diagnóstico gratuito
               </a>
@@ -405,7 +383,7 @@ function Hero() {
               <a
                 href="https://wa.me/522213497090?text=Hola%2C%20me%20interesa%20conocer%20el%20sistema%20para%20mi%20despacho"
                 target="_blank" rel="noopener noreferrer"
-                className="cta-outline inline-block text-foreground px-8 py-4 text-sm uppercase tracking-[0.1em] font-semibold text-center hover:scale-[1.04] active:scale-[0.97] transition-transform"
+                className="inline-flex items-center gap-3 px-10 py-4 text-sm uppercase tracking-[0.12em] font-semibold rounded-full border border-[hsl(var(--border))] text-foreground hover:border-primary/50 hover:scale-[1.04] active:scale-[0.97] transition-all duration-200"
               >
                 Escríbenos por WhatsApp
               </a>
@@ -413,8 +391,6 @@ function Hero() {
           </div>
         </div>
       </div>
-
-      <ScrollIndicator />
     </section>
   );
 }
