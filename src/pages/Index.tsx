@@ -416,10 +416,6 @@ function Hero() {
           <ScrambleText target="El sistema operativo de tu despacho." startDelay={1800} />
         </p>
 
-        {/* Subtitle */}
-        <p className="text-muted-foreground text-base sm:text-lg max-w-md mb-14 hero-fade-in leading-relaxed" style={{ animationDelay: "2.2s" }}>
-          Desde tu sitio web hasta la automatización de procesos internos.
-        </p>
 
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row items-center gap-5 relative">
