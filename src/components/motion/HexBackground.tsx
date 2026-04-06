@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback } from "react";
 
-const HEX_SIZE = 12;
+const HEX_SIZE = 8;
 const HEX_GAP = 1;
 const HOVER_RADIUS = 180;
 const HEX_COLOR_BASE = "rgba(255,255,255,0.025)";
