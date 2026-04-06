@@ -364,15 +364,16 @@ function Hero() {
           </p>
 
           <h1 className="font-display text-4xl sm:text-5xl md:text-[56px] lg:text-[64px] text-foreground leading-[1.1] mb-2">
-            <CharSplash text="Presencia digital" className="block" delayBase={200} />
-            <CharSplash text="que genera" className="block" delayBase={200 + 17 * 60} />
-            <CharSplash text="confianza." className="block" delayBase={200 + 27 * 60} />
+            <span className="block font-mono" style={{ color: "#F5F5F5" }}>
+              <ScrambleText target="Presencia digital" />
+            </span>
+            <span className="block font-mono" style={{ color: "#F5F5F5" }}>
+              <ScrambleText target="que genera" />
+            </span>
+            <span className="block font-mono" style={{ color: "#F5F5F5" }}>
+              <ScrambleText target="confianza." />
+            </span>
           </h1>
-
-          <h2 className="font-display text-2xl sm:text-3xl md:text-4xl text-foreground leading-[1.2] mt-4 mb-2">
-            <WordReveal text="Sistemas que escalan" className="text-primary" delayBase={200 + 37 * 60} />
-            <WordReveal text="el despacho." delayBase={200 + 37 * 60 + 3 * 120} />
-          </h2>
 
           {/* Red divider */}
           <div className="h-[2px] bg-primary line-expand my-6" style={{ animationDelay: "2.8s" }} />
