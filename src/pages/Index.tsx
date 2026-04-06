@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { useScrollRevealV2, useCountUp } from "@/hooks/useScrollRevealV2";
-import heroBg from "@/assets/hero-bg.jpg";
+
 
 /* ─── Smooth scroll ─── */
 function scrollToSection(id: string) {
