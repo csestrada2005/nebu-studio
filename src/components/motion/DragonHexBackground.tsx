@@ -223,22 +223,23 @@ export default function DragonHexBackground() {
       /* ═══ LAYER 3 — BREATH LIGHT ═══ */
       const maxDim = Math.max(w, h);
 
-      if (breathValue > 0.55) {
-        const intensity = Math.pow((breathValue - 0.55) / 0.45, 2) * 0.036;
-        const r = maxDim * 0.62;
+      if (breathValue > 0.35) {
+        const intensity = Math.pow((breathValue - 0.35) / 0.65, 2) * 0.09;
+        const r = maxDim * 0.7;
         const grad = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, r);
         grad.addColorStop(0, `rgba(255,255,255,${intensity.toFixed(5)})`);
+        grad.addColorStop(0.5, `rgba(255,255,255,${(intensity * 0.4).toFixed(5)})`);
         grad.addColorStop(1, "rgba(255,255,255,0)");
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, w, h);
       }
 
-      if (breathValue > 0.80) {
-        const intensity = Math.pow((breathValue - 0.80) / 0.20, 2) * 0.020;
-        const r = maxDim * 0.50;
+      if (breathValue > 0.55) {
+        const intensity = Math.pow((breathValue - 0.55) / 0.45, 2) * 0.055;
+        const r = maxDim * 0.55;
         const grad = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, r);
         grad.addColorStop(0, `rgba(230,57,70,${intensity.toFixed(5)})`);
-        grad.addColorStop(0.6, `rgba(230,57,70,${(intensity * 0.28).toFixed(5)})`);
+        grad.addColorStop(0.5, `rgba(230,57,70,${(intensity * 0.35).toFixed(5)})`);
         grad.addColorStop(1, "rgba(230,57,70,0)");
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, w, h);
