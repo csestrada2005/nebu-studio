@@ -17,7 +17,7 @@ const App = () => {
         <TooltipProvider>
           <Toaster />
           <Sonner />
-          <HexBackground />
+          <DragonHexBackground />
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
