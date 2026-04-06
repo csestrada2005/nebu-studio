@@ -1006,8 +1006,6 @@ const Index = () => {
       <SectionSep />
       <MetricsSection />
       <SectionSep />
-      <TestimonialsSection />
-      <SectionSep />
       <ProcessSection />
       <SectionSep />
       <FaqSection />
