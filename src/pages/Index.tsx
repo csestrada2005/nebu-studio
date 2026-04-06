@@ -4,6 +4,7 @@ import { Menu, X, ChevronDown } from "lucide-react";
 import teamNebu from "@/assets/team-nebu.jpg";
 import { useScrollRevealV2, useCountUp } from "@/hooks/useScrollRevealV2";
 import { GlassTiltCard } from "@/components/motion/GlassTiltCard";
+import { DiagnosticFormModal } from "@/components/motion/DiagnosticFormModal";
 
 
 /* ─── Smooth scroll ─── */
@@ -167,7 +168,7 @@ function Nav() {
               </button>
             ))}
             <button
-              onClick={() => handleNav("contacto")}
+              onClick={() => window.dispatchEvent(new Event("open-diagnostic"))}
               className="cta-outline text-sm px-5 py-2 text-primary rounded-none"
               style={{
                 opacity: navReady ? 1 : 0,
@@ -423,19 +424,18 @@ function Hero() {
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row items-center gap-4 relative">
           <div className="relative hero-cta-spring" style={{ animationDelay: "1.4s" }}>
-            <a
-              href="mailto:j.cuatrecasas@nebustudio.com"
-              onClick={handleCtaClick}
+            <button
+              onClick={() => { handleCtaClick(); window.dispatchEvent(new Event("open-diagnostic")); }}
               className="cta-shine inline-flex items-center gap-2 px-6 py-2.5 text-xs uppercase tracking-[0.12em] font-semibold rounded-md relative overflow-visible transition-all duration-200 hover:scale-[1.03] active:scale-[0.97] text-foreground border border-white/15"
               style={{ background: "rgba(255,255,255,0.07)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1), 0 4px 20px rgba(0,0,0,0.3)" }}
             >
               Agenda tu diagnóstico gratuito
-            </a>
+            </button>
             <ShatterParticles active={shatter} />
           </div>
           <div className="hero-cta-spring" style={{ animationDelay: "1.6s" }}>
             <a
-              href="https://wa.me/522213497090?text=Hola%2C%20me%20interesa%20conocer%20el%20sistema%20para%20mi%20despacho"
+              href="https://wa.me/5212213497090?text=Hola%2C%20me%20interesa%20conocer%20el%20sistema%20para%20mi%20despacho"
               target="_blank" rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-6 py-2.5 text-xs uppercase tracking-[0.12em] font-semibold rounded-md text-foreground/80 border border-white/10 hover:border-white/20 hover:scale-[1.03] active:scale-[0.97] transition-all duration-200"
               style={{ background: "rgba(255,255,255,0.04)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}
@@ -942,11 +942,11 @@ function CtaSection() {
           Hablamos 20 minutos. Sin compromiso. Te decimos exactamente qué necesita tu despacho.
         </p>
         <div data-reveal="up" style={{ transitionDelay: "200ms" }} className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-          <a href="mailto:j.cuatrecasas@nebustudio.com"
-            className="cta-shine inline-block bg-primary text-primary-foreground px-10 py-4 text-sm uppercase tracking-[0.1em] font-semibold rounded-sm">
+          <button onClick={() => window.dispatchEvent(new Event("open-diagnostic"))}
+            className="cta-shine inline-block bg-primary text-primary-foreground px-10 py-4 text-sm uppercase tracking-[0.1em] font-semibold rounded-sm cursor-pointer">
             Agenda tu diagnóstico gratuito
-          </a>
-          <a href="https://wa.me/522213497090?text=Hola%2C%20me%20interesa%20conocer%20el%20sistema%20para%20mi%20despacho"
+          </button>
+          <a href="https://wa.me/5212213497090?text=Hola%2C%20me%20interesa%20conocer%20el%20sistema%20para%20mi%20despacho"
             target="_blank" rel="noopener noreferrer"
             className="cta-outline inline-block text-foreground px-10 py-4 text-sm uppercase tracking-[0.1em] font-semibold">
             Escríbenos por WhatsApp
@@ -1013,6 +1013,14 @@ function SectionTitle({ title }: { title: string }) {
 const Index = () => {
   useScrollRevealV2();
   useCountUp();
+  const [diagnosticOpen, setDiagnosticOpen] = useState(false);
+
+  // Listen for custom event from child components
+  useEffect(() => {
+    const handler = () => setDiagnosticOpen(true);
+    window.addEventListener("open-diagnostic", handler);
+    return () => window.removeEventListener("open-diagnostic", handler);
+  }, []);
 
   return (
     <div className="min-h-screen text-foreground relative" style={{ position: "relative", zIndex: 1 }}>
@@ -1035,7 +1043,7 @@ const Index = () => {
       <SectionSep />
       <CtaSection />
       <Footer />
-      
+      <DiagnosticFormModal open={diagnosticOpen} onClose={() => setDiagnosticOpen(false)} />
     </div>
   );
 };

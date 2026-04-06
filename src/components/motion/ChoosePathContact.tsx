@@ -274,7 +274,7 @@ export const ChoosePathContact = () => {
                 <div className="h-px flex-1" style={{ background: "hsl(0 0% 100% / 0.08)" }} />
               </div>
               <a
-                href="https://wa.me/522213497090"
+                href="https://wa.me/5212213497090"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-4 flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"

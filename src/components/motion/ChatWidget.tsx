@@ -94,7 +94,7 @@ export const ChatWidget = () => {
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </a>
                 <a
-                  href="https://wa.me/522213497090"
+                  href="https://wa.me/5212213497090"
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => setIsOpen(false)}

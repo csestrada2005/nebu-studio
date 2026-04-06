@@ -72,7 +72,7 @@ export const BigCTA = () => {
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             <MarqueeButton text="Make it Real" onClick={openServiceModal} variant="primary" />
-            <MarqueeButton text="WhatsApp" href="https://wa.me/522213497090" variant="ghost" />
+            <MarqueeButton text="WhatsApp" href="https://wa.me/5212213497090" variant="ghost" />
           </div>
 
           <motion.div

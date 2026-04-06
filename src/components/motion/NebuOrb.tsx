@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ArrowRight } from "lucide-react";
 
-const WA_NUMBER = "522213497090";
+const WA_NUMBER = "5212213497090";
 
 const waMessages = {
   es: "Hola, me gustaría saber más sobre lo que pueden hacer por mi marca 🙌",
