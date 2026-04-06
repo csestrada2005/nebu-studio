@@ -992,8 +992,6 @@ const Index = () => {
       <SectionSep />
       <ServicesSection />
       <SectionSep />
-      <AboutSection />
-      <SectionSep />
       <MetricsSection />
       <SectionSep />
       <ProcessSection />
