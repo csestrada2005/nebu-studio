@@ -7,6 +7,7 @@ import { ThemeProvider } from "next-themes";
 import HexBackground from "@/components/motion/HexBackground";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import ProductosDigitales from "./pages/ProductosDigitales";
 
 const queryClient = new QueryClient();
 
