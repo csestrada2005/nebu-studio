@@ -125,8 +125,13 @@ export default function HexBackground() {
       p2.x = w * 0.5 + Math.cos(time * speed * 0.8 + 2.2) * w * 0.38;
       p2.y = h * 0.5 + Math.sin(time * speed * 1.1 + 1.1) * h * 0.35;
 
+      // Phantom 3 — diagonal sweep
+      const p3 = phantom3Ref.current;
+      p3.x = w * 0.5 + Math.sin(time * speed * 1.3 + 4.0) * w * 0.42;
+      p3.y = h * 0.5 + Math.cos(time * speed * 0.5 + 3.0) * h * 0.38;
+
       // Build list of active cursors
-      const cursors: { x: number; y: number }[] = [p, p2];
+      const cursors: { x: number; y: number }[] = [p, p2, p3];
       if (hasRealMouse.current) {
         cursors.push(mouseRef.current);
       }
