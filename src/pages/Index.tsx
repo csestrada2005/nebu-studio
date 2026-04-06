@@ -942,10 +942,10 @@ function CtaSection() {
           Hablamos 20 minutos. Sin compromiso. Te decimos exactamente qué necesita tu despacho.
         </p>
         <div data-reveal="up" style={{ transitionDelay: "200ms" }} className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-          <a href="mailto:j.cuatrecasas@nebustudio.com"
-            className="cta-shine inline-block bg-primary text-primary-foreground px-10 py-4 text-sm uppercase tracking-[0.1em] font-semibold rounded-sm">
+          <button onClick={() => window.dispatchEvent(new Event("open-diagnostic"))}
+            className="cta-shine inline-block bg-primary text-primary-foreground px-10 py-4 text-sm uppercase tracking-[0.1em] font-semibold rounded-sm cursor-pointer">
             Agenda tu diagnóstico gratuito
-          </a>
+          </button>
           <a href="https://wa.me/5212213497090?text=Hola%2C%20me%20interesa%20conocer%20el%20sistema%20para%20mi%20despacho"
             target="_blank" rel="noopener noreferrer"
             className="cta-outline inline-block text-foreground px-10 py-4 text-sm uppercase tracking-[0.1em] font-semibold">
