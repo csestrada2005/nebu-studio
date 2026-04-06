@@ -376,6 +376,12 @@
   }
 }
 
+/* ─── Hero glow pulse ─── */
+@keyframes heroGlowPulse {
+  0%, 100% { text-shadow: 0 0 60px rgba(255,255,255,0.25), 0 0 120px rgba(255,255,255,0.1); }
+  50% { text-shadow: 0 0 80px rgba(255,255,255,0.4), 0 0 160px rgba(255,255,255,0.18), 0 0 200px rgba(230,57,70,0.08); }
+}
+
 /* ─── Hex background orb floats ─── */
 @keyframes floatOrb1 {
   0%, 100% { transform: translateY(0) scale(1); }
