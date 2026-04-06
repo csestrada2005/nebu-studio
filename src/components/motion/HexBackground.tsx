@@ -39,6 +39,7 @@ export default function HexBackground() {
   const mouseRef = useRef({ x: -9999, y: -9999 });
   const hasRealMouse = useRef(false);
   const phantomRef = useRef({ x: 0, y: 0, angle: 0 });
+  const phantom2Ref = useRef({ x: 0, y: 0 });
   const rafRef = useRef<number>(0);
   const sizeRef = useRef({ w: 0, h: 0 });
 
