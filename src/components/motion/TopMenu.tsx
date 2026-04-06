@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Menu, X, ArrowRight, Globe } from "lucide-react";
 import { useLenis } from "lenis/react";
+import { useNavigate } from "react-router-dom";
 import { anchorScrollTo } from "@/lib/anchorScroll";
 import { useServiceChooser } from "@/components/motion/ServiceChooserModal";
 import { useLanguage } from "@/contexts/LanguageContext";
