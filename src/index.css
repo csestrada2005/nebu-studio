@@ -99,6 +99,7 @@
     @apply text-foreground;
     line-height: 1.1;
     text-shadow: 0 0 60px rgba(255,255,255,0.25), 0 0 120px rgba(255,255,255,0.1);
+    animation: heroGlowPulse 4s ease-in-out infinite;
   }
 
   h2 {
@@ -373,6 +374,12 @@
     opacity: 1;
     background: linear-gradient(180deg, transparent, rgba(230,57,70,0.4), transparent);
   }
+}
+
+/* ─── Hero glow pulse ─── */
+@keyframes heroGlowPulse {
+  0%, 100% { text-shadow: 0 0 60px rgba(255,255,255,0.25), 0 0 120px rgba(255,255,255,0.1); }
+  50% { text-shadow: 0 0 80px rgba(255,255,255,0.4), 0 0 160px rgba(255,255,255,0.18), 0 0 200px rgba(230,57,70,0.08); }
 }
 
 /* ─── Hex background orb floats ─── */
