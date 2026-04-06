@@ -424,14 +424,13 @@ function Hero() {
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row items-center gap-4 relative">
           <div className="relative hero-cta-spring" style={{ animationDelay: "1.4s" }}>
-            <a
-              href="mailto:j.cuatrecasas@nebustudio.com"
-              onClick={handleCtaClick}
+            <button
+              onClick={(e) => { handleCtaClick(e as any); window.dispatchEvent(new Event("open-diagnostic")); }}
               className="cta-shine inline-flex items-center gap-2 px-6 py-2.5 text-xs uppercase tracking-[0.12em] font-semibold rounded-md relative overflow-visible transition-all duration-200 hover:scale-[1.03] active:scale-[0.97] text-foreground border border-white/15"
               style={{ background: "rgba(255,255,255,0.07)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1), 0 4px 20px rgba(0,0,0,0.3)" }}
             >
               Agenda tu diagnóstico gratuito
-            </a>
+            </button>
             <ShatterParticles active={shatter} />
           </div>
           <div className="hero-cta-spring" style={{ animationDelay: "1.6s" }}>
