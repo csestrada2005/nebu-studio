@@ -101,7 +101,7 @@ export default function HexBackground() {
       const mx = mouseRef.current.x;
       const my = mouseRef.current.y;
 
-      ctx.fillStyle = "#0D0D0D";
+      ctx.fillStyle = "#030303";
       ctx.fillRect(0, 0, w, h);
 
       const cells = cellsRef.current;
