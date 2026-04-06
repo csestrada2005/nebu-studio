@@ -115,14 +115,14 @@ export default function HexBackground() {
 
       // Phantom 1 — Lissajous path
       const p = phantomRef.current;
-      const speed = 0.0004;
-      p.x = w * 0.5 + Math.sin(time * speed) * w * 0.35;
-      p.y = h * 0.5 + Math.cos(time * speed * 0.7) * h * 0.35;
+      const speed = 0.001;
+      p.x = w * 0.5 + Math.sin(time * speed) * w * 0.4;
+      p.y = h * 0.5 + Math.cos(time * speed * 0.7) * h * 0.4;
 
       // Phantom 2 — offset Lissajous path
       const p2 = phantom2Ref.current;
-      p2.x = w * 0.5 + Math.cos(time * speed * 0.6 + 2.2) * w * 0.3;
-      p2.y = h * 0.5 + Math.sin(time * speed * 0.9 + 1.1) * h * 0.3;
+      p2.x = w * 0.5 + Math.cos(time * speed * 0.8 + 2.2) * w * 0.38;
+      p2.y = h * 0.5 + Math.sin(time * speed * 1.1 + 1.1) * h * 0.35;
 
       // Build list of active cursors
       const cursors: { x: number; y: number }[] = [p, p2];
