@@ -584,48 +584,7 @@ function ServicesSection() {
   );
 }
 
-/* ═══════════════════════════════════════════════
-   ABOUT
-   ═══════════════════════════════════════════════ */
-function AboutSection() {
-  const differentiators = [
-    "Equipo con experiencia exclusiva en el sector legal",
-    "Sistema integrado: web + CRM + portal de cliente + IA",
-    "Acompañamiento continuo, no solo entrega",
-  ];
-
-  return (
-    <section className="py-24 sm:py-32 relative z-10" style={{ background: "rgba(13,13,13,0.75)" }}>
-      <div className="max-w-[1200px] mx-auto px-5">
-        <div className="grid md:grid-cols-[40%_1fr] gap-12 lg:gap-16 items-start">
-          <div data-reveal="left">
-            <GlassTiltCard className="w-full">
-              <img src={teamNebu}
-                alt="Equipo NEBU Studio" className="w-full h-[480px] object-cover" loading="lazy" width={800} height={960} />
-            </GlassTiltCard>
-            <p className="text-muted-foreground text-xs mt-3 tracking-wide">Equipo NEBU Studio</p>
-          </div>
-          <div data-reveal="right" data-delay="2" className="min-w-0">
-            <h2 className="font-display text-3xl sm:text-4xl text-foreground leading-tight mb-6">
-              Especialistas en despachos.<br />No en todo.
-            </h2>
-            <p className="text-muted-foreground text-base leading-[1.7] mb-8 break-words">
-              NEBU Studio nació con una misión específica: ayudar a despachos de abogados en Puebla a competir en un mundo digital. No somos una agencia generalista. Conocemos los dolores del sector legal: los clientes que llaman 20 veces por semana, los prospectos que nunca regresan, la operación que no escala sin contratar más gente.
-            </p>
-            <ul className="space-y-4">
-              {differentiators.map((d, i) => (
-                <li key={i} className="flex items-start gap-3">
-                  <span className="text-primary font-bold mt-0.5 shrink-0">✓</span>
-                  <span className="text-foreground text-sm">{d}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
+/* AboutSection removed */
 
 /* ═══════════════════════════════════════════════
    METRICS — 3D Flip In cards + CountUp
@@ -1032,8 +991,6 @@ const Index = () => {
       <WhySection />
       <SectionSep />
       <ServicesSection />
-      <SectionSep />
-      <AboutSection />
       <SectionSep />
       <MetricsSection />
       <SectionSep />
