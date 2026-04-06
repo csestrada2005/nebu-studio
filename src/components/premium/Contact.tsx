@@ -126,7 +126,7 @@ export const Contact = () => {
         message: { value: "", touched: false, error: "" },
       });
     } catch (error: any) {
-      
+      console.error("Error sending email:", error);
       toast({
         title: "Error",
         description: language === "es" ? "No se pudo enviar" : "Could not send",
