@@ -20,7 +20,7 @@ function useInViewOnce(opts: IntersectionObserverInit = {}) {
 const fadeUp = (visible: boolean, delay = 0) => ({
   initial: { opacity: 0, y: 32 },
   animate: visible ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 },
-  transition: { duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] },
+  transition: { duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
 });
 
 /* ─── HERO ─── */
