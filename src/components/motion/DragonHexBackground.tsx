@@ -89,26 +89,41 @@ export default function DragonHexBackground() {
 
       for (let row = -2; row < sRows; row++) {
         const offsetX = row % 2 === 0 ? 0 : scaleW * 0.5;
+        // Mouse position in canvas coords (accounting for layer translate)
+        const mxCanvas = mx * w * 0.5 - l1dx;
+        const myCanvas = my * h * 0.5 - l1dy;
+        const LIGHT_RADIUS = 180 * dpr;
+
         for (let col = -2; col < sCols; col++) {
           const cx = col * scaleW + offsetX;
           const cy = row * scaleH * 0.55;
 
+          // distance from cursor to this scale
+          const sdx = cx - mxCanvas;
+          const sdy = cy - myCanvas;
+          const sDist = Math.sqrt(sdx * sdx + sdy * sdy);
+          const lightProx = sDist < LIGHT_RADIUS ? 1 - sDist / LIGHT_RADIUS : 0;
+          const lightIntensity = lightProx * lightProx; // quadratic falloff
+
           // brightness variation
           const noise = Math.sin(col * 3.7 + row * 2.3) * 0.5 + 0.5;
-          const br = 11 + noise * 4; // 11-15
-          const bg = 13 + noise * 3;
-          const bb = 11 + noise * 3;
+          const baseBr = 11 + noise * 4;
+          const baseBg = 13 + noise * 3;
+          const baseBb = 11 + noise * 3;
+
+          // Add cursor light — warm reddish highlight on scales
+          const br = baseBr + lightIntensity * 85; // toward red
+          const bg = baseBg + lightIntensity * 25;
+          const bb = baseBb + lightIntensity * 20;
 
           // draw scale shape
           ctx.beginPath();
-          // flat top arc
           ctx.moveTo(cx - scaleW * 0.5, cy);
           ctx.bezierCurveTo(
             cx - scaleW * 0.3, cy - scaleH * 0.35,
             cx + scaleW * 0.3, cy - scaleH * 0.35,
             cx + scaleW * 0.5, cy
           );
-          // pointed bottom
           ctx.bezierCurveTo(
             cx + scaleW * 0.35, cy + scaleH * 0.45,
             cx - scaleW * 0.35, cy + scaleH * 0.45,
@@ -116,14 +131,16 @@ export default function DragonHexBackground() {
           );
           ctx.closePath();
 
-          ctx.fillStyle = `rgb(${br|0},${bg|0},${bb|0})`;
+          ctx.fillStyle = `rgb(${Math.min(br, 255)|0},${Math.min(bg, 255)|0},${Math.min(bb, 255)|0})`;
           ctx.fill();
-          ctx.strokeStyle = "rgba(0,0,0,0.85)";
+          ctx.strokeStyle = lightIntensity > 0.1
+            ? `rgba(230,57,70,${(lightIntensity * 0.4).toFixed(3)})`
+            : "rgba(0,0,0,0.85)";
           ctx.lineWidth = 0.7 * dpr;
           ctx.stroke();
 
-          // sheen highlight ellipse
-          const sheenAlpha = 0.015 + noise * 0.015;
+          // sheen highlight ellipse — intensified near cursor
+          const sheenAlpha = 0.015 + noise * 0.015 + lightIntensity * 0.12;
           ctx.beginPath();
           ctx.ellipse(
             cx - scaleW * 0.15,
