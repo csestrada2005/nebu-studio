@@ -310,6 +310,7 @@ function ShatterParticles({ active }: { active: boolean }) {
 
 function Hero() {
   const [shatter, setShatter] = useState(false);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const handleCtaClick = () => {
     if (!shatter) {
@@ -318,76 +319,129 @@ function Hero() {
     }
   };
 
+  /* Animated floating circles background */
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let raf: number;
+    const circles: { x: number; y: number; r: number; vx: number; vy: number; alpha: number; phase: number }[] = [];
+
+    const resize = () => {
+      canvas.width = canvas.offsetWidth * 2;
+      canvas.height = canvas.offsetHeight * 2;
+      ctx.scale(2, 2);
+    };
+    resize();
+
+    // Create circles
+    for (let i = 0; i < 6; i++) {
+      circles.push({
+        x: Math.random() * canvas.offsetWidth,
+        y: Math.random() * canvas.offsetHeight,
+        r: 80 + Math.random() * 200,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        alpha: 0.04 + Math.random() * 0.06,
+        phase: Math.random() * Math.PI * 2,
+      });
+    }
+
+    const draw = (time: number) => {
+      const w = canvas.offsetWidth;
+      const h = canvas.offsetHeight;
+      ctx.clearRect(0, 0, w, h);
+
+      circles.forEach((c) => {
+        c.x += c.vx;
+        c.y += c.vy;
+        if (c.x < -c.r) c.x = w + c.r;
+        if (c.x > w + c.r) c.x = -c.r;
+        if (c.y < -c.r) c.y = h + c.r;
+        if (c.y > h + c.r) c.y = -c.r;
+
+        const pulse = Math.sin(time * 0.001 + c.phase) * 0.02;
+        const grad = ctx.createRadialGradient(c.x, c.y, 0, c.x, c.y, c.r);
+        grad.addColorStop(0, `rgba(230, 57, 70, ${c.alpha + pulse})`);
+        grad.addColorStop(0.5, `rgba(230, 57, 70, ${(c.alpha + pulse) * 0.4})`);
+        grad.addColorStop(1, "transparent");
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+        ctx.fillStyle = grad;
+        ctx.fill();
+      });
+
+      raf = requestAnimationFrame(draw);
+    };
+
+    raf = requestAnimationFrame(draw);
+    window.addEventListener("resize", resize);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", resize);
+    };
+  }, []);
+
   return (
-    <section id="hero" className="relative min-h-screen flex items-center pt-16">
-      {/* Background image */}
-      <div className="absolute inset-0 z-0">
-        <img src={heroBg} alt="" className="w-full h-full object-cover" loading="eager" width={1920} height={1080} />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(to right, rgba(13,13,13,0.88) 45%, rgba(13,13,13,0.55) 100%)" }} />
-      </div>
-
-      {/* Grid pattern */}
-      <div className="absolute inset-0 z-[1] pointer-events-none opacity-60"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23E63946' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-        }}
+    <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Animated background */}
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 w-full h-full z-0 pointer-events-none"
       />
 
-      {/* Ambient orb */}
-      <div className="absolute top-[-200px] left-[-200px] w-[600px] h-[600px] pointer-events-none z-0"
-        style={{ background: "radial-gradient(circle, rgba(230,57,70,0.08) 0%, transparent 70%)" }}
+      {/* Vignette overlay */}
+      <div className="absolute inset-0 z-[1] pointer-events-none"
+        style={{ background: "radial-gradient(ellipse 70% 70% at 50% 50%, transparent 30%, rgba(13,13,13,0.7) 100%)" }}
       />
 
-      <div className="max-w-[1200px] mx-auto px-5 relative z-10 w-full">
-        <div className="max-w-3xl">
+      <div className="relative z-10 w-full max-w-[1100px] mx-auto px-5 flex flex-col items-center text-center">
 
-          <h1 className="font-display text-5xl sm:text-6xl md:text-[68px] lg:text-[80px] text-foreground leading-[1.08] tracking-[-0.02em] mb-6">
-            <span className="block mb-2">
-              <ScrambleText target="Presencia digital" startDelay={200} />
-            </span>
-            <span className="block mb-2">
-              <ScrambleText target="que genera" startDelay={900} />
-            </span>
-            <span className="block">
-              <ScrambleText target="confianza." startDelay={1400} />
-            </span>
-          </h1>
+        <h1 className="font-display text-5xl sm:text-6xl md:text-[72px] lg:text-[88px] xl:text-[96px] text-foreground leading-[1.05] tracking-[-0.03em] mb-8">
+          <span className="block mb-1">
+            <ScrambleText target="Presencia digital" startDelay={200} />
+          </span>
+          <span className="block mb-1">
+            <ScrambleText target="que genera" startDelay={900} />
+          </span>
+          <span className="block text-primary">
+            <ScrambleText target="confianza." startDelay={1400} />
+          </span>
+        </h1>
 
-          {/* Red divider */}
-          <div className="h-[3px] w-16 bg-primary line-expand my-8" style={{ animationDelay: "2.8s" }} />
+        {/* Tagline */}
+        <p className="font-mono text-xs sm:text-sm uppercase tracking-[0.2em] text-muted-foreground mb-10 hero-fade-in" style={{ animationDelay: "2s" }}>
+          <ScrambleText target="El sistema operativo de tu despacho." startDelay={1800} />
+        </p>
 
-          {/* Scramble tagline */}
-          <p className="font-mono text-sm sm:text-base mb-6" style={{ color: "#E63946" }}>
-            <ScrambleText target="El sistema operativo de tu despacho." />
-          </p>
+        {/* Subtitle */}
+        <p className="text-muted-foreground text-base sm:text-lg max-w-md mb-14 hero-fade-in leading-relaxed" style={{ animationDelay: "2.2s" }}>
+          Desde tu sitio web hasta la automatización de procesos internos.
+        </p>
 
-          {/* Subtitle */}
-          <p className="text-muted-foreground text-base sm:text-lg max-w-lg mb-12 hero-fade-in leading-relaxed" style={{ animationDelay: "2s" }}>
-            Desde tu sitio web hasta la automatización de procesos internos.
-          </p>
-
-          {/* CTAs */}
-          <div className="flex flex-col sm:flex-row items-start gap-5 relative">
-            <div className="relative hero-cta-spring" style={{ animationDelay: "1.4s" }}>
-              <a
-                href="mailto:j.cuatrecasas@nebustudio.com"
-                onClick={handleCtaClick}
-                className="cta-shine inline-flex items-center gap-3 bg-primary text-primary-foreground px-10 py-4 text-sm uppercase tracking-[0.12em] font-semibold rounded-full relative overflow-visible transition-all duration-200 hover:scale-[1.04] active:scale-[0.97]"
-                style={{ boxShadow: "0 4px 24px rgba(230,57,70,0.35)" }}
-              >
-                Agenda tu diagnóstico gratuito
-              </a>
-              <ShatterParticles active={shatter} />
-            </div>
-            <div className="hero-cta-spring" style={{ animationDelay: "1.6s" }}>
-              <a
-                href="https://wa.me/522213497090?text=Hola%2C%20me%20interesa%20conocer%20el%20sistema%20para%20mi%20despacho"
-                target="_blank" rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 px-10 py-4 text-sm uppercase tracking-[0.12em] font-semibold rounded-full border border-[hsl(var(--border))] text-foreground hover:border-primary/50 hover:scale-[1.04] active:scale-[0.97] transition-all duration-200"
-              >
-                Escríbenos por WhatsApp
-              </a>
-            </div>
+        {/* CTAs */}
+        <div className="flex flex-col sm:flex-row items-center gap-5 relative">
+          <div className="relative hero-cta-spring" style={{ animationDelay: "1.4s" }}>
+            <a
+              href="mailto:j.cuatrecasas@nebustudio.com"
+              onClick={handleCtaClick}
+              className="cta-shine inline-flex items-center gap-3 bg-primary text-primary-foreground px-10 py-4 text-sm uppercase tracking-[0.12em] font-semibold rounded-full relative overflow-visible transition-all duration-200 hover:scale-[1.04] active:scale-[0.97]"
+              style={{ boxShadow: "0 4px 24px rgba(230,57,70,0.35)" }}
+            >
+              Agenda tu diagnóstico gratuito
+            </a>
+            <ShatterParticles active={shatter} />
+          </div>
+          <div className="hero-cta-spring" style={{ animationDelay: "1.6s" }}>
+            <a
+              href="https://wa.me/522213497090?text=Hola%2C%20me%20interesa%20conocer%20el%20sistema%20para%20mi%20despacho"
+              target="_blank" rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 px-10 py-4 text-sm uppercase tracking-[0.12em] font-semibold rounded-full border border-[hsl(var(--border))] text-foreground hover:border-primary/50 hover:scale-[1.04] active:scale-[0.97] transition-all duration-200"
+            >
+              Escríbenos por WhatsApp
+            </a>
           </div>
         </div>
       </div>
