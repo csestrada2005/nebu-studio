@@ -1014,6 +1014,14 @@ function SectionTitle({ title }: { title: string }) {
 const Index = () => {
   useScrollRevealV2();
   useCountUp();
+  const [diagnosticOpen, setDiagnosticOpen] = useState(false);
+
+  // Listen for custom event from child components
+  useEffect(() => {
+    const handler = () => setDiagnosticOpen(true);
+    window.addEventListener("open-diagnostic", handler);
+    return () => window.removeEventListener("open-diagnostic", handler);
+  }, []);
 
   return (
     <div className="min-h-screen text-foreground relative" style={{ position: "relative", zIndex: 1 }}>
@@ -1036,7 +1044,7 @@ const Index = () => {
       <SectionSep />
       <CtaSection />
       <Footer />
-      
+      <DiagnosticFormModal open={diagnosticOpen} onClose={() => setDiagnosticOpen(false)} />
     </div>
   );
 };
