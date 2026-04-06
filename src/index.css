@@ -183,7 +183,7 @@
   .cta-shine {
     position: relative;
     overflow: hidden;
-    box-shadow: 0 4px 24px rgba(230,57,70,0.3), inset 0 1px 0 rgba(255,255,255,0.15);
+    box-shadow: 0 0 30px rgba(230,57,70,0.4), 0 0 60px rgba(230,57,70,0.2);
     transition: var(--transition-smooth);
   }
   .cta-shine::after {
