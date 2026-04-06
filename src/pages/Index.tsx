@@ -252,14 +252,14 @@ function WordReveal({ text, className, delayBase = 800 }: { text: string; classN
 }
 
 /* Scramble text effect */
-function ScrambleText({ target, className }: { target: string; className?: string }) {
+function ScrambleText({ target, className, startDelay = 1600 }: { target: string; className?: string; startDelay?: number }) {
   const [display, setDisplay] = useState("");
   const reduced = useReducedMotion();
   const chars = "!@#$%^&*()_+-=[]{}|;:,.<>?";
 
   useEffect(() => {
     if (reduced) { setDisplay(target); return; }
-    const startDelay = setTimeout(() => {
+    const startTimeout = setTimeout(() => {
       let resolved = 0;
       const interval = setInterval(() => {
         setDisplay(
@@ -272,9 +272,9 @@ function ScrambleText({ target, className }: { target: string; className?: strin
         if (resolved > target.length) clearInterval(interval);
       }, 1500 / target.length);
       return () => clearInterval(interval);
-    }, 1600);
-    return () => clearTimeout(startDelay);
-  }, [target, reduced]);
+    }, startDelay);
+    return () => clearTimeout(startTimeout);
+  }, [target, reduced, startDelay]);
 
   return <span className={className}>{display || "\u00A0"}</span>;
 }
@@ -364,15 +364,16 @@ function Hero() {
           </p>
 
           <h1 className="font-display text-4xl sm:text-5xl md:text-[56px] lg:text-[64px] text-foreground leading-[1.1] mb-2">
-            <CharSplash text="Presencia digital" className="block" delayBase={200} />
-            <CharSplash text="que genera" className="block" delayBase={200 + 17 * 60} />
-            <CharSplash text="confianza." className="block" delayBase={200 + 27 * 60} />
+            <span className="block">
+              <ScrambleText target="Presencia digital" startDelay={200} />
+            </span>
+            <span className="block">
+              <ScrambleText target="que genera" startDelay={900} />
+            </span>
+            <span className="block">
+              <ScrambleText target="confianza." startDelay={1400} />
+            </span>
           </h1>
-
-          <h2 className="font-display text-2xl sm:text-3xl md:text-4xl text-foreground leading-[1.2] mt-4 mb-2">
-            <WordReveal text="Sistemas que escalan" className="text-primary" delayBase={200 + 37 * 60} />
-            <WordReveal text="el despacho." delayBase={200 + 37 * 60 + 3 * 120} />
-          </h2>
 
           {/* Red divider */}
           <div className="h-[2px] bg-primary line-expand my-6" style={{ animationDelay: "2.8s" }} />
