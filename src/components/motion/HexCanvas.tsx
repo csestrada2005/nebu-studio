@@ -153,7 +153,7 @@ export default function HexCanvas() {
             const dist = Math.sqrt(dx * dx + dy * dy);
             if (dist < radius) {
               const intensity = 1 - dist / radius;
-              hex.targetColor = intensity > 0.6 ? "#E63946" : intensity > 0.3 ? "#C62828" : "#1A1A1A";
+              hex.targetColor = intensity > 0.6 ? "#C22A29" : intensity > 0.3 ? "#C62828" : "#1A1A1A";
               hex.targetOpacity = intensity > 0.6 ? 0.9 : intensity > 0.3 ? 0.5 : 0.3;
               hex.targetScale = 1 + intensity * 0.1;
             } else {
@@ -174,7 +174,7 @@ export default function HexCanvas() {
             if (dist < radius) {
               const innerRadius = 60 * dpr;
               if (dist < innerRadius * 0.4) {
-                hex.targetColor = "#E63946";
+                hex.targetColor = "#C22A29";
                 hex.targetOpacity = 0.9;
                 hex.targetScale = 1.1;
               } else if (dist < innerRadius) {
