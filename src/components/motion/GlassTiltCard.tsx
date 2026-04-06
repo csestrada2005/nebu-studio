@@ -1,5 +1,5 @@
 import { useRef, useState, useCallback } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useInView, useReducedMotion } from "framer-motion";
 
 interface GlassTiltCardProps {
   children: React.ReactNode;
@@ -15,6 +15,7 @@ export const GlassTiltCard = ({
   maxTilt = 12,
 }: GlassTiltCardProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(cardRef, { once: true, margin: "-60px" });
   const [tilt, setTilt] = useState({ rotateX: 0, rotateY: 0 });
   const [glare, setGlare] = useState({ x: 50, y: 50, opacity: 0 });
   const prefersReduced = useReducedMotion();
@@ -51,10 +52,11 @@ export const GlassTiltCard = ({
       }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      animate={{
-        rotateX: tilt.rotateX,
-        rotateY: tilt.rotateY,
-      }}
+      initial={prefersReduced ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.96 }}
+      animate={isInView
+        ? { opacity: 1, y: 0, scale: 1, rotateX: tilt.rotateX, rotateY: tilt.rotateY }
+        : prefersReduced ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.96 }
+      }
       transition={{ type: "spring", stiffness: 200, damping: 24 }}
     >
       {/* Glass border */}
