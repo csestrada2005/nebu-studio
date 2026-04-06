@@ -364,14 +364,14 @@ function Hero() {
           </p>
 
           <h1 className="font-display text-4xl sm:text-5xl md:text-[56px] lg:text-[64px] text-foreground leading-[1.1] mb-2">
-            <span className="block font-mono" style={{ color: "#F5F5F5" }}>
-              <ScrambleText target="Presencia digital" />
+            <span className="block">
+              <ScrambleText target="Presencia digital" startDelay={200} />
             </span>
-            <span className="block font-mono" style={{ color: "#F5F5F5" }}>
-              <ScrambleText target="que genera" />
+            <span className="block">
+              <ScrambleText target="que genera" startDelay={900} />
             </span>
-            <span className="block font-mono" style={{ color: "#F5F5F5" }}>
-              <ScrambleText target="confianza." />
+            <span className="block">
+              <ScrambleText target="confianza." startDelay={1400} />
             </span>
           </h1>
 
