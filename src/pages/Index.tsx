@@ -326,7 +326,7 @@ function SocialProofSection() {
   return (
     <section className="relative z-10 py-20 lg:py-32 px-5">
       <GlowDivider className="max-w-[1100px] mx-auto mb-20 lg:mb-32" />
-      <div ref={rev.ref} style={rev.style} className="max-w-[900px] mx-auto text-center p-12 lg:p-20" style2="" >
+      <div ref={rev.ref} style={rev.style} className="max-w-[900px] mx-auto text-center">
         <div style={{ ...glass, borderRadius: 20, padding: "48px 32px" }}>
           <h2 className="text-[60px] lg:text-[80px] font-bold tracking-[-0.03em] leading-none mb-4" style={textGlow.red}>
             400+
