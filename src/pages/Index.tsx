@@ -598,10 +598,10 @@ function AboutSection() {
       <div className="max-w-[1200px] mx-auto px-5">
         <div className="grid md:grid-cols-[40%_1fr] gap-12 lg:gap-16 items-start">
           <div data-reveal="left">
-            <div className="glass-card overflow-hidden p-0" style={{ borderRadius: "4px" }}>
+            <GlassTiltCard className="w-full">
               <img src={teamNebu}
                 alt="Equipo NEBU Studio" className="w-full h-[480px] object-cover" loading="lazy" width={800} height={960} />
-            </div>
+            </GlassTiltCard>
             <p className="text-muted-foreground text-xs mt-3 tracking-wide">Equipo NEBU Studio</p>
           </div>
           <div data-reveal="right" data-delay="2" className="min-w-0">
