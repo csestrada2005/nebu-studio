@@ -7,6 +7,7 @@ import { ThemeProvider } from "next-themes";
 import HexBackground from "@/components/motion/HexBackground";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import ProductosDigitales from "./pages/ProductosDigitales";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ const App = () => {
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/productos-digitales" element={<ProductosDigitales />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
