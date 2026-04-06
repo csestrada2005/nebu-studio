@@ -134,7 +134,7 @@ export default function HexBackground() {
       ctx.fillRect(0, 0, w, h);
 
       const cells = cellsRef.current;
-      const dampSpeed = 0.12;
+      const dampSpeed = 0.22;
 
       for (let i = 0; i < cells.length; i++) {
         const c = cells[i];
