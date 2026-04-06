@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 import { Footer } from "@/components/premium/Footer";
 
 /* ─── InView hook ─── */
