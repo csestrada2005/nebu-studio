@@ -113,17 +113,22 @@ export default function HexBackground() {
     const animate = (time: number) => {
       const { w, h } = sizeRef.current;
 
-      // Update phantom cursor — smooth Lissajous-like path
+      // Phantom 1 — Lissajous path
       const p = phantomRef.current;
       const speed = 0.0004;
-      const px = w * 0.5 + Math.sin(time * speed) * w * 0.35;
-      const py = h * 0.5 + Math.cos(time * speed * 0.7) * h * 0.35;
-      p.x = px;
-      p.y = py;
+      p.x = w * 0.5 + Math.sin(time * speed) * w * 0.35;
+      p.y = h * 0.5 + Math.cos(time * speed * 0.7) * h * 0.35;
 
-      // Choose active cursor: real mouse if active, otherwise phantom
-      const mx = hasRealMouse.current ? mouseRef.current.x : p.x;
-      const my = hasRealMouse.current ? mouseRef.current.y : p.y;
+      // Phantom 2 — offset Lissajous path
+      const p2 = phantom2Ref.current;
+      p2.x = w * 0.5 + Math.cos(time * speed * 0.6 + 2.2) * w * 0.3;
+      p2.y = h * 0.5 + Math.sin(time * speed * 0.9 + 1.1) * h * 0.3;
+
+      // Build list of active cursors
+      const cursors: { x: number; y: number }[] = [p, p2];
+      if (hasRealMouse.current) {
+        cursors.push(mouseRef.current);
+      }
 
       ctx.fillStyle = "#333333";
       ctx.fillRect(0, 0, w, h);
@@ -133,14 +138,22 @@ export default function HexBackground() {
 
       for (let i = 0; i < cells.length; i++) {
         const c = cells[i];
-        const dx = c.cx - mx;
-        const dy = c.cy - my;
-        const dist = Math.sqrt(dx * dx + dy * dy);
 
-        if (dist < HOVER_RADIUS) {
-          const proximity = 1 - dist / HOVER_RADIUS;
-          c.targetScale = 1 + proximity * 0.45;
-          c.targetAlpha = proximity;
+        // Find closest cursor
+        let bestProximity = 0;
+        for (let j = 0; j < cursors.length; j++) {
+          const dx = c.cx - cursors[j].x;
+          const dy = c.cy - cursors[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < HOVER_RADIUS) {
+            const prox = 1 - dist / HOVER_RADIUS;
+            if (prox > bestProximity) bestProximity = prox;
+          }
+        }
+
+        if (bestProximity > 0) {
+          c.targetScale = 1 + bestProximity * 0.45;
+          c.targetAlpha = bestProximity;
         } else {
           c.targetScale = 1;
           c.targetAlpha = 0;
