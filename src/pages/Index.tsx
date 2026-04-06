@@ -415,7 +415,7 @@ function Hero() {
         </h1>
 
         {/* Tagline */}
-        <p className="font-mono text-xs sm:text-sm uppercase tracking-[0.2em] text-muted-foreground mb-10 hero-fade-in" style={{ animationDelay: "2s" }}>
+        <p className="font-mono text-[10px] sm:text-xs uppercase tracking-[0.2em] text-muted-foreground mb-8 sm:mb-10 hero-fade-in px-4" style={{ animationDelay: "2s" }}>
           <ScrambleText target="El sistema operativo de tu despacho." startDelay={1800} />
         </p>
 
