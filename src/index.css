@@ -99,6 +99,7 @@
     @apply text-foreground;
     line-height: 1.1;
     text-shadow: 0 0 60px rgba(255,255,255,0.25), 0 0 120px rgba(255,255,255,0.1);
+    animation: heroGlowPulse 4s ease-in-out infinite;
   }
 
   h2 {
