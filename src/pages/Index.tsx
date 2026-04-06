@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Menu, X, ChevronDown } from "lucide-react";
 import teamNebu from "@/assets/team-nebu.jpg";
 import { useScrollRevealV2, useCountUp } from "@/hooks/useScrollRevealV2";
+import { GlassTiltCard } from "@/components/motion/GlassTiltCard";
 
 
 /* ─── Smooth scroll ─── */
