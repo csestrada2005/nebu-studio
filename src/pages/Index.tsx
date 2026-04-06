@@ -451,12 +451,35 @@ function Hero() {
 function TrustBar() {
   const items = ["Puebla, México", "Especialistas en el sector legal", "Respuesta en 24 horas", "Sin compromiso inicial"];
   return (
-    <div className="relative z-10" style={{ background: "rgba(13,13,13,0.7)" }}>
-      <div className="max-w-[1200px] mx-auto px-5 py-4 flex flex-wrap justify-center gap-x-12 gap-y-2">
-        {items.map((item, i) => (
-          <span key={i} className="text-xs text-muted-foreground/80 uppercase tracking-[0.15em]" style={{ textShadow: "0 0 20px rgba(255,255,255,0.12)" }}>{item}</span>
-        ))}
+    <div className="relative z-10">
+      {/* Top divider line */}
+      <div className="h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.08) 20%, rgba(230,57,70,0.25) 50%, rgba(255,255,255,0.08) 80%, transparent)" }} />
+      <div
+        className="backdrop-blur-md"
+        style={{ background: "rgba(255,255,255,0.02)", borderBottom: "1px solid rgba(255,255,255,0.04)" }}
+      >
+        <div className="max-w-[1200px] mx-auto px-5 py-5 flex flex-wrap justify-center items-center gap-y-3">
+          {items.map((item, i) => (
+            <React.Fragment key={i}>
+              {i > 0 && (
+                <span className="hidden sm:block w-px h-3 mx-8" style={{ background: "linear-gradient(180deg, transparent, rgba(230,57,70,0.35), transparent)" }} />
+              )}
+              <motion.span
+                className="text-[11px] text-muted-foreground/70 uppercase tracking-[0.2em] font-light px-2"
+                style={{ textShadow: "0 0 20px rgba(255,255,255,0.1)" }}
+                initial={{ opacity: 0, y: 8 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+              >
+                {item}
+              </motion.span>
+            </React.Fragment>
+          ))}
+        </div>
       </div>
+      {/* Bottom divider line */}
+      <div className="h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.08) 20%, rgba(230,57,70,0.25) 50%, rgba(255,255,255,0.08) 80%, transparent)" }} />
     </div>
   );
 }
