@@ -685,7 +685,7 @@ function TestimonialCard({ t, i }: { t: typeof TESTIMONIALS[0]; i: number }) {
       ref={ref}
       className="glass-card p-7"
       style={{
-        borderLeft: "2px solid hsl(355 78% 56%)",
+        borderLeft: "2px solid hsl(0 65% 46%)",
         borderRadius: "12px",
         opacity: visible || reduced ? 1 : 0,
         transform: visible || reduced ? "scale(1) translateY(0)" : "scale(0.7) translateY(40px)",
