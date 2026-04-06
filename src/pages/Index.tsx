@@ -874,7 +874,7 @@ function FaqSection() {
                   style={{ maxHeight: isOpen ? "200px" : "0", opacity: isOpen ? 1 : 0 }}>
                   <p className="text-muted-foreground text-sm leading-[1.7] pb-5">{faq.a}</p>
                 </div>
-                <div style={{ borderBottom: "1px solid #1A1A1A" }} />
+                <div style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }} />
               </div>
             );
           })}
