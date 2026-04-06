@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Menu, X, ChevronDown } from "lucide-react";
 import teamNebu from "@/assets/team-nebu.jpg";
 import { useScrollRevealV2, useCountUp } from "@/hooks/useScrollRevealV2";
+import { GlassTiltCard } from "@/components/motion/GlassTiltCard";
 
 
 /* ─── Smooth scroll ─── */
@@ -514,12 +515,10 @@ function WhySection() {
             ))}
           </div>
           <div data-reveal="right" data-delay="2" className="flex items-start">
-            <div className="relative w-full overflow-hidden glass-card p-0" style={{ borderRadius: "4px" }}>
+            <GlassTiltCard className="w-full">
               <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&q=80"
                 alt="Abogado trabajando" className="w-full h-[400px] object-cover" loading="lazy" />
-              <div className="absolute inset-0 bg-background/40" />
-              <div className="absolute inset-y-0 left-0 w-[3px] bg-primary" />
-            </div>
+            </GlassTiltCard>
           </div>
         </div>
       </div>
@@ -600,10 +599,10 @@ function AboutSection() {
       <div className="max-w-[1200px] mx-auto px-5">
         <div className="grid md:grid-cols-[40%_1fr] gap-12 lg:gap-16 items-start">
           <div data-reveal="left">
-            <div className="glass-card overflow-hidden p-0" style={{ borderRadius: "4px" }}>
+            <GlassTiltCard className="w-full">
               <img src={teamNebu}
                 alt="Equipo NEBU Studio" className="w-full h-[480px] object-cover" loading="lazy" width={800} height={960} />
-            </div>
+            </GlassTiltCard>
             <p className="text-muted-foreground text-xs mt-3 tracking-wide">Equipo NEBU Studio</p>
           </div>
           <div data-reveal="right" data-delay="2" className="min-w-0">
