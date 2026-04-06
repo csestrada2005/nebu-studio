@@ -2,11 +2,7 @@ import { useEffect, useRef, useCallback } from "react";
 
 const HEX_SIZE = 8;
 const HEX_GAP = 1;
-const HOVER_RADIUS = 180;
-const HEX_COLOR_BASE = "rgba(255,255,255,0.025)";
-const HEX_COLOR_HOVER = "rgba(194,42,41,0.45)";
-const HEX_STROKE_BASE = "rgba(255,255,255,0.06)";
-const HEX_STROKE_HOVER = "rgba(194,42,41,0.7)";
+const HOVER_RADIUS = 200;
 
 interface HexCell {
   cx: number;
@@ -15,6 +11,7 @@ interface HexCell {
   targetScale: number;
   alpha: number;
   targetAlpha: number;
+  pulse: number;
 }
 
 function hexPath(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number) {
@@ -63,6 +60,7 @@ export default function HexBackground() {
           targetScale: 1,
           alpha: 0,
           targetAlpha: 0,
+          pulse: Math.random() * Math.PI * 2,
         });
       }
     }
@@ -104,7 +102,6 @@ export default function HexBackground() {
     window.addEventListener("mousemove", onMove, { passive: true });
     window.addEventListener("mouseleave", onLeave);
 
-    // Initialize phantom at center
     phantomRef.current = {
       x: sizeRef.current.w / 2,
       y: sizeRef.current.h / 2,
@@ -113,34 +110,33 @@ export default function HexBackground() {
 
     const animate = (time: number) => {
       const { w, h } = sizeRef.current;
+      const t = time * 0.001; // seconds
 
-      // Phantom 1 — Lissajous path
+      // Phantom cursors
       const p = phantomRef.current;
       const speed = 0.001;
       p.x = w * 0.5 + Math.sin(time * speed) * w * 0.4;
       p.y = h * 0.5 + Math.cos(time * speed * 0.7) * h * 0.4;
 
-      // Phantom 2 — offset Lissajous path
       const p2 = phantom2Ref.current;
       p2.x = w * 0.5 + Math.cos(time * speed * 0.8 + 2.2) * w * 0.38;
       p2.y = h * 0.5 + Math.sin(time * speed * 1.1 + 1.1) * h * 0.35;
 
-      // Phantom 3 — diagonal sweep
       const p3 = phantom3Ref.current;
       p3.x = w * 0.5 + Math.sin(time * speed * 1.3 + 4.0) * w * 0.42;
       p3.y = h * 0.5 + Math.cos(time * speed * 0.5 + 3.0) * h * 0.38;
 
-      // Build list of active cursors
       const cursors: { x: number; y: number }[] = [p, p2, p3];
       if (hasRealMouse.current) {
         cursors.push(mouseRef.current);
       }
 
+      // Dark background
       ctx.fillStyle = "#333333";
       ctx.fillRect(0, 0, w, h);
 
       const cells = cellsRef.current;
-      const dampSpeed = 0.22;
+      const dampSpeed = 0.18;
 
       for (let i = 0; i < cells.length; i++) {
         const c = cells[i];
@@ -158,7 +154,7 @@ export default function HexBackground() {
         }
 
         if (bestProximity > 0) {
-          c.targetScale = 1 + bestProximity * 0.45;
+          c.targetScale = 1 + bestProximity * 0.35;
           c.targetAlpha = bestProximity;
         } else {
           c.targetScale = 1;
@@ -171,27 +167,51 @@ export default function HexBackground() {
         const r = HEX_SIZE * c.scale;
         const a = c.alpha;
 
-        // Fill
+        // Subtle ambient pulse for idle hexagons
+        const ambientPulse = Math.sin(t * 0.8 + c.pulse) * 0.5 + 0.5;
+        const baseStrokeAlpha = 0.035 + ambientPulse * 0.015;
+
+        // Glass fill — multi-layered for depth
         if (a > 0.01) {
           hexPath(ctx, c.cx, c.cy, r);
-          ctx.fillStyle = `rgba(194,42,41,${(0.03 + a * 0.32).toFixed(3)})`;
+          // Glass base: white tint with variable opacity
+          const glassAlpha = a * 0.06;
+          ctx.fillStyle = `rgba(255,255,255,${glassAlpha.toFixed(4)})`;
+          ctx.fill();
+
+          // Inner glow: red tint
+          hexPath(ctx, c.cx, c.cy, r * 0.85);
+          ctx.fillStyle = `rgba(194,42,41,${(a * 0.2).toFixed(3)})`;
           ctx.fill();
         }
 
-        // Stroke
+        // Stroke — glass edge with white highlight
         hexPath(ctx, c.cx, c.cy, r);
         if (a > 0.01) {
-          const sr = Math.round(194);
-          const sg = Math.round(42);
-          const sb = Math.round(41);
-          const sa = (0.045 + a * 0.5).toFixed(3);
-          ctx.strokeStyle = `rgba(${sr},${sg},${sb},${sa})`;
-          ctx.lineWidth = 0.8 + a * 0.6;
+          // Primary edge: white glass stroke
+          const whiteEdge = (0.06 + a * 0.25).toFixed(3);
+          ctx.strokeStyle = `rgba(255,255,255,${whiteEdge})`;
+          ctx.lineWidth = 0.5 + a * 0.4;
+          ctx.stroke();
+
+          // Secondary edge: red accent glow
+          if (a > 0.3) {
+            hexPath(ctx, c.cx, c.cy, r + 0.5);
+            ctx.strokeStyle = `rgba(194,42,41,${(a * 0.35).toFixed(3)})`;
+            ctx.lineWidth = 0.3;
+            ctx.stroke();
+          }
         } else {
-          ctx.strokeStyle = HEX_STROKE_BASE;
-          ctx.lineWidth = 0.8;
+          ctx.strokeStyle = `rgba(255,255,255,${baseStrokeAlpha.toFixed(4)})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
         }
-        ctx.stroke();
+      }
+
+      // Scanline overlay effect — subtle horizontal lines
+      ctx.fillStyle = "rgba(255,255,255,0.003)";
+      for (let y = 0; y < h; y += 3) {
+        ctx.fillRect(0, y, w, 1);
       }
 
       rafRef.current = requestAnimationFrame(animate);
@@ -224,12 +244,12 @@ export default function HexBackground() {
       <div
         className="absolute pointer-events-none"
         style={{
-          width: 420,
-          height: 420,
+          width: "min(420px, 60vw)",
+          height: "min(420px, 60vw)",
           right: "8%",
           top: "15%",
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(194,42,41,0.16) 0%, rgba(194,42,41,0.04) 45%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(194,42,41,0.12) 0%, rgba(194,42,41,0.03) 45%, transparent 70%)",
           animation: "floatOrb1 7s ease-in-out infinite",
         }}
       />
@@ -238,12 +258,12 @@ export default function HexBackground() {
       <div
         className="absolute pointer-events-none"
         style={{
-          width: 350,
-          height: 350,
+          width: "min(350px, 50vw)",
+          height: "min(350px, 50vw)",
           left: "-5%",
           top: "55%",
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(194,42,41,0.10) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(194,42,41,0.08) 0%, transparent 70%)",
           animation: "floatOrb2 9s ease-in-out infinite",
         }}
       />
@@ -252,13 +272,13 @@ export default function HexBackground() {
       <div
         className="absolute pointer-events-none"
         style={{
-          width: 600,
+          width: "min(600px, 90vw)",
           height: 280,
           bottom: 0,
           left: "50%",
           transform: "translateX(-50%)",
           borderRadius: "50%",
-          background: "radial-gradient(ellipse, rgba(194,42,41,0.08) 0%, transparent 65%)",
+          background: "radial-gradient(ellipse, rgba(194,42,41,0.06) 0%, transparent 65%)",
         }}
       />
     </div>

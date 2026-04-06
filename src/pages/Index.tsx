@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Menu, X, ChevronDown } from "lucide-react";
-import teamNebu from "@/assets/team-nebu.jpg";
 import { useScrollRevealV2, useCountUp } from "@/hooks/useScrollRevealV2";
 import { GlassTiltCard } from "@/components/motion/GlassTiltCard";
 import { DiagnosticFormModal } from "@/components/motion/DiagnosticFormModal";
@@ -403,7 +402,7 @@ function Hero() {
 
       <div className="relative z-10 w-full max-w-[1100px] mx-auto px-5 flex flex-col items-center text-center">
 
-        <h1 className="font-display text-5xl sm:text-6xl md:text-[72px] lg:text-[88px] xl:text-[96px] text-foreground leading-[1.3] tracking-[0.02em] mb-8" style={{ textShadow: "0 0 30px rgba(255,255,255,0.15), 0 0 60px rgba(255,255,255,0.05)" }}>
+        <h1 className="font-display text-4xl sm:text-5xl md:text-[72px] lg:text-[88px] xl:text-[96px] text-foreground leading-[1.25] tracking-[0.02em] mb-6 sm:mb-8 px-2" style={{ textShadow: "0 0 30px rgba(255,255,255,0.15), 0 0 60px rgba(255,255,255,0.05)" }}>
           <span className="block mb-3 sm:mb-4">
             <ScrambleText target="Presencia digital" startDelay={200} />
           </span>
@@ -416,28 +415,28 @@ function Hero() {
         </h1>
 
         {/* Tagline */}
-        <p className="font-mono text-xs sm:text-sm uppercase tracking-[0.2em] text-muted-foreground mb-10 hero-fade-in" style={{ animationDelay: "2s" }}>
+        <p className="font-mono text-[10px] sm:text-xs uppercase tracking-[0.2em] text-muted-foreground mb-8 sm:mb-10 hero-fade-in px-4" style={{ animationDelay: "2s" }}>
           <ScrambleText target="El sistema operativo de tu despacho." startDelay={1800} />
         </p>
 
 
         {/* CTAs */}
-        <div className="flex flex-col sm:flex-row items-center gap-4 relative">
-          <div className="relative hero-cta-spring" style={{ animationDelay: "1.4s" }}>
+        <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 relative w-full sm:w-auto px-4 sm:px-0">
+          <div className="relative hero-cta-spring w-full sm:w-auto" style={{ animationDelay: "1.4s" }}>
             <button
               onClick={() => { handleCtaClick(); window.dispatchEvent(new Event("open-diagnostic")); }}
-              className="cta-shine inline-flex items-center gap-2 px-6 py-2.5 text-xs uppercase tracking-[0.12em] font-semibold rounded-md relative overflow-visible transition-all duration-200 hover:scale-[1.03] active:scale-[0.97] text-foreground border border-white/15"
+              className="cta-shine w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 sm:py-2.5 text-xs uppercase tracking-[0.12em] font-semibold rounded-md relative overflow-visible transition-all duration-200 hover:scale-[1.03] active:scale-[0.97] text-foreground border border-white/15"
               style={{ background: "rgba(255,255,255,0.07)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1), 0 4px 20px rgba(0,0,0,0.3)" }}
             >
               Agenda tu diagnóstico gratuito
             </button>
             <ShatterParticles active={shatter} />
           </div>
-          <div className="hero-cta-spring" style={{ animationDelay: "1.6s" }}>
+          <div className="hero-cta-spring w-full sm:w-auto" style={{ animationDelay: "1.6s" }}>
             <a
               href="https://wa.me/5212213497090?text=Hola%2C%20me%20interesa%20conocer%20el%20sistema%20para%20mi%20despacho"
               target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-2.5 text-xs uppercase tracking-[0.12em] font-semibold rounded-md text-foreground/80 border border-white/10 hover:border-white/20 hover:scale-[1.03] active:scale-[0.97] transition-all duration-200"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 sm:py-2.5 text-xs uppercase tracking-[0.12em] font-semibold rounded-md text-foreground/80 border border-white/10 hover:border-white/20 hover:scale-[1.03] active:scale-[0.97] transition-all duration-200"
               style={{ background: "rgba(255,255,255,0.04)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}
             >
               Escríbenos por WhatsApp
@@ -686,7 +685,7 @@ function TestimonialCard({ t, i }: { t: typeof TESTIMONIALS[0]; i: number }) {
       ref={ref}
       className="glass-card p-7"
       style={{
-        borderLeft: "2px solid hsl(355 78% 56%)",
+        borderLeft: "2px solid hsl(0 65% 46%)",
         borderRadius: "12px",
         opacity: visible || reduced ? 1 : 0,
         transform: visible || reduced ? "scale(1) translateY(0)" : "scale(0.7) translateY(40px)",
@@ -875,7 +874,7 @@ function FaqSection() {
                   style={{ maxHeight: isOpen ? "200px" : "0", opacity: isOpen ? 1 : 0 }}>
                   <p className="text-muted-foreground text-sm leading-[1.7] pb-5">{faq.a}</p>
                 </div>
-                <div style={{ borderBottom: "1px solid #1A1A1A" }} />
+                <div style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }} />
               </div>
             );
           })}
@@ -900,14 +899,14 @@ function CtaSection() {
         <p data-reveal="up" style={{ transitionDelay: "100ms" }} className="text-muted-foreground text-base sm:text-lg mt-6 max-w-xl mx-auto">
           Hablamos 20 minutos. Sin compromiso. Te decimos exactamente qué necesita tu despacho.
         </p>
-        <div data-reveal="up" style={{ transitionDelay: "200ms" }} className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
+        <div data-reveal="up" style={{ transitionDelay: "200ms" }} className="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4 sm:px-0">
           <button onClick={() => window.dispatchEvent(new Event("open-diagnostic"))}
-            className="cta-shine inline-block bg-primary text-primary-foreground px-10 py-4 text-sm uppercase tracking-[0.1em] font-semibold rounded-sm cursor-pointer">
+            className="cta-shine inline-block bg-primary text-primary-foreground px-8 sm:px-10 py-3.5 sm:py-4 text-sm uppercase tracking-[0.1em] font-semibold rounded-sm cursor-pointer">
             Agenda tu diagnóstico gratuito
           </button>
           <a href="https://wa.me/5212213497090?text=Hola%2C%20me%20interesa%20conocer%20el%20sistema%20para%20mi%20despacho"
             target="_blank" rel="noopener noreferrer"
-            className="cta-outline inline-block text-foreground px-10 py-4 text-sm uppercase tracking-[0.1em] font-semibold">
+            className="cta-outline inline-block text-foreground text-center px-8 sm:px-10 py-3.5 sm:py-4 text-sm uppercase tracking-[0.1em] font-semibold">
             Escríbenos por WhatsApp
           </a>
         </div>
