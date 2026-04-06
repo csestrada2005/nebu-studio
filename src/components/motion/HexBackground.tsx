@@ -37,6 +37,8 @@ export default function HexBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const cellsRef = useRef<HexCell[]>([]);
   const mouseRef = useRef({ x: -9999, y: -9999 });
+  const hasRealMouse = useRef(false);
+  const phantomRef = useRef({ x: 0, y: 0, angle: 0 });
   const rafRef = useRef<number>(0);
   const sizeRef = useRef({ w: 0, h: 0 });
 
@@ -87,19 +89,40 @@ export default function HexBackground() {
     resize();
     window.addEventListener("resize", resize);
 
+    let mouseTimeout: ReturnType<typeof setTimeout>;
     const onMove = (e: MouseEvent) => {
       mouseRef.current = { x: e.clientX, y: e.clientY };
+      hasRealMouse.current = true;
+      clearTimeout(mouseTimeout);
+      mouseTimeout = setTimeout(() => { hasRealMouse.current = false; }, 3000);
     };
     const onLeave = () => {
-      mouseRef.current = { x: -9999, y: -9999 };
+      hasRealMouse.current = false;
     };
     window.addEventListener("mousemove", onMove, { passive: true });
     window.addEventListener("mouseleave", onLeave);
 
-    const animate = () => {
+    // Initialize phantom at center
+    phantomRef.current = {
+      x: sizeRef.current.w / 2,
+      y: sizeRef.current.h / 2,
+      angle: Math.random() * Math.PI * 2,
+    };
+
+    const animate = (time: number) => {
       const { w, h } = sizeRef.current;
-      const mx = mouseRef.current.x;
-      const my = mouseRef.current.y;
+
+      // Update phantom cursor — smooth Lissajous-like path
+      const p = phantomRef.current;
+      const speed = 0.0004;
+      const px = w * 0.5 + Math.sin(time * speed) * w * 0.35;
+      const py = h * 0.5 + Math.cos(time * speed * 0.7) * h * 0.35;
+      p.x = px;
+      p.y = py;
+
+      // Choose active cursor: real mouse if active, otherwise phantom
+      const mx = hasRealMouse.current ? mouseRef.current.x : p.x;
+      const my = hasRealMouse.current ? mouseRef.current.y : p.y;
 
       ctx.fillStyle = "#333333";
       ctx.fillRect(0, 0, w, h);
@@ -138,9 +161,9 @@ export default function HexBackground() {
         // Stroke
         hexPath(ctx, c.cx, c.cy, r);
         if (a > 0.01) {
-          const sr = Math.round(230 - a * 0);
-          const sg = Math.round(57 + a * 0);
-          const sb = Math.round(70 + a * 0);
+          const sr = Math.round(194);
+          const sg = Math.round(42);
+          const sb = Math.round(41);
           const sa = (0.045 + a * 0.5).toFixed(3);
           ctx.strokeStyle = `rgba(${sr},${sg},${sb},${sa})`;
           ctx.lineWidth = 0.8 + a * 0.6;
@@ -158,6 +181,7 @@ export default function HexBackground() {
 
     return () => {
       cancelAnimationFrame(rafRef.current);
+      clearTimeout(mouseTimeout);
       window.removeEventListener("resize", resize);
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mouseleave", onLeave);
