@@ -168,7 +168,7 @@ function Nav() {
               </button>
             ))}
             <button
-              onClick={() => handleNav("contacto")}
+              onClick={() => window.dispatchEvent(new Event("open-diagnostic"))}
               className="cta-outline text-sm px-5 py-2 text-primary rounded-none"
               style={{
                 opacity: navReady ? 1 : 0,
