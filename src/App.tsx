@@ -4,7 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
-import HexBackground from "@/components/motion/HexBackground";
+import DragonHexBackground from "@/components/motion/DragonHexBackground";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -17,7 +17,7 @@ const App = () => {
         <TooltipProvider>
           <Toaster />
           <Sonner />
-          <HexBackground />
+          <DragonHexBackground />
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
