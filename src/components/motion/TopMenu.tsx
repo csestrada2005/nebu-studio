@@ -87,6 +87,22 @@ export const TopMenu = () => {
             </span>
           </motion.button>
 
+          {/* Productos digitales link */}
+          <motion.button
+            onClick={() => navigate("/productos-digitales")}
+            className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-[11px] font-semibold tracking-wide transition-all duration-300 hover:scale-105 active:scale-95"
+            style={{
+              background: "hsl(0 0% 0% / 0.6)",
+              boxShadow: "0 2px 12px hsl(0 0% 0% / 0.3)",
+              border: "0.5px solid hsl(0 0% 100% / 0.08)",
+              color: "rgba(255,255,255,0.8)",
+            }}
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Productos digitales
+          </motion.button>
+
           {/* Header CTA */}
           <button
             onClick={(e) => { e.preventDefault(); openServiceModal(); }}
