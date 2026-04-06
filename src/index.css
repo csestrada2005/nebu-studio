@@ -93,16 +93,38 @@
     @apply bg-primary text-primary-foreground;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1 {
     font-family: 'Outfit', sans-serif;
     font-weight: 700;
     @apply text-foreground;
     line-height: 1.1;
+    text-shadow: 0 0 60px rgba(255,255,255,0.25), 0 0 120px rgba(255,255,255,0.1);
+  }
+
+  h2 {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    @apply text-foreground;
+    line-height: 1.1;
+    text-shadow: 0 0 40px rgba(255,255,255,0.15);
+  }
+
+  h3, h4, h5, h6 {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    @apply text-foreground;
+    line-height: 1.1;
+    text-shadow: 0 0 20px rgba(255,255,255,0.08);
   }
 
   p {
     @apply text-muted-foreground leading-relaxed;
     max-width: 65ch;
+  }
+
+  /* Accent/red text glow */
+  .text-primary {
+    text-shadow: 0 0 30px rgba(230,57,70,0.6), 0 0 60px rgba(230,57,70,0.3) !important;
   }
 }
 
