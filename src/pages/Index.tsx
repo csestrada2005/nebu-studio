@@ -435,7 +435,7 @@ function Hero() {
           </div>
           <div className="hero-cta-spring" style={{ animationDelay: "1.6s" }}>
             <a
-              href="https://wa.me/522213497090?text=Hola%2C%20me%20interesa%20conocer%20el%20sistema%20para%20mi%20despacho"
+              href="https://wa.me/5212213497090?text=Hola%2C%20me%20interesa%20conocer%20el%20sistema%20para%20mi%20despacho"
               target="_blank" rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-6 py-2.5 text-xs uppercase tracking-[0.12em] font-semibold rounded-md text-foreground/80 border border-white/10 hover:border-white/20 hover:scale-[1.03] active:scale-[0.97] transition-all duration-200"
               style={{ background: "rgba(255,255,255,0.04)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}
@@ -946,7 +946,7 @@ function CtaSection() {
             className="cta-shine inline-block bg-primary text-primary-foreground px-10 py-4 text-sm uppercase tracking-[0.1em] font-semibold rounded-sm">
             Agenda tu diagnóstico gratuito
           </a>
-          <a href="https://wa.me/522213497090?text=Hola%2C%20me%20interesa%20conocer%20el%20sistema%20para%20mi%20despacho"
+          <a href="https://wa.me/5212213497090?text=Hola%2C%20me%20interesa%20conocer%20el%20sistema%20para%20mi%20despacho"
             target="_blank" rel="noopener noreferrer"
             className="cta-outline inline-block text-foreground px-10 py-4 text-sm uppercase tracking-[0.1em] font-semibold">
             Escríbenos por WhatsApp

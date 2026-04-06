@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLenis } from "lenis/react";
 import { anchorScrollTo } from "@/lib/anchorScroll";
 
-const WA_NUMBER = "522213497090";
+const WA_NUMBER = "5212213497090";
 const waMessages = {
   es: "Hola, me gustaría saber más sobre lo que pueden hacer por mi marca 🙌",
   en: "Hello, I want to learn more about what you can do for my brand 🙌",

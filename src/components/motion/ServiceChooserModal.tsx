@@ -4,7 +4,7 @@ import { X, ArrowRight, MessageCircle } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 /* ── WhatsApp config ── */
-const WA_NUMBER = "522213497090";
+const WA_NUMBER = "5212213497090";
 
 const SERVICE_KEYS = [
   "modal.s1", "modal.s2", "modal.s3", "modal.s4", "modal.s5",
