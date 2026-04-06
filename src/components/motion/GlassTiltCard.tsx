@@ -15,6 +15,7 @@ export const GlassTiltCard = ({
   maxTilt = 12,
 }: GlassTiltCardProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(cardRef, { once: true, margin: "-60px" });
   const [tilt, setTilt] = useState({ rotateX: 0, rotateY: 0 });
   const [glare, setGlare] = useState({ x: 50, y: 50, opacity: 0 });
   const prefersReduced = useReducedMotion();
