@@ -9,9 +9,6 @@ const NotFoundContent = () => {
   const location = useLocation();
   const { language } = useLanguage();
 
-  useEffect(() => {
-    console.error("404 Error: User attempted to access non-existent route:", location.pathname);
-  }, [location.pathname]);
 
   return (
     <main className="flex-1 flex items-center justify-center px-4 pt-24 pb-16">
