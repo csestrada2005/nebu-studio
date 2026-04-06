@@ -261,12 +261,14 @@ const UrgencyBar = () => {
 /* ─── PAGE ─── */
 const ProductosDigitales = () => {
   return (
-    <div className="relative min-h-screen" style={{ background: "#030303" }}>
-      <Hero />
-      <ProductSection />
-      <UrgencyBar />
-      <Footer />
-    </div>
+    <LanguageProvider>
+      <div className="relative min-h-screen" style={{ background: "#030303" }}>
+        <Hero />
+        <ProductSection />
+        <UrgencyBar />
+        <Footer />
+      </div>
+    </LanguageProvider>
   );
 };
 
