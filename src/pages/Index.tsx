@@ -252,14 +252,14 @@ function WordReveal({ text, className, delayBase = 800 }: { text: string; classN
 }
 
 /* Scramble text effect */
-function ScrambleText({ target, className }: { target: string; className?: string }) {
+function ScrambleText({ target, className, startDelay = 1600 }: { target: string; className?: string; startDelay?: number }) {
   const [display, setDisplay] = useState("");
   const reduced = useReducedMotion();
   const chars = "!@#$%^&*()_+-=[]{}|;:,.<>?";
 
   useEffect(() => {
     if (reduced) { setDisplay(target); return; }
-    const startDelay = setTimeout(() => {
+    const startTimeout = setTimeout(() => {
       let resolved = 0;
       const interval = setInterval(() => {
         setDisplay(
@@ -272,9 +272,9 @@ function ScrambleText({ target, className }: { target: string; className?: strin
         if (resolved > target.length) clearInterval(interval);
       }, 1500 / target.length);
       return () => clearInterval(interval);
-    }, 1600);
-    return () => clearTimeout(startDelay);
-  }, [target, reduced]);
+    }, startDelay);
+    return () => clearTimeout(startTimeout);
+  }, [target, reduced, startDelay]);
 
   return <span className={className}>{display || "\u00A0"}</span>;
 }
