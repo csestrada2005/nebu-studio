@@ -1,5 +1,4 @@
 import { useLocation, Link } from "react-router-dom";
-import { useEffect } from "react";
 import { LanguageProvider, useLanguage } from "@/contexts/LanguageContext";
 import { Header } from "@/components/premium/Header";
 import { Footer } from "@/components/premium/Footer";
@@ -9,9 +8,6 @@ const NotFoundContent = () => {
   const location = useLocation();
   const { language } = useLanguage();
 
-  useEffect(() => {
-    console.error("404 Error: User attempted to access non-existent route:", location.pathname);
-  }, [location.pathname]);
 
   return (
     <main className="flex-1 flex items-center justify-center px-4 pt-24 pb-16">

@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback, useMemo } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
 import teamNebu from "@/assets/team-nebu.jpg";
 import { useScrollRevealV2, useCountUp } from "@/hooks/useScrollRevealV2";
